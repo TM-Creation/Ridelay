@@ -1,0 +1,107 @@
+import 'package:flutter/material.dart';
+import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
+import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
+import 'package:ridely/src/presentation/ui/templates/previous_rides_screens_widgets/ratings_container.dart';
+
+Widget userDetailsContainer(String image, String firstText, String secondText,
+    bool isRating, bool haveCarYearMake, String carMake) {
+  return Container(
+    color: Colors.transparent,
+    child: Row(
+      children: [
+        Container(
+          width: ScreenConfig.screenSizeWidth * 0.08,
+          height: ScreenConfig.screenSizeWidth * 0.08,
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+          ),
+        ),
+        spaceWidth(ScreenConfig.screenSizeWidth * 0.03),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            haveCarYearMake
+                ? Row(
+                    children: [
+                      displayText(
+                        firstText,
+                        ScreenConfig.theme.textTheme.bodyText2,
+                        width: 0.16,
+                      ),
+                      displayText(
+                        carMake,
+                        ScreenConfig.theme.textTheme.bodyText2
+                            ?.copyWith(fontSize: 7),
+                        textAlign: TextAlign.start,
+                        width: 0.13,
+                      ),
+                    ],
+                  )
+                : displayText(
+                    firstText,
+                    ScreenConfig.theme.textTheme.bodyText2,
+                    width: 0.25,
+                  ),
+            isRating
+                ? Row(
+                    children: [
+                      const Icon(
+                        Icons.star,
+                        color: Colors.white,
+                        size: 10,
+                      ),
+                      spaceWidth(3),
+                      displayText(
+                        secondText,
+                        ScreenConfig.theme.textTheme.bodyText2,
+                        width: 0.25,
+                      ),
+                    ],
+                  )
+                : displayText(
+                    secondText,
+                    ScreenConfig.theme.textTheme.bodyText2,
+                    width: 0.25,
+                  ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Widget userDetailsMiniContainer(
+  String image,
+  String firstText,
+) {
+  return Container(
+    color: Colors.transparent,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: ScreenConfig.screenSizeWidth * 0.08,
+              height: ScreenConfig.screenSizeWidth * 0.08,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(image), fit: BoxFit.cover),
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+              ),
+            ),
+            spaceWidth(ScreenConfig.screenSizeWidth * 0.03),
+            displayText(
+              firstText,
+              ScreenConfig.theme.textTheme.button,
+              width: 0.3,
+            )
+          ],
+        ),
+        ratingsContainer(25, 5),
+      ],
+    ),
+  );
+}
