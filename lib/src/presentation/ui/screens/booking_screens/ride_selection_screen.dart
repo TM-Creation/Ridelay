@@ -41,7 +41,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                     isShowMyLocationIcon: true,
                     isFullScreen: false,
                     image: "assets/images/RideSelectionScreenMap.png",
-                    hintFieldOne: "Enter Location",
+                    hintFieldOne: "Git check",
                     fieldOneButtonFunction: () {},
                     suffixIconFieldOne: SizedBox(
                       height: 60,
