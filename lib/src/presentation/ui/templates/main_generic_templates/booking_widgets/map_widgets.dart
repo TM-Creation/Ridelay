@@ -149,7 +149,7 @@ Widget mapWidget({
                       CameraUpdate.newCameraPosition(
                         CameraPosition(
                           target: userLocation!,
-                          zoom: 15.0,
+                          zoom: 14.0,
                         ),
                       ),
                     ),
