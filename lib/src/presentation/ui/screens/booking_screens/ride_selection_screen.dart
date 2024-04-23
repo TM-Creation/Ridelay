@@ -146,14 +146,14 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                               "RIDE",
                               "Go for ride now", () {
                             Navigator.of(context)
-                                .pushNamed(VehicleSelectionScreen.routeName,arguments: _userLocation);
+                                .pushNamed(VehicleSelectionScreen.routeName);
                           }),
                           Buttons.squareRideScreenButton(
                               "assets/images/RideShareButtonIcon.png",
                               "SHARE A RIDE",
                               "Share a ride", () {
                             Navigator.of(context)
-                                .pushNamed(LocationSelectionScreen.routeName,arguments: _userLocation);
+                                .pushNamed(LocationSelectionScreen.routeName);
                           }),
                         ],
                       ),

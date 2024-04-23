@@ -29,8 +29,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final LatLng? userLocation =
-        ModalRoute.of(context)!.settings.arguments as LatLng?;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
@@ -62,9 +60,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                     child: Row(
                       children: [
                         Buttons.smallSquareButton(
-                            "assets/images/CircularIconButton.png", () {
-                              print(userLocation);
-                        }),
+                            "assets/images/CircularIconButton.png", () {}),
                       ],
                     ),
                   ),

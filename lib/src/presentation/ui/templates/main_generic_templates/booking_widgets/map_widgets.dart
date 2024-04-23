@@ -142,18 +142,6 @@ Widget mapWidget({
                         ),
                     ],
                   ),
-                  isShowMyLocationIcon
-                  ? Buttons.smallSquareButton(
-                    "assets/images/CircularIconButton.png",
-                        () => _mapController?.animateCamera(
-                      CameraUpdate.newCameraPosition(
-                        CameraPosition(
-                          target: userLocation!,
-                          zoom: 14.0,
-                        ),
-                      ),
-                    ),
-                  ): Container(),
                 ],
               ),
             )

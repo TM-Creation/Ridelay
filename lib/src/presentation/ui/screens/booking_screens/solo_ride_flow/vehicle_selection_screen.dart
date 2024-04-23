@@ -25,9 +25,6 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final LatLng? userLocation =
-        ModalRoute.of(context)!.settings.arguments as LatLng?;
-    print(userLocation);
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
@@ -40,7 +37,6 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
             child: Column(
               children: [
                 mapWidget(
-                    userLocation: userLocation!,
                     isShowMyLocationIcon: true,
                     isFullScreen: false,
                     image: "assets/images/RideSelectionScreenMap.png",
@@ -105,10 +101,10 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                               "assets/images/CarButtonIcon.png",
                               "CAR",
                               "Upto 3 persons", () async {
-                            var refresh = await Navigator.of(context)
-                                .pushNamed(LocationSelectionScreen.routeName,
-                                    arguments: userLocation);
-                            if(refresh=="refresh"){
+                            var refresh = await Navigator.of(context).pushNamed(
+                              LocationSelectionScreen.routeName,
+                            );
+                            if (refresh == "refresh") {
                               setState(() {
                                 print("sigma");
                               });
@@ -119,8 +115,8 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                               "BIKE",
                               "One Person Ride", () {
                             Navigator.of(context).pushNamed(
-                                LocationSelectionScreen.routeName,
-                                arguments: userLocation);
+                              LocationSelectionScreen.routeName,
+                            );
                           }),
                         ],
                       ),
