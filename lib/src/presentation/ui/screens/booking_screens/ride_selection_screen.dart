@@ -11,6 +11,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/book
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/slider_for_bottom_navigation.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
+import 'package:geolocator/geolocator.dart';
 
 class RideSelectionScreen extends StatefulWidget {
   const RideSelectionScreen({Key? key}) : super(key: key);
@@ -25,6 +26,53 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
   GoogleMapController? _mapController;
   LatLng? _userLocation;
   @override
+  void initState() {
+    super.initState();
+    _getLocationPermission();
+  }
+  @override
+  Future<void> _getLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permission is denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permission is permanently denied, we cannot request permissions.');
+    }
+
+    _showUserLocation();
+  }
+
+  void _showUserLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    setState(() {
+      _userLocation = LatLng(position.latitude, position.longitude);
+    });
+
+    if (_mapController != null) {
+      _mapController!.animateCamera(CameraUpdate.newLatLngZoom(
+        _userLocation!,
+        15.0,
+      ));
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -38,37 +86,38 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
             child: Column(
               children: [
                 mapWidget(
-                    isShowMyLocationIcon: true,
-                    isFullScreen: false,
-                    image: "assets/images/RideSelectionScreenMap.png",
-                    hintFieldOne: "Git check",
-                    fieldOneButtonFunction: () {},
-                    suffixIconFieldOne: SizedBox(
-                      height: 60,
-                      width: 50,
-                      child: Row(
-                        children: [
-                          Buttons.smallSquareButton(
-                              "assets/images/SearchIcon.png", () {}),
-                        ],
-                      ),
+                  userLocation: _userLocation,
+                  isShowMyLocationIcon: true,
+                  isFullScreen: false,
+                  image: "assets/images/RideSelectionScreenMap.png",
+                  hintFieldOne: "Search Location",
+                  fieldOneButtonFunction: () {},
+                  suffixIconFieldOne: SizedBox(
+                    height: 60,
+                    width: 50,
+                    child: Row(
+                      children: [
+                        Buttons.smallSquareButton(
+                            "assets/images/SearchIcon.png", () {}),
+                      ],
                     ),
-
-                    fieldOneController: locationEnterController,
-                    isDisplayFieldTwo: false,
-                    hintFieldTwo: " ",
-                    fieldTwoButtonFunction: () {},
-                    suffixIconFieldTwo: SizedBox(
-                      height: 60,
-                      width: 50,
-                      child: Row(
-                        children: [
-                          Buttons.smallSquareButton(
-                              "assets/images/SearchIcon.png", () {}),
-                        ],
-                      ),
+                  ),
+                  fieldOneController: locationEnterController,
+                  isDisplayFieldTwo: false,
+                  hintFieldTwo: " ",
+                  fieldTwoButtonFunction: () {},
+                  suffixIconFieldTwo: SizedBox(
+                    height: 60,
+                    width: 50,
+                    child: Row(
+                      children: [
+                        Buttons.smallSquareButton(
+                            "assets/images/SearchIcon.png", () {}),
+                      ],
                     ),
-                    fieldTwoController: TextEditingController()),
+                  ),
+                  fieldTwoController: TextEditingController(),
+                ),
                 spaceHeight(
                   ScreenConfig.screenSizeHeight * 0.2,
                 ),
@@ -97,14 +146,14 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                               "RIDE",
                               "Go for ride now", () {
                             Navigator.of(context)
-                                .pushNamed(VehicleSelectionScreen.routeName);
+                                .pushNamed(VehicleSelectionScreen.routeName,arguments: _userLocation);
                           }),
                           Buttons.squareRideScreenButton(
                               "assets/images/RideShareButtonIcon.png",
                               "SHARE A RIDE",
                               "Share a ride", () {
                             Navigator.of(context)
-                                .pushNamed(LocationSelectionScreen.routeName);
+                                .pushNamed(LocationSelectionScreen.routeName,arguments: _userLocation);
                           }),
                         ],
                       ),
@@ -116,40 +165,42 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                             context, PreviousRidesScreen.routeName);
                       },
                       child: Container(
-                          height: ScreenConfig.screenSizeHeight * 0.05,
-                          width: ScreenConfig.screenSizeWidth * 0.9,
-                          decoration: squareButtonTemplate(),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 20.0, right: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height:
-                                          ScreenConfig.screenSizeHeight * 0.04,
-                                      width: 25,
-                                      child: Image.asset(
-                                        "assets/images/YourPastTripsIcon.png",
-                                        fit: BoxFit.contain,
-                                      ),
+                        height: ScreenConfig.screenSizeHeight * 0.05,
+                        width: ScreenConfig.screenSizeWidth * 0.9,
+                        decoration: squareButtonTemplate(),
+                        child: Padding(
+                          padding:
+                          const EdgeInsets.only(left: 20.0, right: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    height:
+                                    ScreenConfig.screenSizeHeight * 0.04,
+                                    width: 25,
+                                    child: Image.asset(
+                                      "assets/images/YourPastTripsIcon.png",
+                                      fit: BoxFit.contain,
                                     ),
-                                    spaceWidth(
-                                        ScreenConfig.screenSizeWidth * 0.03),
-                                    displayText("YOUR PAST TRIPS",
-                                        ScreenConfig.theme.textTheme.headline4,
-                                        width: 0.5),
-                                  ],
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 15,
-                                ),
-                              ],
-                            ),
-                          )),
+                                  ),
+                                  spaceWidth(
+                                      ScreenConfig.screenSizeWidth * 0.03),
+                                  displayText(
+                                      "YOUR PAST TRIPS",
+                                      ScreenConfig.theme.textTheme.headline4,
+                                      width: 0.5),
+                                ],
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 15,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   ],

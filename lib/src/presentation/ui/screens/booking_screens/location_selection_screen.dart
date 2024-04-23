@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_shown_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
@@ -22,11 +23,14 @@ class LocationSelectionScreen extends StatefulWidget {
 class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
+  GoogleMapController? _mapController;
   String image = "assets/images/RideSelectionScreenMap.png";
   bool isShowbottomButton = false;
 
   @override
   Widget build(BuildContext context) {
+    final LatLng? userLocation =
+        ModalRoute.of(context)!.settings.arguments as LatLng?;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
@@ -58,7 +62,9 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                     child: Row(
                       children: [
                         Buttons.smallSquareButton(
-                            "assets/images/CircularIconButton.png", () {}),
+                            "assets/images/CircularIconButton.png", () {
+                              print(userLocation);
+                        }),
                       ],
                     ),
                   ),

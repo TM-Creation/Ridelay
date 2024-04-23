@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/location_selection_solo_screen.dart';
@@ -21,8 +22,12 @@ class VehicleSelectionScreen extends StatefulWidget {
 
 class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final LatLng? userLocation =
+        ModalRoute.of(context)!.settings.arguments as LatLng?;
+    print(userLocation);
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
@@ -35,6 +40,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
             child: Column(
               children: [
                 mapWidget(
+                    userLocation: userLocation!,
                     isShowMyLocationIcon: true,
                     isFullScreen: false,
                     image: "assets/images/RideSelectionScreenMap.png",
@@ -98,16 +104,23 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                           Buttons.squareRideScreenButton(
                               "assets/images/CarButtonIcon.png",
                               "CAR",
-                              "Upto 3 persons", () {
-                            Navigator.of(context).pushNamed(
-                                LocationSelectionSoloScreen.routeName);
+                              "Upto 3 persons", () async {
+                            var refresh = await Navigator.of(context)
+                                .pushNamed(LocationSelectionScreen.routeName,
+                                    arguments: userLocation);
+                            if(refresh=="refresh"){
+                              setState(() {
+                                print("sigma");
+                              });
+                            }
                           }),
                           Buttons.squareRideScreenButton(
                               "assets/images/BikeButtonIcon.png",
                               "BIKE",
                               "One Person Ride", () {
                             Navigator.of(context).pushNamed(
-                                LocationSelectionSoloScreen.routeName);
+                                LocationSelectionScreen.routeName,
+                                arguments: userLocation);
                           }),
                         ],
                       ),

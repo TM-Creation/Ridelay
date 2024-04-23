@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart'; // Import the permission_handler package
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/space_line_between_two_text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/generic_textfield.dart';
 
-Widget displayMapWidget() {
-  GoogleMapController? _mapController;
-  LatLng? _userLocation;
+GoogleMapController? _mapController;
+const initailposition = CameraPosition(
+  target: LatLng(31.459917, 74.246294),
+  zoom: 10,
+);
 
+Widget displayMapWidget() {
+  @override
+  void dispose() {
+    _mapController?.dispose();
+  }
+ LatLng? _userLocation;
   return GoogleMap(
-    initialCameraPosition: CameraPosition(
-      target: LatLng(30.37, 69.34),
-      zoom: 5,
-    ),
+    initialCameraPosition: initailposition,
     myLocationEnabled: true,
     myLocationButtonEnabled: false,
     mapType: MapType.normal,
@@ -24,35 +30,35 @@ Widget displayMapWidget() {
     onCameraMove: ((_position) async {
       // Handle camera movement here if needed
     }),
-    onMapCreated: (GoogleMapController controller) {
+    onMapCreated: (GoogleMapController controller) async {
       _mapController = controller;
-      _showUserLocation(_mapController!);
+      await _requestPermissionAndGetCurrentLocation(); // Request permission and get current location
     },
-    markers: _userLocation != null
-        ? {
-      Marker(
-        markerId: MarkerId("user_location"),
-        position: _userLocation!,
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueBlue,
-        ),
-      ),
-    }
-        : {},
+
   );
 }
 
-void _showUserLocation(GoogleMapController controller) async {
-  Position position = await Geolocator.getCurrentPosition(
-    desiredAccuracy: LocationAccuracy.high,
-  );
-  LatLng userLocation = LatLng(position.latitude, position.longitude);
-  controller.animateCamera(CameraUpdate.newCameraPosition(
-    CameraPosition(
-      target: userLocation,
-      zoom: 15.0,
-    ),
-  ));
+Future<void> _requestPermissionAndGetCurrentLocation() async {
+  // Check if location permission is granted
+  var status = await Permission.location.request();
+  if (status.isGranted) {
+    // Get current position
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    // Update the map to show the user's current location
+    LatLng userLocation = LatLng(position.latitude, position.longitude);
+    _mapController?.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: userLocation,
+        zoom: 15.0,
+      ),
+    ));
+  } else {
+    // Handle if permission is denied
+    print('Location permission denied');
+  }
 }
 
 Widget mapWidget({
@@ -71,6 +77,7 @@ Widget mapWidget({
   bool isFieldsReadOnly = false,
   bool showTextFields = true,
   bool showAds = false,
+  LatLng? userLocation,
 }) {
   return Stack(
     alignment: AlignmentDirectional.topCenter,
@@ -136,8 +143,17 @@ Widget mapWidget({
                     ],
                   ),
                   isShowMyLocationIcon
-                      ? Buttons.getMyCurrentLocationButton()
-                      : Container(),
+                  ? Buttons.smallSquareButton(
+                    "assets/images/CircularIconButton.png",
+                        () => _mapController?.animateCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                          target: userLocation!,
+                          zoom: 15.0,
+                        ),
+                      ),
+                    ),
+                  ): Container(),
                 ],
               ),
             )

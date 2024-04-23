@@ -38,7 +38,7 @@ class Buttons {
   static Widget backButton(BuildContext context, bool isIconCross) =>
       GestureDetector(
         onTap: () {
-          Navigator.of(context).pop();
+          Navigator.pop(context,"refresh");
         },
         child: Container(
           width: 30,
@@ -89,7 +89,9 @@ class Buttons {
         ),
       );
   static Widget getMyCurrentLocationButton() => GestureDetector(
-        onTap: () {},
+        onTap: () {
+
+        },
         child: Container(
           width: 40,
           height: 40,
