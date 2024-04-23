@@ -5,6 +5,7 @@ import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_numb
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingCardsScreen extends StatefulWidget {
   const OnboardingCardsScreen({Key? key}) : super(key: key);
@@ -33,6 +34,32 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
       Navigator.pushReplacementNamed(context, LoginNumberEnterScreen.routeName);
       // Navigator.pushNamed(context, RideSelectionScreen.routeName);
     }
+  }
+  @override
+  void initState() {
+    super.initState();
+    _checkFirstTime();
+  }
+
+  void _checkFirstTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool firstTime = prefs.getBool('first_time') ?? true;
+    if (!firstTime) {
+      // User has already seen the intro, navigate to login page
+      Navigator.pushReplacementNamed(
+          context,LoginNumberEnterScreen.routeName);
+    }
+  }
+
+  void _nextPage() {
+    _saveFirstTime();
+    Navigator.pushReplacementNamed(
+        context,LoginNumberEnterScreen.routeName);
+  }
+
+  void _saveFirstTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('first_time', false);
   }
 
   @override
@@ -109,6 +136,9 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   Buttons.splashScreenButton("Let's get rides", () {
                     incrementCount();
+                    if(currentOnboardingImage==3){
+                      _nextPage();
+                    }
                   }),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                 ],
