@@ -1,41 +1,72 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart'; // Import the permission_handler package
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/space_line_between_two_text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/generic_textfield.dart';
 
+final dio = Dio();
+late List<Location> pick=[];
+late List<Location> drop=[];
+final obj = LocationSelectionScreen();
 GoogleMapController? _mapController;
 const initailposition = CameraPosition(
   target: LatLng(31.459917, 74.246294),
   zoom: 10,
 );
 
-Widget displayMapWidget() {
+Widget displayMapWidget(List<Location> pick, List<Location> drop,
+    Directions? info) {
   @override
   void dispose() {
     _mapController?.dispose();
   }
- LatLng? _userLocation;
-  return GoogleMap(
-    initialCameraPosition: initailposition,
-    myLocationEnabled: true,
-    myLocationButtonEnabled: false,
-    mapType: MapType.normal,
-    zoomGesturesEnabled: true,
-    zoomControlsEnabled: false,
-    onCameraMove: ((_position) async {
-      // Handle camera movement here if needed
-    }),
-    onMapCreated: (GoogleMapController controller) async {
-      _mapController = controller;
-      await _requestPermissionAndGetCurrentLocation(); // Request permission and get current location
-    },
+    return GoogleMap(
+      initialCameraPosition: initailposition,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      mapType: MapType.normal,
+      zoomGesturesEnabled: true,
+      zoomControlsEnabled: false,
+      markers: {
+        if(pick!=null && pick.isNotEmpty)
+          Marker(markerId: MarkerId('pickup'),
+              icon: BitmapDescriptor.defaultMarker,
+              position:LatLng(pick[0].latitude,pick[0].longitude)),
+        if(drop!=null && drop.isNotEmpty)
+          Marker(markerId: MarkerId('dropoff'),
+              icon: BitmapDescriptor.defaultMarker,
+              position:LatLng(drop[0].latitude,drop[0].longitude)),
+      },
+      /*polylines: {
+      if (_info != null)
+        Polyline(
+          polylineId: const PolylineId('overview_polyline'),
+          color: Colors.orange,
+          width: 10,
+          points: _info?.polylinePoints
+              ?.map((e) => LatLng(e.latitude, e.longitude))
+              .toList() ??
+              [],
+        ),
+    },*/
+      onCameraMove: ((_position) async {
+        // Handle camera movement here if needed
+      }),
+      onMapCreated: (GoogleMapController controller) async {
+        _mapController = controller;
+        _requestPermissionAndGetCurrentLocation();
+        // Request permission and get current location
+      },
+    );
 
-  );
 }
 
 Future<void> _requestPermissionAndGetCurrentLocation() async {
@@ -52,7 +83,7 @@ Future<void> _requestPermissionAndGetCurrentLocation() async {
     _mapController?.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         target: userLocation,
-        zoom: 15.0,
+        zoom: 5.0,
       ),
     ));
   } else {
@@ -78,6 +109,7 @@ Widget mapWidget({
   bool showTextFields = true,
   bool showAds = false,
   LatLng? userLocation,
+  Directions? info,
 }) {
   return Stack(
     alignment: AlignmentDirectional.topCenter,
@@ -87,7 +119,7 @@ Widget mapWidget({
             ? ScreenConfig.screenSizeHeight * 1.2
             : ScreenConfig.screenSizeHeight * 0.8,
         width: ScreenConfig.screenSizeWidth,
-        child: displayMapWidget(),
+        child: displayMapWidget(pick, drop, info),
       ),
       Column(
         children: [
@@ -147,6 +179,94 @@ Widget mapWidget({
             )
         ],
       ),
+      if (isDisplayFieldTwo)
+        Positioned(
+            bottom: 20,
+            left: 20,
+            child: FloatingActionButton(
+              onPressed: () async {
+                if (fieldOneController.text.isNotEmpty && fieldTwoController.text.isNotEmpty) {
+                  pick = await locationFromAddress(fieldOneController.text);
+                  drop = await locationFromAddress(fieldTwoController.text);
+                } else {
+                  print('ni aya');
+                }
+
+              },
+              child: Icon(Icons.directions),
+            ))
     ],
   );
+}
+
+class Directions {
+  final LatLngBounds bounds;
+  final List<PointLatLng> polylinePoints;
+  final String totalDistance;
+  final String totalDuration;
+
+  const Directions({
+    required this.bounds,
+    required this.polylinePoints,
+    required this.totalDistance,
+    required this.totalDuration,
+  });
+
+  factory Directions.fromMap(Map<String, dynamic> map) {
+    if ((map['routes'] as List).isEmpty) return null!;
+
+    final data = Map<String, dynamic>.from(map['routes'][0]);
+
+    final northeast = data['bounds']['northeast'];
+    final southwest = data['bounds']['southwest'];
+    final bounds = LatLngBounds(
+      northeast: LatLng(northeast['lat'], northeast['lng']),
+      southwest: LatLng(southwest['lat'], southwest['lng']),
+    );
+
+    String distance = '';
+    String duration = '';
+    if ((data['legs'] as List).isNotEmpty) {
+      final leg = data['legs'][0];
+      distance = leg['distance']['text'];
+      duration = leg['duration']['text'];
+    }
+
+    return Directions(
+      bounds: bounds,
+      polylinePoints:
+      PolylinePoints().decodePolyline(data['overview_polyline']['points']),
+      totalDistance: distance,
+      totalDuration: duration,
+    );
+  }
+}
+
+class DirectionsRepository {
+  static const String _baseUrl =
+      'https://maps.googleapis.com/maps/api/directions/json?';
+
+  final Dio _dio;
+
+  DirectionsRepository({required Dio dio}) : _dio = dio ?? Dio();
+
+  Future<Directions?> getDirections({
+    required LatLng origin,
+    required LatLng destination,
+  }) async {
+    final response = await _dio.get(
+      _baseUrl,
+      queryParameters: {
+        'origin': '${origin.latitude},${origin.longitude}',
+        'destination': '${destination.latitude},${destination.longitude}',
+        'key': 'AIzaSyBqS3AkskYGh_DVkAxdWkHdT6uAjXc87IQ',
+      },
+    );
+
+    // Check if response is successful
+    if (response.statusCode == 200) {
+      return Directions.fromMap(response.data);
+    }
+    return null;
+  }
 }

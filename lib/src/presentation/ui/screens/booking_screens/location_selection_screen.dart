@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_shown_screen.dart';
@@ -26,7 +27,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   GoogleMapController? _mapController;
   String image = "assets/images/RideSelectionScreenMap.png";
   bool isShowbottomButton = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +35,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
       backgroundColor: Colors.white,
       appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: SizedBox(
-        height: ScreenConfig.screenSizeHeight * 1.2,
+        height: ScreenConfig.screenSizeHeight * 1.0,
         child: GestureDetector(
           onTap: () {
             setState(() {
@@ -79,7 +79,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                     ),
                   ),
                   fieldTwoController: dropoffEnterController),
-              if (isShowbottomButton)
+              if (true)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
