@@ -60,7 +60,7 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop,
                 snippet: 'Pickup Location',
                 anchor: Offset(0.5, 0.5),
               ),
-              icon: _originIcon!,
+              icon: BitmapDescriptor.defaultMarker,
               position:LatLng(pick[0].latitude,pick[0].longitude)),
         if(drop!=null && drop.isNotEmpty)
           Marker(markerId: MarkerId('dropoff'),
@@ -69,7 +69,7 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop,
                 snippet: 'Dropoff Location',
                 anchor: Offset(0.5, 0.5),
               ),
-              icon: _destinationIcon!,
+              icon: BitmapDescriptor.defaultMarker,
               position:LatLng(drop[0].latitude,drop[0].longitude)),
       },
 
@@ -85,6 +85,7 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop,
               [],
         ),
     },
+
       onCameraMove: ((_position) async {
         // Handle camera movement here if needed
       }),
@@ -230,6 +231,7 @@ Widget mapWidget({
                   drop = await locationFromAddress(fieldTwoController.text);
                   showpolyline(LatLng(pick[0].latitude, pick[0].longitude),LatLng(drop[0].latitude, drop[0].longitude));
                   fieldButtonFunction!();
+                  //CameraPosition cameraposition=CameraPosition(target: LatLng((pick[0].latitude+drop[0].latitude)/2,(pick[0].longitude+drop[0].longitude)/2),zoom: )
                 } else {
                   print('ni aya');
                 }
