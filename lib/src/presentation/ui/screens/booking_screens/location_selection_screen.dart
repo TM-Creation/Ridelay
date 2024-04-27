@@ -13,24 +13,24 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
 class LocationSelectionScreen extends StatefulWidget {
-  const LocationSelectionScreen({Key? key}) : super(key: key);
+  final void Function(Directions?)? onInfoReceived;
+   LocationSelectionScreen({Key? key,  this.onInfoReceived}) : super(key: key);
   static const routeName = '/locationselection-screen';
 
   @override
   State<LocationSelectionScreen> createState() =>
       _LocationSelectionScreenState();
 }
-
+Directions? distance;
+void onInfoReceived(Directions? info) {
+  distance=info;
+}
 class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
   GoogleMapController? _mapController;
   String image = "assets/images/RideSelectionScreenMap.png";
   bool isShowbottomButton = false;
-  void updateState() {
-    setState(() {
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +54,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
             children: [
               mapWidget(
                   isFullScreen: true,
-                  fieldButtonFunction: updateState,
                   isShowMyLocationIcon: false,
                   image: image,
                   hintFieldOne: "Pick-Up Location",
@@ -106,7 +105,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                     width: 0.3,
                                   ),
                                   displayText(
-                                    "17 km",
+                                    "${distance?.totalDistance ?? ""}",
                                     ScreenConfig.theme.textTheme.headline4,
                                     width: 0.2,
                                   ),
@@ -115,7 +114,10 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               GestureDetector(
                                 onTap: () {
                                   Navigator.of(context)
-                                      .pushNamed(RideShownScreen.routeName);
+                                      .pushNamed(RideShownScreen.routeName,arguments: {
+                                    'pickupLocation': pickupEnterController.text,
+                                    'dropoffLocation': dropoffEnterController.text,
+                                  },);
                                 },
                                 child: Container(
                                   height: 30,

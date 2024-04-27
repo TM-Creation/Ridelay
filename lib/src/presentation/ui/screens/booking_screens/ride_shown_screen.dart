@@ -27,10 +27,22 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
   @override
   void initState() {
-    pickupEnterController.text = "Gulberg Phase II";
-    dropoffEnterController.text = "Bahria Town";
     super.initState();
+
   }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Retrieve pickup and drop-off locations from arguments after dependencies change
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+    if (args != null) {
+      setState(() {
+        pickupEnterController.text = args['pickupLocation'] ?? '';
+        dropoffEnterController.text = args['dropoffLocation'] ?? '';
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

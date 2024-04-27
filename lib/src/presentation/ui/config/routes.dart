@@ -40,7 +40,8 @@ final Map<String, Widget Function(BuildContext)> routes = {
   DriverRideSelectionScreen.routeName: (ctx) =>
       const DriverRideSelectionScreen(),
   VehicleSelectionScreen.routeName: (ctx) => const VehicleSelectionScreen(),
-  LocationSelectionScreen.routeName: (ctx) => const LocationSelectionScreen(),
+  LocationSelectionScreen.routeName: (ctx) => LocationSelectionScreen(
+  ),
   LocationSelectionSoloScreen.routeName: (ctx) =>
       const LocationSelectionSoloScreen(),
   RideShownScreen.routeName: (ctx) => const RideShownScreen(),
