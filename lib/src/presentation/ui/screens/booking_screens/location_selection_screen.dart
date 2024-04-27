@@ -31,10 +31,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   GoogleMapController? _mapController;
   String image = "assets/images/RideSelectionScreenMap.png";
   bool isShowbottomButton = false;
-  void updateState() {
-    setState(() {
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +54,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
             children: [
               mapWidget(
                   isFullScreen: true,
-                  fieldButtonFunction: updateState,
                   isShowMyLocationIcon: false,
                   image: image,
                   hintFieldOne: "Pick-Up Location",
@@ -119,7 +114,10 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               GestureDetector(
                                 onTap: () {
                                   Navigator.of(context)
-                                      .pushNamed(RideShownScreen.routeName);
+                                      .pushNamed(RideShownScreen.routeName,arguments: {
+                                    'pickupLocation': pickupEnterController.text,
+                                    'dropoffLocation': dropoffEnterController.text,
+                                  },);
                                 },
                                 child: Container(
                                   height: 30,

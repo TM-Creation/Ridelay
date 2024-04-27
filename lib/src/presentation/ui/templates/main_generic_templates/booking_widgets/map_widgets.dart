@@ -21,11 +21,10 @@ final obj = LocationSelectionScreen();
 GoogleMapController? _mapController;
 const initailposition = CameraPosition(
   target: LatLng(31.459917, 74.246294),
-  zoom: 10,
+  zoom: 11.5,
 );
 
-Widget displayMapWidget(List<Location> pick, List<Location> drop,
-    Directions? info) {
+Widget displayMapWidget(List<Location> pick, List<Location> drop) {
   @override
   void dispose() {
     _mapController?.dispose();
@@ -51,7 +50,11 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop,
       myLocationButtonEnabled: false,
       mapType: MapType.normal,
       zoomGesturesEnabled: true,
-      zoomControlsEnabled: false,
+      zoomControlsEnabled: true,
+      padding: EdgeInsets.only(
+        right: 20,
+        bottom: 60,
+      ),
       markers: {
         if(pick!=null && pick.isNotEmpty)
           Marker(markerId: MarkerId('pickup'),
@@ -104,6 +107,9 @@ void showpolyline(LatLng pickup, LatLng dropoff) async{
   );
   if(directions!= null){
     _info = directions;
+    if(_info!= null){
+      onInfoReceived(_info);
+    }
   }else{
     print("direction null");
   }
@@ -122,7 +128,7 @@ Future<void> _requestPermissionAndGetCurrentLocation() async {
     _mapController?.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         target: userLocation,
-        zoom: 4.0,
+        zoom: 11.0,
       ),
     ));
   } else {
@@ -132,6 +138,7 @@ Future<void> _requestPermissionAndGetCurrentLocation() async {
 }
 
 Widget mapWidget({
+  void Function(Directions?)? onInfoReceived,
   required bool isFullScreen,
   required bool isShowMyLocationIcon,
   required String image,
@@ -144,7 +151,6 @@ Widget mapWidget({
   required void Function() fieldTwoButtonFunction,
   required Widget suffixIconFieldTwo,
   required TextEditingController fieldTwoController,
-  void Function()? fieldButtonFunction,
   bool isFieldsReadOnly = false,
   bool showTextFields = true,
   bool showAds = false,
@@ -158,7 +164,7 @@ Widget mapWidget({
             ? ScreenConfig.screenSizeHeight * 1.2
             : ScreenConfig.screenSizeHeight * 0.8,
         width: ScreenConfig.screenSizeWidth,
-        child: displayMapWidget(pick, drop, info),
+        child: displayMapWidget(pick, drop),
       ),
       Column(
         children: [
@@ -220,7 +226,7 @@ Widget mapWidget({
       ),
       if (isDisplayFieldTwo)
         Positioned(
-            bottom: 20,
+            bottom: 80,
             left: 20,
             child: FloatingActionButton(
               onPressed: () async {
@@ -228,7 +234,6 @@ Widget mapWidget({
                   pick = await locationFromAddress(fieldOneController.text);
                   drop = await locationFromAddress(fieldTwoController.text);
                   showpolyline(LatLng(pick[0].latitude, pick[0].longitude),LatLng(drop[0].latitude, drop[0].longitude));
-                  fieldButtonFunction!();
                 } else {
                   print('ni aya');
                 }
