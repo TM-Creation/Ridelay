@@ -7,7 +7,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart'; // Import the permission_handler package
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
-import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/space_line_between_two_text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/generic_textfield.dart';
@@ -24,10 +23,6 @@ const initailposition = CameraPosition(
 
 Widget displayMapWidget(List<Location> pick, List<Location> drop,
     Directions? info) {
-  @override
-  void dispose() {
-    _mapController?.dispose();
-  }
     return GoogleMap(
       initialCameraPosition: initailposition,
       myLocationEnabled: true,
@@ -184,10 +179,12 @@ Widget mapWidget({
             bottom: 20,
             left: 20,
             child: FloatingActionButton(
-              onPressed: () async {
+              onPressed: ()  async{
                 if (fieldOneController.text.isNotEmpty && fieldTwoController.text.isNotEmpty) {
                   pick = await locationFromAddress(fieldOneController.text);
                   drop = await locationFromAddress(fieldTwoController.text);
+                  print('$pick'+'A gya');
+                  print('$drop'+'A gya');
                 } else {
                   print('ni aya');
                 }
