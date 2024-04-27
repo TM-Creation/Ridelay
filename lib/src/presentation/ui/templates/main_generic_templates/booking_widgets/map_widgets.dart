@@ -7,7 +7,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart'; // Import the permission_handler package
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
-import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/space_line_between_two_text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/generic_textfield.dart';
@@ -15,6 +14,9 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 final dio = Dio();
 late List<Location> pick=[];
 late List<Location> drop=[];
+Directions? _info;
+BitmapDescriptor? _originIcon;
+BitmapDescriptor? _destinationIcon;
 final obj = LocationSelectionScreen();
 GoogleMapController? _mapController;
 const initailposition = CameraPosition(
@@ -28,6 +30,21 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop,
   void dispose() {
     _mapController?.dispose();
   }
+  Future<void> _loadMarkerIcons() async {
+    final double iconSize = 68.0; // Set the desired size of the icons
+
+    _originIcon = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(size: Size(iconSize, iconSize)), // Specify the size
+      'assets/images/CircularIconButton.png',
+    );
+
+    _destinationIcon = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(size: Size(iconSize, iconSize)), // Specify the size
+      'assets/images/destinationIcon.png',
+    );
+  }
+
+  _loadMarkerIcons();
     return GoogleMap(
       initialCameraPosition: initailposition,
       myLocationEnabled: true,
@@ -38,25 +55,36 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop,
       markers: {
         if(pick!=null && pick.isNotEmpty)
           Marker(markerId: MarkerId('pickup'),
-              icon: BitmapDescriptor.defaultMarker,
+              infoWindow: InfoWindow(
+                title: 'Origin',
+                snippet: 'Pickup Location',
+                anchor: Offset(0.5, 0.5),
+              ),
+              icon: _originIcon!,
               position:LatLng(pick[0].latitude,pick[0].longitude)),
         if(drop!=null && drop.isNotEmpty)
           Marker(markerId: MarkerId('dropoff'),
-              icon: BitmapDescriptor.defaultMarker,
+              infoWindow: InfoWindow(
+                title: 'Destination',
+                snippet: 'Dropoff Location',
+                anchor: Offset(0.5, 0.5),
+              ),
+              icon: _destinationIcon!,
               position:LatLng(drop[0].latitude,drop[0].longitude)),
       },
-      /*polylines: {
+
+      polylines: {
       if (_info != null)
         Polyline(
           polylineId: const PolylineId('overview_polyline'),
-          color: Colors.orange,
-          width: 10,
+          color: Color(0XFFFC0A0A),
+          width: 5,
           points: _info?.polylinePoints
               ?.map((e) => LatLng(e.latitude, e.longitude))
               .toList() ??
               [],
         ),
-    },*/
+    },
       onCameraMove: ((_position) async {
         // Handle camera movement here if needed
       }),
@@ -69,6 +97,17 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop,
 
 }
 
+void showpolyline(LatLng pickup, LatLng dropoff) async{
+  final directions = await DirectionsRepository(dio: dio).getDirections(
+    origin: pickup,
+    destination: dropoff,
+  );
+  if(directions!= null){
+    _info = directions;
+  }else{
+    print("direction null");
+  }
+}
 Future<void> _requestPermissionAndGetCurrentLocation() async {
   // Check if location permission is granted
   var status = await Permission.location.request();
@@ -83,7 +122,7 @@ Future<void> _requestPermissionAndGetCurrentLocation() async {
     _mapController?.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         target: userLocation,
-        zoom: 5.0,
+        zoom: 4.0,
       ),
     ));
   } else {
@@ -188,6 +227,7 @@ Widget mapWidget({
                 if (fieldOneController.text.isNotEmpty && fieldTwoController.text.isNotEmpty) {
                   pick = await locationFromAddress(fieldOneController.text);
                   drop = await locationFromAddress(fieldTwoController.text);
+                  showpolyline(LatLng(pick[0].latitude, pick[0].longitude),LatLng(drop[0].latitude, drop[0].longitude));
                 } else {
                   print('ni aya');
                 }
@@ -198,7 +238,6 @@ Widget mapWidget({
     ],
   );
 }
-
 class Directions {
   final LatLngBounds bounds;
   final List<PointLatLng> polylinePoints;
@@ -259,7 +298,7 @@ class DirectionsRepository {
       queryParameters: {
         'origin': '${origin.latitude},${origin.longitude}',
         'destination': '${destination.latitude},${destination.longitude}',
-        'key': 'AIzaSyBqS3AkskYGh_DVkAxdWkHdT6uAjXc87IQ',
+        'key': 'AIzaSyC3zIrn8aFCIboCPmMyE52wKgFeQizPRNI',
       },
     );
 
