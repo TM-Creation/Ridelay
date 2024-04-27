@@ -60,7 +60,7 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop,
                 snippet: 'Pickup Location',
                 anchor: Offset(0.5, 0.5),
               ),
-              icon: _originIcon!,
+              icon: BitmapDescriptor.defaultMarker,
               position:LatLng(pick[0].latitude,pick[0].longitude)),
         if(drop!=null && drop.isNotEmpty)
           Marker(markerId: MarkerId('dropoff'),
@@ -69,7 +69,7 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop,
                 snippet: 'Dropoff Location',
                 anchor: Offset(0.5, 0.5),
               ),
-              icon: _destinationIcon!,
+              icon: BitmapDescriptor.defaultMarker!,
               position:LatLng(drop[0].latitude,drop[0].longitude)),
       },
 
@@ -144,6 +144,7 @@ Widget mapWidget({
   required void Function() fieldTwoButtonFunction,
   required Widget suffixIconFieldTwo,
   required TextEditingController fieldTwoController,
+  void Function()? fieldButtonFunction,
   bool isFieldsReadOnly = false,
   bool showTextFields = true,
   bool showAds = false,
@@ -228,6 +229,7 @@ Widget mapWidget({
                   pick = await locationFromAddress(fieldOneController.text);
                   drop = await locationFromAddress(fieldTwoController.text);
                   showpolyline(LatLng(pick[0].latitude, pick[0].longitude),LatLng(drop[0].latitude, drop[0].longitude));
+                  fieldButtonFunction!();
                 } else {
                   print('ni aya');
                 }

@@ -27,6 +27,11 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   GoogleMapController? _mapController;
   String image = "assets/images/RideSelectionScreenMap.png";
   bool isShowbottomButton = false;
+  void updateState() {
+    setState(() {
+      // Update the state here
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +55,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
             children: [
               mapWidget(
                   isFullScreen: true,
+                  fieldButtonFunction: updateState,
                   isShowMyLocationIcon: false,
                   image: image,
                   hintFieldOne: "Pick-Up Location",
