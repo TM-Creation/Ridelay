@@ -29,7 +29,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   bool isShowbottomButton = false;
   void updateState() {
     setState(() {
-      // Update the state here
     });
   }
   @override
