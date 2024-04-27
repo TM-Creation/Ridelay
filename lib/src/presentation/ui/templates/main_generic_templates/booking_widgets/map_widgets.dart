@@ -149,7 +149,6 @@ Widget mapWidget({
   bool showTextFields = true,
   bool showAds = false,
   LatLng? userLocation,
-  Directions? info,
 }) {
   return Stack(
     alignment: AlignmentDirectional.topCenter,
