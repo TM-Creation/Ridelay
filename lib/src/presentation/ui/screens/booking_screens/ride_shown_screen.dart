@@ -19,167 +19,42 @@ class RideShownScreen extends StatefulWidget {
 }
 
 class _RideShownScreenState extends State<RideShownScreen> {
-  int currentIndex = -1;
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
-  String image = "assets/images/LocationDistanceScreenMap.png";
-  List namesList = ["Mini", "Go", "Comfort", "Mini"];
+  String image = "assets/images/LocationDistanceScreenMap.png", vahicle = '';
+  List namesList = ["Mini", "Go", "Comfort"];
+  int mini = 50, Go = 50, Comfort = 50;
+  bool min = false, go = false, comfrt = false,rikshaw=false,bik=false;
+  bool showConfirmYourRide = false;
+  String distance = '';
 
   @override
   void initState() {
     super.initState();
-
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
     if (args != null) {
       setState(() {
-        pickupEnterController.text = args['pickupLocation'] ?? '';
-        dropoffEnterController.text = args['dropoffLocation'] ?? '';
+        pickupEnterController.text = args['pickupLocation']!;
+        dropoffEnterController.text = args['dropoffLocation']!;
+        vahicle = args['vah']!;
+        distance = args['distance']!;
+        print('$distance oy distance a gya');
       });
     }
   }
 
+  String typeofvahicle = '';
 
   @override
   Widget build(BuildContext context) {
-    Widget bottomModalNonSlideable() {
-      return Container(
-        height: ScreenConfig.screenSizeHeight * 0.39,
-        width: ScreenConfig.screenSizeWidth,
-        decoration: bottomModalTemplate(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: SizedBox(
-            width: ScreenConfig.screenSizeWidth * 0.9,
-            child: Column(
-              children: [
-                sliderBar(),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                Container(
-                  height: 35,
-                  width: 35,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/AppIcon.png"),
-                        fit: BoxFit.contain),
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
-                ),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                SizedBox(
-                  height: ScreenConfig.screenSizeHeight * 0.24,
-                  width: ScreenConfig.screenSizeWidth * 0.9,
-                  child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    child: Column(
-                      children: List.generate(4, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              currentIndex = index;
-                            });
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                height: ScreenConfig.screenSizeHeight * 0.07,
-                                width: ScreenConfig.screenSizeWidth * 0.9,
-                                decoration: currentIndex == index
-                                    ? greyContainerTemplate()
-                                    : blueContainerTemplate(),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 2.0,
-                                      horizontal:
-                                          ScreenConfig.screenSizeWidth * 0.05),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            height: 35,
-                                            width: 35,
-                                            decoration:
-                                                squareButtonTemplate(radius: 8),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(3.0),
-                                              child: Image.asset(
-                                                  "assets/images/CarIconColored.png",
-                                                  fit: BoxFit.contain),
-                                            ),
-                                          ),
-                                          spaceWidth(
-                                              ScreenConfig.screenSizeWidth *
-                                                  0.03),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              displayText(
-                                                  namesList[index],
-                                                  ScreenConfig
-                                                      .theme.textTheme.button,
-                                                  width: 0.3),
-                                              displayText(
-                                                  "1-8 mins",
-                                                  ScreenConfig
-                                                      .theme.textTheme.button
-                                                      ?.copyWith(fontSize: 9),
-                                                  width: 0.3),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 5.0),
-                                        child: displayText(
-                                            "Rs. 290",
-                                            currentIndex == index
-                                                ? ScreenConfig
-                                                    .theme.textTheme.button
-                                                    ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold)
-                                                : ScreenConfig
-                                                    .theme.textTheme.headline5
-                                                    ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                            textAlign: TextAlign.end,
-                                            width: 0.3),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              spaceHeight(
-                                  ScreenConfig.screenSizeHeight * 0.015),
-                            ],
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    Widget confirmYourRideWidget() {
+    Widget confirmYourRideWidget(String typeofvahicle) {
       return Container(
         height: ScreenConfig.screenSizeHeight * 0.25,
         width: ScreenConfig.screenSizeWidth * 0.9,
@@ -209,9 +84,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                     children: [
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       Buttons.crossSmallButton(context, () {
-                        setState(() {
-                          currentIndex = -1;
-                        });
+                        setState(() {});
                       }),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                       displayText(
@@ -227,7 +100,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                currentIndex = -1;
+                                showConfirmYourRide=false;
+                                min=false;
+                                go=false;
+                                comfrt=false;
+                                bik=false;
+                                rikshaw=false;
                               });
                             },
                             child: Container(
@@ -243,8 +121,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(RideWaitingScreen.routeName);
+                              Navigator.of(context).pushNamed(
+                                  RideWaitingScreen.routeName,
+                                  arguments: typeofvahicle);
                             },
                             child: Container(
                               height: 25,
@@ -262,6 +141,577 @@ class _RideShownScreenState extends State<RideShownScreen> {
                     ],
                   ),
                 )
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget bottomModalNonSlideable() {
+      return Container(
+        height: ScreenConfig.screenSizeHeight * 0.39,
+        width: ScreenConfig.screenSizeWidth,
+        decoration: bottomModalTemplate(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: SizedBox(
+            width: ScreenConfig.screenSizeWidth * 0.9,
+            child: Column(
+              children: [
+                sliderBar(),
+                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                Container(
+                  height: 35,
+                  width: 35,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/AppIcon.png"),
+                        fit: BoxFit.contain),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                ),
+                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                SizedBox(
+                  height: ScreenConfig.screenSizeHeight * 0.24,
+                  width: ScreenConfig.screenSizeWidth * 0.9,
+                  child: vahicle == "car"
+                      ? SingleChildScrollView(
+                          physics: const ClampingScrollPhysics(),
+                          child: Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    showConfirmYourRide = true;
+                                    min = !min;
+                                    go = false;
+                                    comfrt = false;
+                                    typeofvahicle = "Mini";
+                                    print("$typeofvahicle");
+                                  });
+                                  if (min == false) {
+                                    setState(() {
+                                      showConfirmYourRide = false;
+                                    });
+                                  }
+                                },
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height:
+                                          ScreenConfig.screenSizeHeight * 0.07,
+                                      width: ScreenConfig.screenSizeWidth * 0.9,
+                                      decoration: min == false
+                                          ? blueContainerTemplate()
+                                          : greyContainerTemplate(),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 2.0,
+                                            horizontal:
+                                                ScreenConfig.screenSizeWidth *
+                                                    0.05),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 35,
+                                                  width: 35,
+                                                  decoration:
+                                                      squareButtonTemplate(
+                                                          radius: 8),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            3.0),
+                                                    child: Image.asset(
+                                                        "assets/images/CarIconColored.png",
+                                                        fit: BoxFit.contain),
+                                                  ),
+                                                ),
+                                                spaceWidth(ScreenConfig
+                                                        .screenSizeWidth *
+                                                    0.03),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    displayText(
+                                                        namesList[0],
+                                                        ScreenConfig.theme
+                                                            .textTheme.button,
+                                                        width: 0.3),
+                                                    displayText(
+                                                        "1-8 mins",
+                                                        ScreenConfig.theme
+                                                            .textTheme.button
+                                                            ?.copyWith(
+                                                                fontSize: 9),
+                                                        width: 0.3),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 5.0),
+                                              child: displayText(
+                                                  "Rs. 290",
+                                                  min
+                                                      ? ScreenConfig.theme
+                                                          .textTheme.button
+                                                          ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)
+                                                      : ScreenConfig.theme
+                                                          .textTheme.headline5
+                                                          ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                  textAlign: TextAlign.end,
+                                                  width: 0.3),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    spaceHeight(
+                                        ScreenConfig.screenSizeHeight * 0.015),
+                                  ],
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    showConfirmYourRide = true;
+                                    min = false;
+                                    go = !go;
+                                    comfrt = false;
+                                    typeofvahicle = "Go";
+                                    print("$typeofvahicle");
+                                  });
+                                  if (go == false) {
+                                    setState(() {
+                                      showConfirmYourRide = false;
+                                    });
+                                  }
+                                },
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height:
+                                          ScreenConfig.screenSizeHeight * 0.07,
+                                      width: ScreenConfig.screenSizeWidth * 0.9,
+                                      decoration: go == false
+                                          ? blueContainerTemplate()
+                                          : greyContainerTemplate(),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 2.0,
+                                            horizontal:
+                                                ScreenConfig.screenSizeWidth *
+                                                    0.05),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 35,
+                                                  width: 35,
+                                                  decoration:
+                                                      squareButtonTemplate(
+                                                          radius: 8),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            3.0),
+                                                    child: Image.asset(
+                                                        "assets/images/CarIconColored.png",
+                                                        fit: BoxFit.contain),
+                                                  ),
+                                                ),
+                                                spaceWidth(ScreenConfig
+                                                        .screenSizeWidth *
+                                                    0.03),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    displayText(
+                                                        namesList[1],
+                                                        ScreenConfig.theme
+                                                            .textTheme.button,
+                                                        width: 0.3),
+                                                    displayText(
+                                                        "1-8 mins",
+                                                        ScreenConfig.theme
+                                                            .textTheme.button
+                                                            ?.copyWith(
+                                                                fontSize: 9),
+                                                        width: 0.3),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 5.0),
+                                              child: displayText(
+                                                  "Rs. 290",
+                                                  go
+                                                      ? ScreenConfig.theme
+                                                          .textTheme.button
+                                                          ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)
+                                                      : ScreenConfig.theme
+                                                          .textTheme.headline5
+                                                          ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                  textAlign: TextAlign.end,
+                                                  width: 0.3),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    spaceHeight(
+                                        ScreenConfig.screenSizeHeight * 0.015),
+                                  ],
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    showConfirmYourRide = true;
+                                    min = false;
+                                    go = false;
+                                    comfrt = !comfrt;
+                                    typeofvahicle = "Comfort";
+                                    print("$typeofvahicle");
+                                  });
+                                  if (comfrt == false) {
+                                    setState(() {
+                                      showConfirmYourRide = false;
+                                    });
+                                  }
+                                },
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height:
+                                          ScreenConfig.screenSizeHeight * 0.07,
+                                      width: ScreenConfig.screenSizeWidth * 0.9,
+                                      decoration: comfrt == false
+                                          ? blueContainerTemplate()
+                                          : greyContainerTemplate(),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 2.0,
+                                            horizontal:
+                                                ScreenConfig.screenSizeWidth *
+                                                    0.05),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 35,
+                                                  width: 35,
+                                                  decoration:
+                                                      squareButtonTemplate(
+                                                          radius: 8),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            3.0),
+                                                    child: Image.asset(
+                                                        "assets/images/CarIconColored.png",
+                                                        fit: BoxFit.contain),
+                                                  ),
+                                                ),
+                                                spaceWidth(ScreenConfig
+                                                        .screenSizeWidth *
+                                                    0.03),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    displayText(
+                                                        namesList[2],
+                                                        ScreenConfig.theme
+                                                            .textTheme.button,
+                                                        width: 0.3),
+                                                    displayText(
+                                                        "1-8 mins",
+                                                        ScreenConfig.theme
+                                                            .textTheme.button
+                                                            ?.copyWith(
+                                                                fontSize: 9),
+                                                        width: 0.3),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 5.0),
+                                              child: displayText(
+                                                  "Rs. 290",
+                                                  comfrt
+                                                      ? ScreenConfig.theme
+                                                          .textTheme.button
+                                                          ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)
+                                                      : ScreenConfig.theme
+                                                          .textTheme.headline5
+                                                          ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                  textAlign: TextAlign.end,
+                                                  width: 0.3),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    spaceHeight(
+                                        ScreenConfig.screenSizeHeight * 0.015),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : vahicle == "rickshaw"
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  showConfirmYourRide = !showConfirmYourRide;
+                                  rikshaw=!rikshaw;
+                                  typeofvahicle = "Rickshaw";
+                                  print("$typeofvahicle");
+                                });
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height:
+                                        ScreenConfig.screenSizeHeight * 0.07,
+                                    width: ScreenConfig.screenSizeWidth * 0.9,
+                                    decoration: rikshaw == false
+                                        ? blueContainerTemplate()
+                                        : greyContainerTemplate(),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 2.0,
+                                          horizontal:
+                                              ScreenConfig.screenSizeWidth *
+                                                  0.05),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                height: 35,
+                                                width: 35,
+                                                decoration:
+                                                    squareButtonTemplate(
+                                                        radius: 8),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(3.0),
+                                                  child: Image.asset(
+                                                      "assets/images/CarIconColored.png",
+                                                      fit: BoxFit.contain),
+                                                ),
+                                              ),
+                                              spaceWidth(
+                                                  ScreenConfig.screenSizeWidth *
+                                                      0.03),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  displayText(
+                                                      "Rickshaw",
+                                                      ScreenConfig.theme
+                                                          .textTheme.button,
+                                                      width: 0.3),
+                                                  displayText(
+                                                      "1-8 mins",
+                                                      ScreenConfig.theme
+                                                          .textTheme.button
+                                                          ?.copyWith(
+                                                              fontSize: 9),
+                                                      width: 0.3),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 5.0),
+                                            child: displayText(
+                                                "Rs. 290",
+                                                rikshaw
+                                                    ? ScreenConfig
+                                                        .theme.textTheme.button
+                                                        ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold)
+                                                    : ScreenConfig.theme
+                                                        .textTheme.headline5
+                                                        ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                textAlign: TextAlign.end,
+                                                width: 0.3),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  spaceHeight(
+                                      ScreenConfig.screenSizeHeight * 0.015),
+                                ],
+                              ),
+                            )
+                          : vahicle == "bike"
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      showConfirmYourRide = !showConfirmYourRide;
+                                      bik=!bik;
+                                      typeofvahicle = "Bike";
+                                      print("$typeofvahicle");
+                                    });
+
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: ScreenConfig.screenSizeHeight *
+                                            0.07,
+                                        width:
+                                            ScreenConfig.screenSizeWidth * 0.9,
+                                        decoration: bik == false
+                                            ? blueContainerTemplate()
+                                            : greyContainerTemplate(),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.0,
+                                              horizontal:
+                                                  ScreenConfig.screenSizeWidth *
+                                                      0.05),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    height: 35,
+                                                    width: 35,
+                                                    decoration:
+                                                        squareButtonTemplate(
+                                                            radius: 8),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      child: Image.asset(
+                                                          "assets/images/CarIconColored.png",
+                                                          fit: BoxFit.contain),
+                                                    ),
+                                                  ),
+                                                  spaceWidth(ScreenConfig
+                                                          .screenSizeWidth *
+                                                      0.03),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      displayText(
+                                                          "Bike",
+                                                          ScreenConfig.theme
+                                                              .textTheme.button,
+                                                          width: 0.3),
+                                                      displayText(
+                                                          "1-8 mins",
+                                                          ScreenConfig.theme
+                                                              .textTheme.button
+                                                              ?.copyWith(
+                                                                  fontSize: 9),
+                                                          width: 0.3),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 5.0),
+                                                child: displayText(
+                                                    "Rs. 290",
+                                                    bik
+                                                        ? ScreenConfig.theme
+                                                            .textTheme.button
+                                                            ?.copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)
+                                                        : ScreenConfig.theme
+                                                            .textTheme.headline5
+                                                            ?.copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                    textAlign: TextAlign.end,
+                                                    width: 0.3),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      spaceHeight(
+                                          ScreenConfig.screenSizeHeight *
+                                              0.015),
+                                    ],
+                                  ),
+                                )
+                              : Container(),
+                ),
+                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               ],
             ),
           ),
@@ -322,7 +772,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              if (currentIndex != -1) confirmYourRideWidget(),
+              if (showConfirmYourRide) confirmYourRideWidget(typeofvahicle),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
               bottomModalNonSlideable(),
             ],

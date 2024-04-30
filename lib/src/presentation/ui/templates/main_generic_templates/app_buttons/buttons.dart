@@ -173,6 +173,35 @@ class Buttons {
           ),
         ),
       );
+  static Widget squareRideSelectionScreenButton(String image, String heading,
+      String subHeading, void Function() func) =>
+      GestureDetector(
+        onTap: func,
+        child: Container(
+          width: ScreenConfig.screenSizeWidth * 0.28,
+          decoration: squareButtonTemplate(),
+          child: Column(
+            children: [
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
+              SizedBox(
+                height: 50,
+                width: 60,
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+              displayText(heading, ScreenConfig.theme.textTheme.headline4,
+                  textAlign: TextAlign.center, width: 0.3),
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.002),
+              displayText(subHeading, ScreenConfig.theme.textTheme.caption,
+                  textAlign: TextAlign.center, width: 0.3),
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+            ],
+          ),
+        ),
+      );
   static Widget squareLargeSelectionScreenButton(String image, String heading,
           String subHeading, void Function() func) =>
       GestureDetector(

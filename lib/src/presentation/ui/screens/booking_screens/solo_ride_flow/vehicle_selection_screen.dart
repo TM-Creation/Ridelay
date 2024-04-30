@@ -22,7 +22,7 @@ class VehicleSelectionScreen extends StatefulWidget {
 
 class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
-
+  String vahicle='';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,25 +97,28 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Buttons.squareRideScreenButton(
+                          Buttons.squareRideSelectionScreenButton(
                               "assets/images/CarButtonIcon.png",
                               "CAR",
-                              "Upto 3 persons", () async {
-                            var refresh = await Navigator.of(context).pushNamed(
-                              LocationSelectionScreen.routeName,
+                              "Upto 3 persons", (){
+                             Navigator.of(context).pushNamed(
+                              LocationSelectionScreen.routeName, arguments: vahicle='car'
                             );
-                            if (refresh == "refresh") {
-                              setState(() {
-                                print("sigma");
-                              });
-                            }
                           }),
-                          Buttons.squareRideScreenButton(
+                          Buttons.squareRideSelectionScreenButton(
+                              "assets/images/rikshawbuttonicon.png",
+                              "Rickshaw",
+                              "Upto 1 Person Ride", () {
+                            Navigator.of(context).pushNamed(
+                              LocationSelectionScreen.routeName,arguments: vahicle='rickshaw'
+                            );
+                          }),
+                          Buttons.squareRideSelectionScreenButton(
                               "assets/images/BikeButtonIcon.png",
                               "BIKE",
                               "One Person Ride", () {
                             Navigator.of(context).pushNamed(
-                              LocationSelectionScreen.routeName,
+                              LocationSelectionScreen.routeName,arguments: vahicle='bike'
                             );
                           }),
                         ],
