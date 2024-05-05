@@ -41,6 +41,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
  }
   @override
   Widget build(BuildContext context) {
+    String argument = (ModalRoute.of(context)!.settings.arguments as String?)!;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
@@ -159,10 +160,13 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
+                                  print("${pickupEnterController.text + dropoffEnterController.text + argument + distance!.totalDistance} bhai sab a raha h");
                                   Navigator.of(context)
                                       .pushNamed(RideShownScreen.routeName,arguments: {
                                     'pickupLocation': pickupEnterController.text,
                                     'dropoffLocation': dropoffEnterController.text,
+                                    'vah':argument,
+                                    'distance': distance!.totalDistance
                                   },);
                                 },
                                 child: Container(
