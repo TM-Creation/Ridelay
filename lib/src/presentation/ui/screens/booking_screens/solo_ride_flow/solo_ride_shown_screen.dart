@@ -92,7 +92,9 @@ class _SoloRideShownScreenState extends State<SoloRideShownScreen> {
               height: ScreenConfig.screenSizeHeight * 1.2,
               child: Column(
                 children: [
-                  mapWidget(
+                  MapScreen(
+                      showAds: false,
+                      showTextFields: true,
                       isFieldsReadOnly: true,
                       isFullScreen: false,
                       isShowMyLocationIcon: false,
@@ -124,6 +126,39 @@ class _SoloRideShownScreenState extends State<SoloRideShownScreen> {
                         ),
                       ),
                       fieldTwoController: dropoffEnterController),
+
+                  // mapWidget(
+                  //     isFieldsReadOnly: true,
+                  //     isFullScreen: false,
+                  //     isShowMyLocationIcon: false,
+                  //     image: image,
+                  //     hintFieldOne: "Pick-Up Location",
+                  //     fieldOneButtonFunction: () {},
+                  //     suffixIconFieldOne: SizedBox(
+                  //       height: 60,
+                  //       width: 50,
+                  //       child: Row(
+                  //         children: [
+                  //           Buttons.smallSquareButton(
+                  //               "assets/images/CircularIconButton.png", () {}),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     fieldOneController: pickupEnterController,
+                  //     isDisplayFieldTwo: true,
+                  //     hintFieldTwo: "Drop Off Location",
+                  //     fieldTwoButtonFunction: () {},
+                  //     suffixIconFieldTwo: SizedBox(
+                  //       height: 60,
+                  //       width: 50,
+                  //       child: Row(
+                  //         children: [
+                  //           Buttons.smallSquareButton(
+                  //               "assets/images/PinPointIcon.png", () {}),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     fieldTwoController: dropoffEnterController),
                   spaceHeight(
                     ScreenConfig.screenSizeHeight * 0.2,
                   )

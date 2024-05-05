@@ -36,7 +36,10 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
             height: ScreenConfig.screenSizeHeight * 1.2,
             child: Column(
               children: [
-                mapWidget(
+                MapScreen(
+                    showAds: false,
+                    showTextFields: true,
+                    isFieldsReadOnly: true,
                     isShowMyLocationIcon: true,
                     isFullScreen: false,
                     image: "assets/images/RideSelectionScreenMap.png",
@@ -67,6 +70,38 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                       ),
                     ),
                     fieldTwoController: TextEditingController()),
+
+                // mapWidget(
+                //     isShowMyLocationIcon: true,
+                //     isFullScreen: false,
+                //     image: "assets/images/RideSelectionScreenMap.png",
+                //     hintFieldOne: "Enter Location",
+                //     fieldOneButtonFunction: () {},
+                //     suffixIconFieldOne: SizedBox(
+                //       height: 60,
+                //       width: 50,
+                //       child: Row(
+                //         children: [
+                //           Buttons.smallSquareButton(
+                //               "assets/images/SearchIcon.png", () {}),
+                //         ],
+                //       ),
+                //     ),
+                //     fieldOneController: locationEnterController,
+                //     isDisplayFieldTwo: false,
+                //     hintFieldTwo: " ",
+                //     fieldTwoButtonFunction: () {},
+                //     suffixIconFieldTwo: SizedBox(
+                //       height: 60,
+                //       width: 50,
+                //       child: Row(
+                //         children: [
+                //           Buttons.smallSquareButton(
+                //               "assets/images/SearchIcon.png", () {}),
+                //         ],
+                //       ),
+                //     ),
+                //     fieldTwoController: TextEditingController()),
                 spaceHeight(
                   ScreenConfig.screenSizeHeight * 0.2,
                 )

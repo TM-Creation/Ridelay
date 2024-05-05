@@ -47,7 +47,10 @@ class _LocationSelectionSoloScreenState
           child: Stack(
             alignment: AlignmentDirectional.bottomCenter,
             children: [
-              mapWidget(
+              MapScreen(
+                  showTextFields: true,
+                  showAds: false,
+                  isFieldsReadOnly: false,
                   isFullScreen: true,
                   isShowMyLocationIcon: false,
                   image: image,
@@ -78,6 +81,38 @@ class _LocationSelectionSoloScreenState
                     ),
                   ),
                   fieldTwoController: dropoffEnterController),
+
+              // mapWidget(
+              //     isFullScreen: true,
+              //     isShowMyLocationIcon: false,
+              //     image: image,
+              //     hintFieldOne: "Pick-Up Location",
+              //     fieldOneButtonFunction: () {},
+              //     suffixIconFieldOne: SizedBox(
+              //       height: 60,
+              //       width: 50,
+              //       child: Row(
+              //         children: [
+              //           Buttons.smallSquareButton(
+              //               "assets/images/CircularIconButton.png", () {}),
+              //         ],
+              //       ),
+              //     ),
+              //     fieldOneController: pickupEnterController,
+              //     isDisplayFieldTwo: true,
+              //     hintFieldTwo: "Drop Off Location",
+              //     fieldTwoButtonFunction: () {},
+              //     suffixIconFieldTwo: SizedBox(
+              //       height: 60,
+              //       width: 50,
+              //       child: Row(
+              //         children: [
+              //           Buttons.smallSquareButton(
+              //               "assets/images/PinPointIcon.png", () {}),
+              //         ],
+              //       ),
+              //     ),
+              //     fieldTwoController: dropoffEnterController),
               if (isShowbottomButton)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,

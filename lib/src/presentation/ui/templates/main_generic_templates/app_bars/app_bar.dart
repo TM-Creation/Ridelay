@@ -11,7 +11,7 @@ class GenericAppBars {
         centerTitle: false,
         leading: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Buttons.backButton(context, isIconCross),
+          child: Buttons.backButton(context, isIconCross,),
         ),
       );
   static PreferredSizeWidget appBarWithBackButtonAndTitle(

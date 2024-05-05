@@ -11,23 +11,339 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/othe
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/generic_textfield.dart';
 
-final dio = Dio();
-late List<Location> pick=[];
-late List<Location> drop=[];
-Directions? _info;
-BitmapDescriptor? _originIcon;
-BitmapDescriptor? _destinationIcon;
-final obj = LocationSelectionScreen();
-GoogleMapController? _mapController;
-const initailposition = CameraPosition(
-  target: LatLng(31.459917, 74.246294),
-  zoom: 11.5,
-);
+// final dio = Dio();
+// late List<Location> pick = [];
+// late List<Location> drop = [];
+// Directions? _info;
+// BitmapDescriptor? _originIcon;
+// BitmapDescriptor? _destinationIcon;
+// final obj = LocationSelectionScreen();
+// GoogleMapController? _mapController;
+// const initailposition = CameraPosition(
+//   target: LatLng(31.459917, 74.246294),
+//   zoom: 11.5,
+// );
+//
+// Widget displayMapWidget(List<Location> pick, List<Location> drop) {
+//   @override
+//   void dispose() {
+//     _mapController?.dispose();
+//   }
+//
+//   Future<void> _loadMarkerIcons() async {
+//     final double iconSize = 68.0; // Set the desired size of the icons
+//
+//     _originIcon = await BitmapDescriptor.fromAssetImage(
+//       ImageConfiguration(size: Size(iconSize, iconSize)), // Specify the size
+//       'assets/images/CircularIconButton.png',
+//     );
+//
+//     _destinationIcon = await BitmapDescriptor.fromAssetImage(
+//       ImageConfiguration(size: Size(iconSize, iconSize)), // Specify the size
+//       'assets/images/destinationIcon.png',
+//     );
+//   }
+//
+//   _loadMarkerIcons();
+//   return
+//     GoogleMap(
+//     initialCameraPosition: initailposition,
+//     myLocationEnabled: true,
+//     myLocationButtonEnabled: false,
+//     mapType: MapType.normal,
+//     zoomGesturesEnabled: true,
+//     zoomControlsEnabled: true,
+//     padding: EdgeInsets.only(
+//       right: 20,
+//       bottom: 60,
+//     ),
+//     markers: {
+//       if (pick != null && pick.isNotEmpty)
+//         Marker(
+//             markerId: MarkerId('pickup'),
+//             infoWindow: InfoWindow(
+//               title: 'Origin',
+//               snippet: 'Pickup Location',
+//               anchor: Offset(0.5, 0.5),
+//             ),
+//             icon: _originIcon!,
+//             position: LatLng(pick[0].latitude, pick[0].longitude)),
+//       if (drop != null && drop.isNotEmpty)
+//         Marker(
+//             markerId: MarkerId('dropoff'),
+//             infoWindow: InfoWindow(
+//               title: 'Destination',
+//               snippet: 'Dropoff Location',
+//               anchor: Offset(0.5, 0.5),
+//             ),
+//             icon: _destinationIcon!,
+//             position: LatLng(drop[0].latitude, drop[0].longitude)),
+//     },
+//     polylines: {
+//       if (_info != null && DistanceLessThenFiftyKM())
+//         Polyline(
+//           polylineId: const PolylineId('overview_polyline'),
+//           color: Color(0XFFFC0A0A),
+//           width: 5,
+//           points: _info?.polylinePoints
+//                   ?.map((e) => LatLng(e.latitude, e.longitude))
+//                   .toList() ??
+//               [],
+//         ),
+//     },
+//     onCameraMove: ((_position) async {
+//       // Handle camera movement here if needed
+//     }),
+//     onMapCreated: (GoogleMapController controller) async {
+//       _mapController = controller;
+//       _requestPermissionAndGetCurrentLocation();
+//       // Request permission and get current location
+//     },
+//   );
+// }
+//
+// void showpolyline(LatLng pickup, LatLng dropoff) async {
+//   final directions = await DirectionsRepository(dio: dio).getDirections(
+//     origin: pickup,
+//     destination: dropoff,
+//   );
+//   if (directions != null) {
+//     _info = directions;
+//     if (_info != null) {
+//       onInfoReceived(_info);
+//     }
+//   } else {
+//     print("direction null");
+//   }
+// }
+//
+// Future<void> _requestPermissionAndGetCurrentLocation() async {
+//   // Check if location permission is granted
+//   var status = await Permission.location.request();
+//   if (status.isGranted) {
+//     // Get current position
+//     Position position = await Geolocator.getCurrentPosition(
+//       desiredAccuracy: LocationAccuracy.high,
+//     );
+//
+//     // Update the map to show the user's current location
+//     LatLng userLocation = LatLng(position.latitude, position.longitude);
+//     _mapController?.animateCamera(CameraUpdate.newCameraPosition(
+//       CameraPosition(
+//         target: userLocation,
+//         zoom: 5.0,
+//       ),
+//     ));
+//   } else {
+//     // Handle if permission is denied
+//     print('Location permission denied');
+//   }
+// }
+//
+// Widget mapWidget({
+//   void Function(Directions?)? onInfoReceived,
+//   required bool isFullScreen,
+//   required bool isShowMyLocationIcon,
+//   required String image,
+//   required String hintFieldOne,
+//   required void Function() fieldOneButtonFunction,
+//   required Widget suffixIconFieldOne,
+//   required TextEditingController fieldOneController,
+//   required bool isDisplayFieldTwo,
+//   required String hintFieldTwo,
+//   required void Function() fieldTwoButtonFunction,
+//   required Widget suffixIconFieldTwo,
+//   required TextEditingController fieldTwoController,
+//   void Function()? fieldButtonFunction,
+//   bool isFieldsReadOnly = false,
+//   bool showTextFields = true,
+//   bool showAds = false,
+//   LatLng? userLocation,
+// }) {
+//   return
+//     Stack(
+//     alignment: AlignmentDirectional.topCenter,
+//     children: [
+//       SizedBox(
+//         height: isFullScreen
+//             ? ScreenConfig.screenSizeHeight * 1.2
+//             : ScreenConfig.screenSizeHeight * 0.8,
+//         width: ScreenConfig.screenSizeWidth,
+//         child: displayMapWidget(pick, drop),
+//       ),
+//       Column(
+//         children: [
+//           spaceHeight(ScreenConfig.screenSizeHeight * 0.17),
+//           if (showAds)
+//             Container(
+//               width: ScreenConfig.screenSizeWidth * 0.9,
+//               height: ScreenConfig.screenSizeHeight * 0.25,
+//               decoration: BoxDecoration(
+//                 image: const DecorationImage(
+//                   image: AssetImage("assets/images/SampleAd.png"),
+//                   fit: BoxFit.cover,
+//                 ),
+//                 color: Colors.white,
+//                 borderRadius: const BorderRadius.all(Radius.circular(10)),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.grey.withOpacity(0.40),
+//                     offset: const Offset(0.0, 1.2), //(x,y)
+//                     blurRadius: 6.0,
+//                   )
+//                 ],
+//               ),
+//             ),
+//           if (showTextFields)
+//             SizedBox(
+//               height: isFullScreen
+//                   ? ScreenConfig.screenSizeHeight * 0.8
+//                   : ScreenConfig.screenSizeHeight * 0.5,
+//               width: ScreenConfig.screenSizeWidth * 0.9,
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 crossAxisAlignment: CrossAxisAlignment.end,
+//                 children: [
+//                   Column(
+//                     children: [
+//                       genericTextField(
+//                         hintFieldOne,
+//                         suffixIconFieldOne,
+//                         fieldOneController,
+//                         isReadOnly: isFieldsReadOnly,
+//                       ),
+//                       if (isDisplayFieldTwo) spaceHeight(10),
+//                       if (isDisplayFieldTwo) lineSeparatorTextFields(),
+//                       if (isDisplayFieldTwo) spaceHeight(10),
+//                       if (isDisplayFieldTwo)
+//                         genericTextField(
+//                           hintFieldTwo,
+//                           suffixIconFieldTwo,
+//                           fieldTwoController,
+//                           isReadOnly: isFieldsReadOnly,
+//                         ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             )
+//         ],
+//       ),
+//       if (isDisplayFieldTwo)
+//         Positioned(
+//             bottom: 80,
+//             left: 20,
+//             child: FloatingActionButton(
+//               onPressed: () async {
+//                 if (fieldOneController.text.isNotEmpty &&
+//                     fieldTwoController.text.isNotEmpty) {
+//                   pick = await locationFromAddress(fieldOneController.text);
+//                   drop = await locationFromAddress(fieldTwoController.text);
+//                   showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
+//                       LatLng(drop[0].latitude, drop[0].longitude));
+//                   fieldButtonFunction!();
+//                 } else {
+//                   print('ni aya');
+//                 }
+//               },
+//               child: Icon(Icons.directions),
+//             ))
+//     ],
+//   );
+// }
 
-Widget displayMapWidget(List<Location> pick, List<Location> drop) {
+
+
+class MapScreen extends StatefulWidget {
+  void Function(Directions?)? onInfoReceived;
+  bool isFullScreen;
+  bool isShowMyLocationIcon;
+  String image;
+  String hintFieldOne;
+  void Function() fieldOneButtonFunction;
+  Widget suffixIconFieldOne;
+  TextEditingController fieldOneController;
+  bool isDisplayFieldTwo;
+  String hintFieldTwo;
+  void Function() fieldTwoButtonFunction;
+  Widget suffixIconFieldTwo;
+  TextEditingController fieldTwoController;
+  void Function()? fieldButtonFunction;
+  bool? isFieldsReadOnly = false;
+  bool? showTextFields = true;
+  bool? showAds = false;
+  LatLng? userLocation;
+  MapScreen({
+    Key? kek,
+     this.onInfoReceived,
+    required this.isFullScreen,
+    required this.isShowMyLocationIcon,
+    required this.image,
+    required this.hintFieldOne,
+    required this.fieldOneButtonFunction,
+    required this.isDisplayFieldTwo,
+    required this.hintFieldTwo,
+    required this.fieldTwoButtonFunction,
+    required this.suffixIconFieldTwo,
+    required this.fieldTwoController,
+     required this.fieldOneController,
+    required this.suffixIconFieldOne,
+      this.fieldButtonFunction,
+      this.isFieldsReadOnly,
+      this.showAds,
+      this.showTextFields,
+     this.userLocation,
+
+  });
+
   @override
-  void dispose() {
-    _mapController?.dispose();
+  State<MapScreen> createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+  @override
+  void initState() {
+    _loadMarkerIcons();
+  }
+  @override
+  Future<void> _requestPermissionAndGetCurrentLocation() async {
+    // Check if location permission is granted
+    var status = await Permission.location.request();
+    if (status.isGranted) {
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Update the map to show the user's current location
+      LatLng userLocation = LatLng(position.latitude, position.longitude);
+      _mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: userLocation,
+          zoom: 5.0,
+        ),
+      ));
+    } else {
+      // Handle if permission is denied
+      print('Location permission denied');
+    }
+  }
+  void showpolyline(LatLng pickup, LatLng dropoff) async {
+    final directions = await DirectionsRepository(dio: dio).getDirections(
+      origin: pickup,
+      destination: dropoff,
+    );
+    if (directions != null) {
+      _info = directions;
+      if (_info != null) {
+        onInfoReceived(_info);
+        setState(() {
+
+        });
+      }
+    } else {
+      print("direction null");
+    }
   }
   Future<void> _loadMarkerIcons() async {
     final double iconSize = 68.0; // Set the desired size of the icons
@@ -43,208 +359,174 @@ Widget displayMapWidget(List<Location> pick, List<Location> drop) {
     );
   }
 
-  _loadMarkerIcons();
-    return GoogleMap(
-      initialCameraPosition: initailposition,
-      myLocationEnabled: true,
-      myLocationButtonEnabled: false,
-      mapType: MapType.normal,
-      zoomGesturesEnabled: true,
-      zoomControlsEnabled: true,
-      padding: EdgeInsets.only(
-        right: 20,
-        bottom: 60,
-      ),
-      markers: {
-        if(pick!=null && pick.isNotEmpty)
-          Marker(markerId: MarkerId('pickup'),
-              infoWindow: InfoWindow(
-                title: 'Origin',
-                snippet: 'Pickup Location',
-                anchor: Offset(0.5, 0.5),
-              ),
-              icon: BitmapDescriptor.defaultMarker,
-              position:LatLng(pick[0].latitude,pick[0].longitude)),
-        if(drop!=null && drop.isNotEmpty)
-          Marker(markerId: MarkerId('dropoff'),
-              infoWindow: InfoWindow(
-                title: 'Destination',
-                snippet: 'Dropoff Location',
-                anchor: Offset(0.5, 0.5),
-              ),
-              icon: BitmapDescriptor.defaultMarker,
-              position:LatLng(drop[0].latitude,drop[0].longitude)),
-      },
-
-      polylines: {
-      if (_info != null)
-        Polyline(
-          polylineId: const PolylineId('overview_polyline'),
-          color: Color(0XFFFC0A0A),
-          width: 5,
-          points: _info?.polylinePoints
-              ?.map((e) => LatLng(e.latitude, e.longitude))
-              .toList() ??
-              [],
-        ),
-    },
-      onCameraMove: ((_position) async {
-        // Handle camera movement here if needed
-      }),
-      onMapCreated: (GoogleMapController controller) async {
-        _mapController = controller;
-        _requestPermissionAndGetCurrentLocation();
-        // Request permission and get current location
-      },
-    );
-
-}
-
-void showpolyline(LatLng pickup, LatLng dropoff) async{
-  final directions = await DirectionsRepository(dio: dio).getDirections(
-    origin: pickup,
-    destination: dropoff,
+  final dio = Dio();
+  late List<Location> pick = [];
+  late List<Location> drop = [];
+  Directions? _info;
+  BitmapDescriptor? _originIcon;
+  BitmapDescriptor? _destinationIcon;
+  final obj = LocationSelectionScreen();
+  GoogleMapController? _mapController;
+  static const initailposition = CameraPosition(
+    target: LatLng(31.459917, 74.246294),
+    zoom: 11.5,
   );
-  if(directions!= null){
-    _info = directions;
-    if(_info!= null){
-      onInfoReceived(_info);
-    }
-  }else{
-    print("direction null");
-  }
-}
-Future<void> _requestPermissionAndGetCurrentLocation() async {
-  // Check if location permission is granted
-  var status = await Permission.location.request();
-  if (status.isGranted) {
-    // Get current position
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+  @override
+  // void dispose() {
+  //   _mapController?.dispose();
+  //  }
 
-    // Update the map to show the user's current location
-    LatLng userLocation = LatLng(position.latitude, position.longitude);
-    _mapController?.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        target: userLocation,
-        zoom: 5.0,
-      ),
-    ));
-  } else {
-    // Handle if permission is denied
-    print('Location permission denied');
-  }
-}
+  @override
+  Widget build(BuildContext context) {
 
-Widget mapWidget({
-  void Function(Directions?)? onInfoReceived,
-  required bool isFullScreen,
-  required bool isShowMyLocationIcon,
-  required String image,
-  required String hintFieldOne,
-  required void Function() fieldOneButtonFunction,
-  required Widget suffixIconFieldOne,
-  required TextEditingController fieldOneController,
-  required bool isDisplayFieldTwo,
-  required String hintFieldTwo,
-  required void Function() fieldTwoButtonFunction,
-  required Widget suffixIconFieldTwo,
-  required TextEditingController fieldTwoController,
-  void Function()? fieldButtonFunction,
-  bool isFieldsReadOnly = false,
-  bool showTextFields = true,
-  bool showAds = false,
-  LatLng? userLocation,
-}) {
-  return Stack(
-    alignment: AlignmentDirectional.topCenter,
-    children: [
-      SizedBox(
-        height: isFullScreen
-            ? ScreenConfig.screenSizeHeight * 1.2
-            : ScreenConfig.screenSizeHeight * 0.8,
-        width: ScreenConfig.screenSizeWidth,
-        child: displayMapWidget(pick, drop),
-      ),
-      Column(
-        children: [
-          spaceHeight(ScreenConfig.screenSizeHeight * 0.17),
-          if (showAds)
-            Container(
-              width: ScreenConfig.screenSizeWidth * 0.9,
-              height: ScreenConfig.screenSizeHeight * 0.25,
-              decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage("assets/images/SampleAd.png"),
-                  fit: BoxFit.cover,
-                ),
-                color: Colors.white,
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.40),
-                    offset: const Offset(0.0, 1.2), //(x,y)
-                    blurRadius: 6.0,
-                  )
-                ],
-              ),
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        SizedBox(
+          height: widget.isFullScreen
+              ? ScreenConfig.screenSizeHeight * 1.2
+              : ScreenConfig.screenSizeHeight * 0.8,
+          width: ScreenConfig.screenSizeWidth,
+          child: GoogleMap(
+            initialCameraPosition: initailposition,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            mapType: MapType.normal,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: true,
+            padding: EdgeInsets.only(
+              right: 20,
+              bottom: 60,
             ),
-          if (showTextFields)
-            SizedBox(
-              height: isFullScreen
-                  ? ScreenConfig.screenSizeHeight * 0.8
-                  : ScreenConfig.screenSizeHeight * 0.5,
-              width: ScreenConfig.screenSizeWidth * 0.9,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Column(
-                    children: [
-                      genericTextField(
-                        hintFieldOne,
-                        suffixIconFieldOne,
-                        fieldOneController,
-                        isReadOnly: isFieldsReadOnly,
-                      ),
-                      if (isDisplayFieldTwo) spaceHeight(10),
-                      if (isDisplayFieldTwo) lineSeparatorTextFields(),
-                      if (isDisplayFieldTwo) spaceHeight(10),
-                      if (isDisplayFieldTwo)
-                        genericTextField(
-                          hintFieldTwo,
-                          suffixIconFieldTwo,
-                          fieldTwoController,
-                          isReadOnly: isFieldsReadOnly,
-                        ),
-                    ],
+            markers: {
+              if (pick != null && pick.isNotEmpty)
+                Marker(
+                    markerId: MarkerId('pickup'),
+                    infoWindow: InfoWindow(
+                      title: 'Origin',
+                      snippet: 'Pickup Location',
+                      anchor: Offset(0.5, 0.5),
+                    ),
+                    icon: _originIcon!,
+                    position: LatLng(pick[0].latitude, pick[0].longitude)),
+              if (drop != null && drop.isNotEmpty)
+                Marker(
+                    markerId: MarkerId('dropoff'),
+                    infoWindow: InfoWindow(
+                      title: 'Destination',
+                      snippet: 'Dropoff Location',
+                      anchor: Offset(0.5, 0.5),
+                    ),
+                    icon: _destinationIcon!,
+                    position: LatLng(drop[0].latitude, drop[0].longitude)),
+            },
+            polylines: {
+              // if (_info != null && DistanceLessThenFiftyKM())
+              if (_info != null)
+                Polyline(
+                  polylineId: const PolylineId('overview_polyline'),
+                  color: Color(0XFFFC0A0A),
+                  width: 5,
+                  points: _info?.polylinePoints
+                      ?.map((e) => LatLng(e.latitude, e.longitude))
+                      .toList() ??
+                      [],
+                ),
+            },
+            onCameraMove: ((_position) async {
+              // Handle camera movement here if needed
+            }),
+            onMapCreated: (GoogleMapController controller) async {
+              _mapController = controller;
+              _requestPermissionAndGetCurrentLocation();
+              // Request permission and get current location
+            },
+          ),
+        ),
+        Column(
+          children: [
+            spaceHeight(ScreenConfig.screenSizeHeight * 0.17),
+            if (widget.showAds!)
+              Container(
+                width: ScreenConfig.screenSizeWidth * 0.9,
+                height: ScreenConfig.screenSizeHeight * 0.25,
+                decoration: BoxDecoration(
+                  image: const DecorationImage(
+                    image: AssetImage("assets/images/SampleAd.png"),
+                    fit: BoxFit.cover,
                   ),
-                ],
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.40),
+                      offset: const Offset(0.0, 1.2), //(x,y)
+                      blurRadius: 6.0,
+                    )
+                  ],
+                ),
               ),
-            )
-        ],
-      ),
-      if (isDisplayFieldTwo)
-        Positioned(
-            bottom: 80,
-            left: 20,
-            child: FloatingActionButton(
-              onPressed: () async {
-                if (fieldOneController.text.isNotEmpty && fieldTwoController.text.isNotEmpty) {
-                  pick = await locationFromAddress(fieldOneController.text);
-                  drop = await locationFromAddress(fieldTwoController.text);
-                  showpolyline(LatLng(pick[0].latitude, pick[0].longitude),LatLng(drop[0].latitude, drop[0].longitude));
-                  fieldButtonFunction!();
-                } else {
-                  print('ni aya');
-                }
+            if (widget.showTextFields!)
+              SizedBox(
+                height: widget.isFullScreen
+                    ? ScreenConfig.screenSizeHeight * 0.8
+                    : ScreenConfig.screenSizeHeight * 0.5,
+                width: ScreenConfig.screenSizeWidth * 0.9,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Column(
+                      children: [
+                        genericTextField(
+                          widget.hintFieldOne,
+                          widget.suffixIconFieldOne,
+                          widget.fieldOneController,
+                          isReadOnly: widget.isFieldsReadOnly!,
+                        ),
+                        if (widget.isDisplayFieldTwo) spaceHeight(10),
+                        if (widget.isDisplayFieldTwo) lineSeparatorTextFields(),
+                        if (widget.isDisplayFieldTwo) spaceHeight(10),
+                        if (widget.isDisplayFieldTwo)
+                          genericTextField(
+                            widget.hintFieldTwo,
+                            widget.suffixIconFieldTwo,
+                            widget.fieldTwoController,
+                            isReadOnly: widget.isFieldsReadOnly!,
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+          ],
+        ),
+        if (widget.isDisplayFieldTwo)
+          Positioned(
+              bottom: 80,
+              left: 20,
+              child: FloatingActionButton(
+                onPressed: () async{
+                    if (widget.fieldOneController.text.isNotEmpty &&
+                        widget.fieldTwoController.text.isNotEmpty) {
+                      pick = await locationFromAddress(widget.fieldOneController.text);
+                      drop = await locationFromAddress(widget.fieldTwoController.text);
+                      print("$pick pick aya  $drop drop aya");
+                      setState(() {
 
-              },
-              child: Icon(Icons.directions),
-            ))
-    ],
-  );
+                      });
+                      showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
+                          LatLng(drop[0].latitude, drop[0].longitude));
+
+                    } else {
+                      print('ni aya');
+                    }
+                },
+                child: Icon(Icons.directions),
+              ))
+      ],
+    );
+  }
 }
 class Directions {
   final LatLngBounds bounds;
@@ -315,5 +597,19 @@ class DirectionsRepository {
       return Directions.fromMap(response.data);
     }
     return null;
+  }
+}
+
+bool DistanceLessThenFiftyKM() {
+  // Extract numerical value from the string
+  final distanceString = distance?.totalDistance ?? "";
+  final distanceNumeric =
+      double.tryParse(distanceString.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
+
+  if (distanceNumeric <= 50) {
+    print("Hello moeen");
+    return true;
+  } else {
+    return false;
   }
 }

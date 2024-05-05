@@ -41,6 +41,8 @@ dependencies:
   permission_handler: ^11.3.1
   flutter_polyline_points: ^2.0.0
   dio: ^5.4.3+1
+  http: ^1.2.1
+  uuid: ^4.4.0
   get:
   geocoding: ^3.0.0
   image_picker: ^0.8.5+3
