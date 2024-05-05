@@ -30,7 +30,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   bool isShowbottomButton = false;
 
   @override
-
   void update(){
    setState(() {
      // final distanceString = distance?.totalDistance ?? "";
@@ -69,7 +68,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   isShowMyLocationIcon: false,
                   image: image,
                   hintFieldOne: "Pick-Up Location",
-                  fieldOneButtonFunction: ()=>update,
+                  fieldButtonFunction: ()=>update,
+                  fieldOneButtonFunction: (){},
                   suffixIconFieldOne: SizedBox(
                     height: 60,
                     width: 50,
@@ -160,14 +160,32 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  print("${pickupEnterController.text + dropoffEnterController.text + argument + distance!.totalDistance} bhai sab a raha h");
-                                  Navigator.of(context)
-                                      .pushNamed(RideShownScreen.routeName,arguments: {
-                                    'pickupLocation': pickupEnterController.text,
-                                    'dropoffLocation': dropoffEnterController.text,
-                                    'vah':argument,
-                                    'distance': distance!.totalDistance
-                                  },);
+                                  if (pickupEnterController.text != '' &&
+                                      dropoffEnterController.text != '') {
+                                    Navigator.of(context).pushNamed(
+                                      RideShownScreen.routeName,
+                                      arguments: {
+                                        'pickupLocation':
+                                        pickupEnterController.text,
+                                        'dropoffLocation':
+                                        dropoffEnterController.text,
+                                        'vah':argument,
+                                        'distance': distance!.totalDistance
+
+                                      },
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Center(
+                                          child: Text(
+                                            'Please Select Pick-Up & Drop Off Location',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.white),),
+                                        ),
+                                        backgroundColor: Colors.black,
+                                        behavior: SnackBarBehavior.floating,
+                                      ),
+                                    );
+                                  }
                                 },
                                 child: Container(
                                   height: 30,

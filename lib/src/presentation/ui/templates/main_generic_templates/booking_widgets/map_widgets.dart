@@ -302,6 +302,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   @override
+  late LatLngBounds _polylineBounds;
   void initState() {
     _loadMarkerIcons();
   }
@@ -328,6 +329,38 @@ class _MapScreenState extends State<MapScreen> {
       print('Location permission denied');
     }
   }
+  void _adjustCameraToBounds() {
+    if (_info != null && _mapController != null) {
+      final List<LatLng> polylinePoints = _info!.polylinePoints
+          .map((point) => LatLng(point.latitude, point.longitude))
+          .toList();
+
+      double minLat = polylinePoints[0].latitude;
+      double minLng = polylinePoints[0].longitude;
+      double maxLat = polylinePoints[0].latitude;
+      double maxLng = polylinePoints[0].longitude;
+
+      for (final point in polylinePoints) {
+        if (point.latitude < minLat) minLat = point.latitude;
+        if (point.latitude > maxLat) maxLat = point.latitude;
+        if (point.longitude < minLng) minLng = point.longitude;
+        if (point.longitude > maxLng) maxLng = point.longitude;
+      }
+
+      _polylineBounds = LatLngBounds(
+        southwest: LatLng(minLat, minLng),
+        northeast: LatLng(maxLat, maxLng),
+      );
+
+      _mapController!.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          _polylineBounds,
+          100, // Padding to adjust the position of the bounds inside the map
+        ),
+      );
+    }
+  }
+
   void showpolyline(LatLng pickup, LatLng dropoff) async {
     final directions = await DirectionsRepository(dio: dio).getDirections(
       origin: pickup,
@@ -337,6 +370,7 @@ class _MapScreenState extends State<MapScreen> {
       _info = directions;
       if (_info != null) {
         onInfoReceived(_info);
+        _adjustCameraToBounds();
         setState(() {
 
         });
@@ -407,7 +441,7 @@ class _MapScreenState extends State<MapScreen> {
                       snippet: 'Pickup Location',
                       anchor: Offset(0.5, 0.5),
                     ),
-                    icon: _originIcon!,
+                    icon: BitmapDescriptor.defaultMarker!,
                     position: LatLng(pick[0].latitude, pick[0].longitude)),
               if (drop != null && drop.isNotEmpty)
                 Marker(
@@ -417,7 +451,7 @@ class _MapScreenState extends State<MapScreen> {
                       snippet: 'Dropoff Location',
                       anchor: Offset(0.5, 0.5),
                     ),
-                    icon: _destinationIcon!,
+                    icon: BitmapDescriptor.defaultMarker!,
                     position: LatLng(drop[0].latitude, drop[0].longitude)),
             },
             polylines: {
@@ -512,9 +546,7 @@ class _MapScreenState extends State<MapScreen> {
                       pick = await locationFromAddress(widget.fieldOneController.text);
                       drop = await locationFromAddress(widget.fieldTwoController.text);
                       print("$pick pick aya  $drop drop aya");
-                      setState(() {
 
-                      });
                       showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
                           LatLng(drop[0].latitude, drop[0].longitude));
 
