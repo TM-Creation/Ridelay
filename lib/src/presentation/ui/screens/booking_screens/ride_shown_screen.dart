@@ -45,7 +45,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
         dropoffEnterController.text = args['dropoffLocation']!;
         vahicle = args['vah']!;
         distance = args['distance']!;
-        print('$distance oy distance a gya');
+        print('${pickupEnterController.text} oy pick a gya');
       });
     }
   }
@@ -123,7 +123,15 @@ class _RideShownScreenState extends State<RideShownScreen> {
                             onTap: () {
                               Navigator.of(context).pushNamed(
                                   RideWaitingScreen.routeName,
-                                  arguments: typeofvahicle);
+                                arguments: {
+                              'pickupLocation':
+                              pickupEnterController.text,
+                              'dropoffLocation':
+                              dropoffEnterController.text,
+                              'vah':typeofvahicle,
+                              'distance': distance
+
+                              },);
                             },
                             child: Container(
                               height: 25,
@@ -718,7 +726,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
         ),
       );
     }
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
@@ -736,7 +743,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
                     showTextFields: true,
                     isFieldsReadOnly: true,
                     isFullScreen: false,
+                    autoupdatepolyline: true,
                     isShowMyLocationIcon: false,
+                    check: true,
                     image: image,
                     hintFieldOne: "Pick-Up Location",
                     fieldOneButtonFunction: () {},
@@ -766,38 +775,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                     ),
                     fieldTwoController: dropoffEnterController),
 
-                // mapWidget(
-                //     isFieldsReadOnly: true,
-                //     isFullScreen: false,
-                //     isShowMyLocationIcon: false,
-                //     image: image,
-                //     hintFieldOne: "Pick-Up Location",
-                //     fieldOneButtonFunction: () {},
-                //     suffixIconFieldOne: SizedBox(
-                //       height: 60,
-                //       width: 50,
-                //       child: Row(
-                //         children: [
-                //           Buttons.smallSquareButton(
-                //               "assets/images/CircularIconButton.png", () {}),
-                //         ],
-                //       ),
-                //     ),
-                //     fieldOneController: pickupEnterController,
-                //     isDisplayFieldTwo: true,
-                //     hintFieldTwo: "Drop Off Location",
-                //     fieldTwoButtonFunction: () {},
-                //     suffixIconFieldTwo: SizedBox(
-                //       height: 60,
-                //       width: 50,
-                //       child: Row(
-                //         children: [
-                //           Buttons.smallSquareButton(
-                //               "assets/images/PinPointIcon.png", () {}),
-                //         ],
-                //       ),
-                //     ),
-                //     fieldTwoController: dropoffEnterController),
+
                 spaceHeight(
                   ScreenConfig.screenSizeHeight * 0.2,
                 )

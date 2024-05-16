@@ -101,6 +101,7 @@ class _SoloRideInProgressAndFinishedScreenState
               child: Column(
                 children: [
                   MapScreen(
+                    check: true,
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,

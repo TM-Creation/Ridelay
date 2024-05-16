@@ -30,14 +30,20 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   bool isShowbottomButton = false;
 
   @override
+  void dispose(){
+    distance=null;
+    super.dispose();
+  }
   void update(){
    setState(() {
-     // final distanceString = distance?.totalDistance ?? "";
-     // final distanceNumeric = double.tryParse(distanceString.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
-     // if(distanceNumeric <= 50){
-     // }
+     final distanceString = distance?.totalDistance ?? "";
+     final distanceNumeric = double.tryParse(distanceString.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
+     if(distanceNumeric <= 50){
+       showDistance=distanceString;
+     }
    });
  }
+
   @override
   Widget build(BuildContext context) {
     String argument = (ModalRoute.of(context)!.settings.arguments as String?)!;
@@ -64,11 +70,13 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   isFieldsReadOnly: false,
                   showAds: false,
                   showTextFields: true,
+                  check: false,
                   isFullScreen: true,
                   isShowMyLocationIcon: false,
+                  autoupdatepolyline: false,
                   image: image,
                   hintFieldOne: "Pick-Up Location",
-                  fieldButtonFunction: ()=>update,
+                  fieldButtonFunction: update,
                   fieldOneButtonFunction: (){},
                   suffixIconFieldOne: SizedBox(
                     height: 60,
@@ -95,41 +103,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                     ),
                   ),
                   fieldTwoController: dropoffEnterController),
-              // mapWidget(
-              //   isFieldsReadOnly: false,
-              //     showAds: false,
-              //     showTextFields: true,
-              //     fieldButtonFunction:update,
-              //     isFullScreen: true,
-              //     isShowMyLocationIcon: false,
-              //     image: image,
-              //     hintFieldOne: "Pick-Up Location",
-              //     fieldOneButtonFunction: () {},
-              //     suffixIconFieldOne: SizedBox(
-              //       height: 60,
-              //       width: 50,
-              //       child: Row(
-              //         children: [
-              //           Buttons.smallSquareButton(
-              //               "assets/images/CircularIconButton.png", () {}),
-              //         ],
-              //       ),
-              //     ),
-              //     fieldOneController: pickupEnterController,
-              //     isDisplayFieldTwo: true,
-              //     hintFieldTwo: "Drop Off Location",
-              //     fieldTwoButtonFunction: () {},
-              //     suffixIconFieldTwo: SizedBox(
-              //       height: 60,
-              //       width: 50,
-              //       child: Row(
-              //         children: [
-              //           Buttons.smallSquareButton(
-              //               "assets/images/PinPointIcon.png", () {}),
-              //         ],
-              //       ),
-              //     ),
-              //     fieldTwoController: dropoffEnterController),
+
               if (true)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -179,7 +153,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                       SnackBar(
                                         content: Center(
                                           child: Text(
-                                            'Please Select Pick-Up & Drop Off Location',style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold,color: Colors.white),),
+                                            'Please Select Pick-Up & Drop Off Location',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white),),
                                         ),
                                         backgroundColor: Colors.black,
                                         behavior: SnackBarBehavior.floating,

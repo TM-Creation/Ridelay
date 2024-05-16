@@ -23,16 +23,23 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
   int currentIndex = -1;
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
-  String image = "assets/images/LocationDistanceScreenMap.png";
+  String image = "assets/images/LocationDistanceScreenMap.png",distance='',vahicle='';
   List namesList = ["Mini", "Go", "Comfort", "Mini"];
-
-  @override
-  void initState() {
-    pickupEnterController.text = "Gulberg Phase II";
-    dropoffEnterController.text = "Bahria Town";
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Retrieve pickup and drop-off locations from arguments after dependencies change
+    final args =
+    ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+    if (args != null) {
+      setState(() {
+        pickupEnterController.text = args['pickupLocation']!;
+        dropoffEnterController.text = args['dropoffLocation']!;
+        vahicle = args['vah']!;
+        distance = args['distance']!;
+        print('${pickupEnterController.text} oy pick a gya');
+      });
+    }
   }
-
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -87,7 +94,8 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
               child: Column(
                 children: [
                   MapScreen(
-                      showAds: true,
+                    check: true,
+                      showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,
                       isFullScreen: false,

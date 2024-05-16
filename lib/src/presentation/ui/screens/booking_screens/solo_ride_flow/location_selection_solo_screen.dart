@@ -48,6 +48,7 @@ class _LocationSelectionSoloScreenState
             alignment: AlignmentDirectional.bottomCenter,
             children: [
               MapScreen(
+                  check: false,
                   showTextFields: true,
                   showAds: false,
                   isFieldsReadOnly: false,

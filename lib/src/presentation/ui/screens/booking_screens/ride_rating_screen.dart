@@ -66,7 +66,8 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
               child: Column(
                 children: [
                   MapScreen(
-                      showAds: true,
+                      showAds: false,
+                      check: true,
                       showTextFields: true,
                       isFieldsReadOnly: true,
                       isFullScreen: false,

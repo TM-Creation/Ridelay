@@ -86,6 +86,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
             child: Column(
               children: [
                 MapScreen(
+                  check: false,
                   isFieldsReadOnly: false,
                   showTextFields: true,
                   showAds: false,
@@ -121,40 +122,6 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                   ),
                   fieldTwoController: TextEditingController(),
                 ),
-
-                // mapWidget(
-                //   userLocation: _userLocation,
-                //   isShowMyLocationIcon: true,
-                //   isFullScreen: false,
-                //   image: "assets/images/RideSelectionScreenMap.png",
-                //   hintFieldOne: "Search Location",
-                //   fieldOneButtonFunction: () {},
-                //   suffixIconFieldOne: SizedBox(
-                //     height: 60,
-                //     width: 50,
-                //     child: Row(
-                //       children: [
-                //         Buttons.smallSquareButton(
-                //             "assets/images/SearchIcon.png", () {}),
-                //       ],
-                //     ),
-                //   ),
-                //   fieldOneController: locationEnterController,
-                //   isDisplayFieldTwo: false,
-                //   hintFieldTwo: " ",
-                //   fieldTwoButtonFunction: () {},
-                //   suffixIconFieldTwo: SizedBox(
-                //     height: 60,
-                //     width: 50,
-                //     child: Row(
-                //       children: [
-                //         Buttons.smallSquareButton(
-                //             "assets/images/SearchIcon.png", () {}),
-                //       ],
-                //     ),
-                //   ),
-                //   fieldTwoController: TextEditingController(),
-                // ),
                 spaceHeight(
                   ScreenConfig.screenSizeHeight * 0.2,
                 ),

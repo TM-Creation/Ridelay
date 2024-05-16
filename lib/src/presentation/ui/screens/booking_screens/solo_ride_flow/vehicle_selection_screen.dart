@@ -37,6 +37,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
             child: Column(
               children: [
                 MapScreen(
+                  check: false,
                     showAds: false,
                     showTextFields: true,
                     isFieldsReadOnly: true,

@@ -102,6 +102,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
               child: Column(
                 children: [
                   MapScreen(
+                    check: false,
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,

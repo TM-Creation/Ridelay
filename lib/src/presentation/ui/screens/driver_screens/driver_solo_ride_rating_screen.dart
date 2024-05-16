@@ -72,6 +72,7 @@ class _DriverSoloRideRatingScreenState
               child: Column(
                 children: [
                   MapScreen(
+                    check: false,
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,
