@@ -49,6 +49,7 @@ class _LocationSelectionSoloScreenState
             children: [
               MapScreen(
                   check: false,
+                  search: [],
                   showTextFields: true,
                   showAds: false,
                   isFieldsReadOnly: false,

@@ -3,6 +3,7 @@ import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 
 Widget genericTextField(
     String hint, Widget suffixIconButton, TextEditingController controller,
+    Function(String)? onChanged,
     {bool isReadOnly = false}) {
   return Container(
       width: ScreenConfig.screenSizeWidth * 0.9,
@@ -19,6 +20,7 @@ Widget genericTextField(
           ]),
       child: TextFormField(
           readOnly: isReadOnly,
+          onChanged: onChanged,
           textInputAction: TextInputAction.done,
           textAlign: TextAlign.start,
           keyboardType: TextInputType.text,
@@ -31,3 +33,5 @@ Widget genericTextField(
               contentPadding: const EdgeInsets.all(20)),
           style: ScreenConfig.theme.textTheme.headline5));
 }
+
+

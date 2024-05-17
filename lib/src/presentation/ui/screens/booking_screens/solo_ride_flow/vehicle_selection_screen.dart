@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
@@ -24,6 +25,14 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
   String vahicle='';
   @override
+  List<Location> search=[];
+  void searchupdate()async{
+    final searchlocation=await locationFromAddress(locationEnterController.text);
+    setState(() {
+      search=searchlocation as List<Location>;
+      print('$search search a gya');
+    });
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -40,9 +49,10 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                   check: false,
                     showAds: false,
                     showTextFields: true,
-                    isFieldsReadOnly: true,
+                    isFieldsReadOnly: false,
                     isShowMyLocationIcon: true,
                     isFullScreen: false,
+                    search: search,
                     image: "assets/images/RideSelectionScreenMap.png",
                     hintFieldOne: "Enter Location",
                     fieldOneButtonFunction: () {},
@@ -52,7 +62,9 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                       child: Row(
                         children: [
                           Buttons.smallSquareButton(
-                              "assets/images/SearchIcon.png", () {}),
+                              "assets/images/SearchIcon.png", () {
+                                searchupdate();
+                          }),
                         ],
                       ),
                     ),
@@ -66,7 +78,9 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                       child: Row(
                         children: [
                           Buttons.smallSquareButton(
-                              "assets/images/SearchIcon.png", () {}),
+                              "assets/images/SearchIcon.png", () {
+                            searchupdate();
+                          }),
                         ],
                       ),
                     ),

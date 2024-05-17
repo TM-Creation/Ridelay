@@ -67,35 +67,87 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
             physics: const ClampingScrollPhysics(),
             child: Column(
               children: [
-                genericTextField(
-                    "Gulberg Phase II",
-                    SizedBox(
-                      height: 60,
-                      width: 50,
-                      child: Row(
-                        children: [
-                          Buttons.smallSquareButton(
-                              "assets/images/CircularIconButton.png", () {}),
-                        ],
+                Container(
+                  width: ScreenConfig.screenSizeWidth * 0.9,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.40),
+                        offset: const Offset(0.0, 1.2), //(x,y)
+                        blurRadius: 6.0,
+                      )
+                    ],
+                  ),
+                  child: TextFormField(
+                    readOnly: true,
+                    textInputAction: TextInputAction.done,
+                    textAlign: TextAlign.start,
+                    keyboardType: TextInputType.text,
+                    controller: TextEditingController(),
+                    decoration: InputDecoration(
+                      hintText: '',
+                      hintStyle: ScreenConfig.theme.textTheme.headline5,
+                      suffixIcon: SizedBox(
+                        height: 60,
+                        width: 50,
+                        child: Row(
+                          children: [
+                            Buttons.smallSquareButton(
+                                "assets/images/CircularIconButton.png", () {}),
+                          ],
+                        ),
                       ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.all(20),
                     ),
-                    dummyController),
+                    style: ScreenConfig.theme.textTheme.headline5,
+                  ),
+                ),
                 spaceHeight(10),
                 lineSeparatorTextFields(),
                 spaceHeight(10),
-                genericTextField(
-                    "Bahria Town",
-                    SizedBox(
-                      height: 60,
-                      width: 50,
-                      child: Row(
-                        children: [
-                          Buttons.smallSquareButton(
-                              "assets/images/PinPointIcon.png", () {}),
-                        ],
+                Container(
+                  width: ScreenConfig.screenSizeWidth * 0.9,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.40),
+                        offset: const Offset(0.0, 1.2), //(x,y)
+                        blurRadius: 6.0,
+                      )
+                    ],
+                  ),
+                  child: TextFormField(
+                    readOnly: true,
+                    textInputAction: TextInputAction.done,
+                    textAlign: TextAlign.start,
+                    keyboardType: TextInputType.text,
+                    controller: TextEditingController(),
+                    decoration: InputDecoration(
+                      hintText: '',
+                      hintStyle: ScreenConfig.theme.textTheme.headline5,
+                      suffixIcon: SizedBox(
+                        height: 60,
+                        width: 50,
+                        child: Row(
+                          children: [
+                            Buttons.smallSquareButton(
+                                "assets/images/PinPointIcon.png", () {}),
+                          ],
+                        ),
                       ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.all(20),
                     ),
-                    dummyController),
+                    style: ScreenConfig.theme.textTheme.headline5,
+                  ),
+                ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                 Container(
                   width: ScreenConfig.screenSizeWidth * 0.9,

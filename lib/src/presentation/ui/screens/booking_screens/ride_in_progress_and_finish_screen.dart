@@ -100,6 +100,7 @@ class _RideInProgressAndFinishedScreenState
               child: Column(
                 children: [
                   MapScreen(
+                    search: [],
                     check: true,
                       showAds: false,
                       showTextFields: true,

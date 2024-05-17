@@ -88,6 +88,7 @@ class _SoloRideWaitingScreenState extends State<SoloRideWaitingScreen> {
                 children: [
                   MapScreen(
                       check: true,
+                      search: [],
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,

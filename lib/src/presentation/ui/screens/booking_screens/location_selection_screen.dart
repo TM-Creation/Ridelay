@@ -67,6 +67,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
             alignment: AlignmentDirectional.bottomCenter,
             children: [
               MapScreen(
+                search: [],
                   isFieldsReadOnly: false,
                   showAds: false,
                   showTextFields: true,

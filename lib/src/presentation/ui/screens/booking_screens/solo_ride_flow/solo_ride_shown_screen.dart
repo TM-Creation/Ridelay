@@ -94,6 +94,7 @@ class _SoloRideShownScreenState extends State<SoloRideShownScreen> {
                 children: [
                   MapScreen(
                       check: true,
+                      search: [],
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,

@@ -92,6 +92,7 @@ class _DriverSoloRideWaitingScreenState
                   MapScreen(
                       check: false,
                       showAds: false,
+                      search: [],
                       showTextFields: true,
                       isFieldsReadOnly: true,
                       isFullScreen: false,

@@ -103,6 +103,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                 children: [
                   MapScreen(
                     check: false,
+                      search: [],
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,

@@ -98,6 +98,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,
+                      search: [],
                       isFullScreen: false,
                       isShowMyLocationIcon: false,
                       image: image,

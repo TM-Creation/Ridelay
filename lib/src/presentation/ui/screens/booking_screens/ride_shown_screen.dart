@@ -739,6 +739,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
             child: Column(
               children: [
                 MapScreen(
+                  search: [],
                     showAds: false,
                     showTextFields: true,
                     isFieldsReadOnly: true,

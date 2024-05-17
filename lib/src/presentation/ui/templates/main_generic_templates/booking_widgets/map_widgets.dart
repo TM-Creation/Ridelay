@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -11,6 +12,8 @@ import 'package:ridely/src/presentation/ui/screens/booking_screens/location_sele
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/space_line_between_two_text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/generic_textfield.dart';
+import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
 
 class MapScreen extends StatefulWidget {
   void Function(Directions?)? onInfoReceived;
@@ -33,6 +36,7 @@ class MapScreen extends StatefulWidget {
   bool? showAds = false;
   LatLng? userLocation;
   bool check;
+  List<Location>? search=[];
 
   MapScreen({
     Key? kek,
@@ -56,6 +60,7 @@ class MapScreen extends StatefulWidget {
     this.userLocation,
     this.autoupdatepolyline,
     required this.check,
+    required this.search,
   });
 
   @override
@@ -66,8 +71,87 @@ class _MapScreenState extends State<MapScreen> {
   @override
   late LatLngBounds _polylineBounds;
 
+  var uuid = Uuid();
+  String sessionToken = "122344";
+  List<dynamic> placeList1 = [];
+  List<dynamic> placeList2 = [];
+  bool flag1 = false;
+  bool flag2 = true;
+
+  @override
   void initState() {
     _loadMarkerIcons();
+    widget.fieldOneController.addListener(() {
+      onChange();
+    });
+    widget.fieldTwoController.addListener(() {
+      onChange();
+    });
+    super.initState();
+  }
+
+  void onChange() {
+    if (sessionToken == null) {
+      setState(() {
+        sessionToken = uuid.v4();
+      });
+    }
+    getSuggestion1(widget.fieldOneController.text);
+    getSuggestion2(widget.fieldTwoController.text);
+  }
+
+  void getSuggestion1(String input) async {
+    String KPLACES_API_KEY = "AIzaSyDqZTJoPimkbiGd4K6PZATCP7Zu0QYM2q8";
+    String baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    String request =
+        '$baseURL?input=$input&key=$KPLACES_API_KEY&sessiontoken=$sessionToken';
+
+    try {
+      var response = await http.get(Uri.parse(request));
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        print("data: $data");
+        if (data['status'] == 'OK') {
+          setState(() {
+            placeList1 = data['predictions'];
+          });
+        } else {
+          throw Exception('Failed to get suggestions: ${data['status']}');
+        }
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  void getSuggestion2(String input) async {
+    String KPLACES_API_KEY = "AIzaSyDqZTJoPimkbiGd4K6PZATCP7Zu0QYM2q8";
+    String baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    String request =
+        '$baseURL?input=$input&key=$KPLACES_API_KEY&sessiontoken=$sessionToken';
+
+    try {
+      var response = await http.get(Uri.parse(request));
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        print("data: $data");
+        if (data['status'] == 'OK') {
+          setState(() {
+            placeList2 = data['predictions'];
+          });
+        } else {
+          throw Exception('Failed to get suggestions: ${data['status']}');
+        }
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override
@@ -85,7 +169,7 @@ class _MapScreenState extends State<MapScreen> {
       _mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
           target: userLocation,
-          zoom: 5.0,
+          zoom: 15.0,
         ),
       ));
     } else {
@@ -178,8 +262,10 @@ class _MapScreenState extends State<MapScreen> {
   //   _mapController?.dispose();
   //  }
   void locationUpdate() async {
-    final pickLocations = await locationFromAddress(widget.fieldOneController.text);
-    final dropLocations = await locationFromAddress(widget.fieldTwoController.text);
+    final pickLocations =
+        await locationFromAddress(widget.fieldOneController.text);
+    final dropLocations =
+        await locationFromAddress(widget.fieldTwoController.text);
 
     // Update the state within setState
     setState(() {
@@ -191,12 +277,20 @@ class _MapScreenState extends State<MapScreen> {
       );
     });
   }
-  @override
-  Widget build(BuildContext context){
-    if (widget.check == true) {
-     locationUpdate();
-    }
 
+  @override
+  Widget build(BuildContext context) {
+    if (widget.check == true) {
+      locationUpdate();
+    }
+    if(widget.search!.isNotEmpty){
+      _mapController?.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(widget.search![0].latitude, widget.search![0].longitude),
+          zoom: 15.0,
+        ),
+      ));
+    }
     return Stack(
       alignment: AlignmentDirectional.topCenter,
       children: [
@@ -217,6 +311,16 @@ class _MapScreenState extends State<MapScreen> {
               bottom: 60,
             ),
             markers: {
+              if (widget.search!.isNotEmpty)
+                Marker(
+                    markerId: MarkerId('pickup'),
+                    infoWindow: InfoWindow(
+                      title: 'Origin',
+                      snippet: 'Pickup Location',
+                      anchor: Offset(0.5, 0.5),
+                    ),
+                    icon: BitmapDescriptor.defaultMarker!,
+                    position: LatLng(widget.search![0].latitude, widget.search![0].longitude)),
               if (pick != null && pick.isNotEmpty)
                 Marker(
                     markerId: MarkerId('pickup'),
@@ -256,8 +360,8 @@ class _MapScreenState extends State<MapScreen> {
             }),
             onMapCreated: (GoogleMapController controller) async {
               _mapController = controller;
-              if(widget.check!=true){
-                _requestPermissionAndGetCurrentLocation();
+              if (widget.check != true) {
+                  _requestPermissionAndGetCurrentLocation();
               }
               // Request permission and get current location
             },
@@ -293,29 +397,142 @@ class _MapScreenState extends State<MapScreen> {
                     : ScreenConfig.screenSizeHeight * 0.5,
                 width: ScreenConfig.screenSizeWidth * 0.9,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Column(
-                      children: [
-                        genericTextField(
-                          widget.hintFieldOne,
-                          widget.suffixIconFieldOne,
-                          widget.fieldOneController,
-                          isReadOnly: widget.isFieldsReadOnly!,
-                        ),
-                        if (widget.isDisplayFieldTwo) spaceHeight(10),
-                        if (widget.isDisplayFieldTwo) lineSeparatorTextFields(),
-                        if (widget.isDisplayFieldTwo) spaceHeight(10),
-                        if (widget.isDisplayFieldTwo)
-                          genericTextField(
-                            widget.hintFieldTwo,
-                            widget.suffixIconFieldTwo,
-                            widget.fieldTwoController,
-                            isReadOnly: widget.isFieldsReadOnly!,
-                          ),
-                      ],
+                    genericTextField(
+                      widget.hintFieldOne,
+                      widget.suffixIconFieldOne,
+                      widget.fieldOneController,
+                      (value) {
+                        setState(() {
+                          flag1 = !value.isEmpty;
+                        });
+                        getSuggestion1(widget.fieldOneController.text);
+                      },
+                      isReadOnly: widget.isFieldsReadOnly!,
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    if (flag1)
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(
+                                placeList1.length,
+                                (index) {
+                                  return ListTile(
+                                    onTap: () async {
+                                      flag1 = false;
+                                      // Set the text of the controller to the tapped place's description
+                                      widget.fieldOneController.text =
+                                          placeList1[index]['description'];
+                                      // Call getSuggestion with the tapped place's description to update suggestions
+                                      getSuggestion1(
+                                          placeList1[index]['description']);
+                                      try {
+                                        List<Location> locations =
+                                            await locationFromAddress(
+                                                "${placeList1[index]['description']}");
+                                        print("locations: $locations");
+                                        if (locations != null &&
+                                            locations.isNotEmpty) {
+                                          print(
+                                              "longitude: ${locations.last.longitude}");
+                                          print(
+                                              "latitude: ${locations.last.latitude}");
+                                        } else {
+                                          print(
+                                              'No location found for this address');
+                                        }
+                                      } catch (e) {
+                                        print('Error getting location: $e');
+                                      }
+                                    },
+                                    title: Text(
+                                      placeList1[index]['description'],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (widget.isDisplayFieldTwo) spaceHeight(10),
+                    if (widget.isDisplayFieldTwo) lineSeparatorTextFields(),
+                    if (widget.isDisplayFieldTwo) spaceHeight(10),
+                    if (widget.isDisplayFieldTwo)
+                      genericTextField(
+                        widget.hintFieldTwo,
+                        widget.suffixIconFieldTwo,
+                        widget.fieldTwoController,
+                        (value) {
+                          setState(() {
+                            flag2 = !value.isEmpty;
+                          });
+                          getSuggestion2(widget.fieldTwoController.text);
+                        },
+                        isReadOnly: widget.isFieldsReadOnly!,
+                      ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    if (flag2)
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(
+                                placeList2.length,
+                                (index) {
+                                  return ListTile(
+                                    onTap: () async {
+                                      flag2=false;
+                                      // Set the text of the controller to the tapped place's description
+                                      widget.fieldTwoController.text =
+                                      placeList2[index]['description'];
+                                      // Call getSuggestion with the tapped place's description to update suggestions
+                                      getSuggestion2(
+                                          placeList2[index]['description']);
+                                      try {
+                                        List<Location> locations =
+                                        await locationFromAddress(
+                                            "${placeList2[index]['description']}");
+                                        print("locations: $locations");
+                                        if (locations != null &&
+                                            locations.isNotEmpty) {
+                                          print(
+                                              "longitude: ${locations.last.longitude}");
+                                          print(
+                                              "latitude: ${locations.last.latitude}");
+                                        } else {
+                                          print(
+                                              'No location found for this address');
+                                        }
+                                      } catch (e) {
+                                        print('Error getting location: $e');
+                                      }
+                                    },
+                                    title: Text(
+                                      placeList2[index]['description'],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               )

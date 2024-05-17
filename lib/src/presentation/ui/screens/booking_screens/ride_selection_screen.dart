@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
@@ -29,6 +30,14 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
   void initState() {
     super.initState();
     _getLocationPermission();
+  }
+  List<Location> search=[];
+  void searchupdate()async{
+   final searchlocation=await locationFromAddress(locationEnterController.text);
+    setState(() {
+      search=searchlocation as List<Location>;
+      print('$search search a gya');
+    });
   }
   @override
   Future<void> _getLocationPermission() async {
@@ -93,6 +102,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                   userLocation: _userLocation,
                   isShowMyLocationIcon: true,
                   isFullScreen: false,
+                  search: search,
                   image: "assets/images/RideSelectionScreenMap.png",
                   hintFieldOne: "Search Location",
                   fieldOneButtonFunction: () {},
@@ -102,7 +112,9 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                     child: Row(
                       children: [
                         Buttons.smallSquareButton(
-                            "assets/images/SearchIcon.png", () {}),
+                            "assets/images/SearchIcon.png", () {
+                              searchupdate();
+                        }),
                       ],
                     ),
                   ),
@@ -116,7 +128,9 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                     child: Row(
                       children: [
                         Buttons.smallSquareButton(
-                            "assets/images/SearchIcon.png", () {}),
+                            "assets/images/SearchIcon.png", () {
+
+                        }),
                       ],
                     ),
                   ),

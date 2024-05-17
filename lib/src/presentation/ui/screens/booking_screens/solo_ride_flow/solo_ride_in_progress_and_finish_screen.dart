@@ -102,6 +102,7 @@ class _SoloRideInProgressAndFinishedScreenState
                 children: [
                   MapScreen(
                     check: true,
+                      search: [],
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,

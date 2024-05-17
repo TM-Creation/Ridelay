@@ -67,6 +67,7 @@ class _SoloRideRatingScreenState extends State<SoloRideRatingScreen> {
                 children: [
                   MapScreen(
                       check: true,
+                      search: [],
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,
