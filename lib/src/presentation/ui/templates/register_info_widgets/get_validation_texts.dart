@@ -4,7 +4,14 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/vali
 Widget _getRegistrationValidations(String value) {
   if (value == "image") {
     return errorValidator('Picture can not be empty', TextAlign.center);
-  } else if (value == "phoneNumber") {
+  }else if (value == "nameerror") {
+    return errorValidator(
+        'Enter a valid Name', TextAlign.left);
+  }else if (value == "phoneerror") {
+    return errorValidator(
+        'Enter a valid phone number with country extension', TextAlign.left);
+  }
+  else if (value == "phoneNumber") {
     return errorValidator(
         'Enter a valid phone number with country extension', TextAlign.left);
   } else if (value == "firstName") {
@@ -13,11 +20,7 @@ Widget _getRegistrationValidations(String value) {
     return errorValidator('Please enter a valid last name', TextAlign.left);
   } else if (value == "email") {
     return errorValidator('Please enter a valid email address', TextAlign.left);
-  } else if (value == "country") {
-    return errorValidator('Please enter a valid country', TextAlign.left);
-  } else if (value == "city") {
-    return errorValidator('Please enter a valid city', TextAlign.left);
-  } else if (value == "vehicleType") {
+  }  else if (value == "vehicleType") {
     return errorValidator('Please enter a valid vehicle type', TextAlign.left);
   } else if (value == "vehicleModelName") {
     return errorValidator('Please enter a valid vehicle model', TextAlign.left);

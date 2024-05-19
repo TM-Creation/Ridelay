@@ -26,8 +26,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
   int mini = 50, Go = 50, Comfort = 50;
   bool min = false, go = false, comfrt = false,rikshaw=false,bik=false;
   bool showConfirmYourRide = false;
-  String distance = '';
-
+  String distance='',duration='';
+  double? totaldistance;
+  double minifare=0,gofare=0,comfortfare=0,rickshawfare=0,bykefare=0;
   @override
   void initState() {
     super.initState();
@@ -44,8 +45,14 @@ class _RideShownScreenState extends State<RideShownScreen> {
         pickupEnterController.text = args['pickupLocation']!;
         dropoffEnterController.text = args['dropoffLocation']!;
         vahicle = args['vah']!;
-        distance = args['distance']!;
-        print('${pickupEnterController.text} oy pick a gya');
+        distance=args['distance']!;
+        duration=args['duration']!;
+        totaldistance=double.tryParse(distance.replaceAll(RegExp(r'[^0-9.]'), ''));
+        minifare=60*totaldistance!;
+        gofare=70*totaldistance!;
+        comfortfare=80*totaldistance!;
+        rickshawfare=45*totaldistance!;
+        bykefare=35*totaldistance!;
       });
     }
   }
@@ -129,7 +136,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
                               'dropoffLocation':
                               dropoffEnterController.text,
                               'vah':typeofvahicle,
-                              'distance': distance
 
                               },);
                             },
@@ -256,11 +262,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             .textTheme.button,
                                                         width: 0.3),
                                                     displayText(
-                                                        "1-8 mins",
+                                                        "$duration",
                                                         ScreenConfig.theme
                                                             .textTheme.button
                                                             ?.copyWith(
-                                                                fontSize: 9),
+                                                                fontSize: 15),
                                                         width: 0.3),
                                                   ],
                                                 ),
@@ -270,7 +276,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                               padding: const EdgeInsets.only(
                                                   bottom: 5.0),
                                               child: displayText(
-                                                  "Rs. 290",
+                                                  "RS. $minifare",
                                                   min
                                                       ? ScreenConfig.theme
                                                           .textTheme.button
@@ -363,11 +369,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             .textTheme.button,
                                                         width: 0.3),
                                                     displayText(
-                                                        "1-8 mins",
+                                                        "$duration",
                                                         ScreenConfig.theme
                                                             .textTheme.button
                                                             ?.copyWith(
-                                                                fontSize: 9),
+                                                                fontSize: 15),
                                                         width: 0.3),
                                                   ],
                                                 ),
@@ -377,7 +383,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                               padding: const EdgeInsets.only(
                                                   bottom: 5.0),
                                               child: displayText(
-                                                  "Rs. 290",
+                                                  "RS. $gofare",
                                                   go
                                                       ? ScreenConfig.theme
                                                           .textTheme.button
@@ -470,11 +476,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             .textTheme.button,
                                                         width: 0.3),
                                                     displayText(
-                                                        "1-8 mins",
+                                                        "$duration",
                                                         ScreenConfig.theme
                                                             .textTheme.button
                                                             ?.copyWith(
-                                                                fontSize: 9),
+                                                                fontSize: 15),
                                                         width: 0.3),
                                                   ],
                                                 ),
@@ -484,7 +490,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                               padding: const EdgeInsets.only(
                                                   bottom: 5.0),
                                               child: displayText(
-                                                  "Rs. 290",
+                                                  "RS. $comfortfare",
                                                   comfrt
                                                       ? ScreenConfig.theme
                                                           .textTheme.button
@@ -573,11 +579,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                           .textTheme.button,
                                                       width: 0.3),
                                                   displayText(
-                                                      "1-8 mins",
+                                                      "$duration",
                                                       ScreenConfig.theme
                                                           .textTheme.button
                                                           ?.copyWith(
-                                                              fontSize: 9),
+                                                              fontSize: 15),
                                                       width: 0.3),
                                                 ],
                                               ),
@@ -587,7 +593,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                             padding: const EdgeInsets.only(
                                                 bottom: 5.0),
                                             child: displayText(
-                                                "Rs. 290",
+                                                "RS. $rickshawfare",
                                                 rikshaw
                                                     ? ScreenConfig
                                                         .theme.textTheme.button
@@ -676,11 +682,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                               .textTheme.button,
                                                           width: 0.3),
                                                       displayText(
-                                                          "1-8 mins",
+                                                          "$duration",
                                                           ScreenConfig.theme
                                                               .textTheme.button
                                                               ?.copyWith(
-                                                                  fontSize: 9),
+                                                                  fontSize: 15),
                                                           width: 0.3),
                                                     ],
                                                   ),
@@ -690,7 +696,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                 padding: const EdgeInsets.only(
                                                     bottom: 5.0),
                                                 child: displayText(
-                                                    "Rs. 290",
+                                                    "RS. $bykefare",
                                                     bik
                                                         ? ScreenConfig.theme
                                                             .textTheme.button

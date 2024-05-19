@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,6 +16,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/snack_bars/custom_snack_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
+import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/phone_number_textfield.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
@@ -35,18 +37,15 @@ class _RegisterDriverVehicleInfoScreenState
     extends State<RegisterDriverVehicleInfoScreen> {
   final ImagePicker _picker = ImagePicker();
 
-  PickedFile? _imageFile;
+  PickedFile? _imageFile, _imageFile2;
 
   final TextEditingController licenseNumber = TextEditingController();
-
+  final TextEditingController drivername = TextEditingController();
+  final TextEditingController driverphonenumber = TextEditingController();
   final TextEditingController vehicleName = TextEditingController();
-
   final TextEditingController plateNumber = TextEditingController();
-
   final TextEditingController vehicleType = TextEditingController();
-
   final TextEditingController idNumber = TextEditingController();
-
   final TextEditingController image = TextEditingController();
   String valueCity = '';
   String valueCountry = '';
@@ -54,11 +53,14 @@ class _RegisterDriverVehicleInfoScreenState
   final _formKey = GlobalKey<FormState>();
 
   String userNumber = "";
+
   @override
   void initState() {
     super.initState();
   }
 
+  bool nameerror = true;
+  bool phoneerror = true;
   bool idNumberError = true;
   bool picError = true;
   bool licenseNumberError = true;
@@ -70,8 +72,8 @@ class _RegisterDriverVehicleInfoScreenState
     ScaffoldMessenger.of(context).showSnackBar(showSnackbar(
         "You have been registered successfully. Please login to start taking rides."));
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          DriverRideSelectionScreen.routeName, ModalRoute.withName("/"));
+      Navigator.of(context).pushNamed(
+          DriverRideSelectionScreen.routeName,);
     });
   }
 
@@ -87,6 +89,40 @@ class _RegisterDriverVehicleInfoScreenState
           if (isImageLesserThanDefinedSize(File(pickedFile.path))) {
             setState(() {
               _imageFile = pickedFile;
+              picError = false;
+
+              // _cnicFrontFile = pickedFile;
+            });
+
+            return true;
+          } else {
+            setState(() {
+              picError = true;
+            });
+
+            return false;
+            // ScaffoldMessenger.of(context)
+            //     .showSnackBar(showSnackbar('Image size too large'));
+          }
+        }
+
+        return true;
+      } catch (e) {
+        print(e.toString());
+        return true;
+      }
+    }
+
+    Future<bool> pickImage2(ImageSource source) async {
+      try {
+        // ignore: deprecated_member_use
+        final pickedFile = await _picker.getImage(
+          source: source,
+        );
+        if (pickedFile != null) {
+          if (isImageLesserThanDefinedSize(File(pickedFile.path))) {
+            setState(() {
+              _imageFile2 = pickedFile;
               picError = false;
 
               // _cnicFrontFile = pickedFile;
@@ -156,7 +192,7 @@ class _RegisterDriverVehicleInfoScreenState
             ),
             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
             displayText(
-              'Add Vehicle Photo',
+              'Add Driver and Vehicle Photo',
               ScreenConfig.theme.textTheme.headline6
                   ?.copyWith(fontWeight: FontWeight.w500),
             ),
@@ -243,41 +279,187 @@ class _RegisterDriverVehicleInfoScreenState
               ]));
     }
 
+    Future pickImageBottomSheet2({required BuildContext context}) {
+      return showModalBottomSheet(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+          ),
+          context: context,
+          builder: (ctx) =>
+              Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                Container(
+                  alignment: AlignmentDirectional.topStart,
+                  padding: const EdgeInsets.only(top: 12, left: 15, bottom: 6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
+                      Text(
+                        "Pick Image",
+                        style: ScreenConfig.theme.textTheme.headline6
+                            ?.merge(const TextStyle(
+                          fontWeight: FontWeight.normal,
+                        )),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: ScreenConfig.screenSizeWidth,
+                  height: ScreenConfig.screenSizeHeight * 0.17,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: ScreenConfig.screenSizeHeight * 0.01,
+                            horizontal: ScreenConfig.screenSizeWidth * 0.05),
+                        child: Column(
+                          children: [
+                            Buttons.longWidthButton(
+                              'Capture From Camera',
+                              () async {
+                                final isImageSelectedCorrectSize =
+                                    await pickImage2(ImageSource.camera);
+                                Navigator.of(context).pop();
+                                // if (!isImageSelectedCorrectSize) {
+                                //   imageSizeErrorDialogBox(context);
+                                // }
+                              },
+                            ),
+                            SizedBox(
+                              height: ScreenConfig.screenSizeHeight * 0.02,
+                            ),
+                            Buttons.longWidthButton(
+                              'Pick From Gallery',
+                              () async {
+                                final isImageSelectedCorrectSize =
+                                    await pickImage2(ImageSource.gallery);
+                                Navigator.of(context).pop();
+                                // if (!isImageSelectedCorrectSize) {
+                                //   imageSizeErrorDialogBox(context);
+                                // }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // SizedBox(
+                //   height: ScreenConfig.screenSizeHeight * 0.04,
+                // ),
+              ]));
+    }
+
     Widget _displayAddPhotoSection() => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               height: ScreenConfig.screenSizeHeight * 0.01,
             ),
-            DottedBorder(
-              color: ScreenConfig.theme.primaryColor,
-              dashPattern: const [10, 10, 10, 10],
-              borderType: BorderType.Circle,
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(40.0)),
-                  constraints: BoxConstraints(
-                      maxHeight: ScreenConfig.screenSizeHeight * 0.1,
-                      minHeight: ScreenConfig.screenSizeHeight * 0.04,
-                      maxWidth: ScreenConfig.screenSizeWidth * 0.2,
-                      minWidth: ScreenConfig.screenSizeWidth * 0.1),
-                  child: _imageFile != null
-                      ? CircleAvatar(
-                          radius: ScreenConfig.screenSizeHeight * 0.1,
-                          backgroundImage: FileImage(
-                            File(_imageFile!.path),
-                          ))
-                      : GestureDetector(
-                          onTap: () async {
-                            pickImageBottomSheet(context: context);
-                          },
-                          child: Center(
-                              child: Icon(
-                            Icons.add,
-                            color: ScreenConfig.theme.primaryColor,
-                          )),
-                        )),
+            Row(
+              children: [
+                Column(
+                  children: [
+                    DottedBorder(
+                      color: ScreenConfig.theme.primaryColor,
+                      dashPattern: const [5, 5, 5, 5],
+                      borderType: BorderType.Circle,
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(40.0)),
+                          constraints: BoxConstraints(
+                              maxHeight: ScreenConfig.screenSizeHeight * 0.1,
+                              minHeight: ScreenConfig.screenSizeHeight * 0.04,
+                              maxWidth: ScreenConfig.screenSizeWidth * 0.2,
+                              minWidth: ScreenConfig.screenSizeWidth * 0.1),
+                          child: _imageFile != null
+                              ? CircleAvatar(
+                                  radius: ScreenConfig.screenSizeHeight * 0.1,
+                                  backgroundImage: FileImage(
+                                    File(_imageFile!.path),
+                                  ))
+                              : GestureDetector(
+                                  onTap: () async {
+                                    pickImageBottomSheet(context: context);
+                                  },
+                                  child: Center(
+                                      child: Icon(
+                                    Icons.person,
+                                    color: ScreenConfig.theme.primaryColor,
+                                    size:
+                                        MediaQuery.sizeOf(context).width * 0.15,
+                                  )),
+                                )),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Driver Image',
+                      style: ScreenConfig.theme.textTheme.headline6
+                          ?.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width * 0.25,
+                ),
+                Column(
+                  children: [
+                    DottedBorder(
+                      color: ScreenConfig.theme.primaryColor,
+                      dashPattern: const [5, 5, 5, 5],
+                      borderType: BorderType.Circle,
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(40.0)),
+                          constraints: BoxConstraints(
+                              maxHeight: ScreenConfig.screenSizeHeight * 0.1,
+                              minHeight: ScreenConfig.screenSizeHeight * 0.04,
+                              maxWidth: ScreenConfig.screenSizeWidth * 0.2,
+                              minWidth: ScreenConfig.screenSizeWidth * 0.1),
+                          child: _imageFile2 != null
+                              ? CircleAvatar(
+                                  radius: ScreenConfig.screenSizeHeight * 0.1,
+                                  backgroundImage: FileImage(
+                                    File(_imageFile2!.path),
+                                  ))
+                              : GestureDetector(
+                                  onTap: () async {
+                                    pickImageBottomSheet2(context: context);
+                                  },
+                                  child: Center(
+                                      child: Icon(
+                                    Icons.car_rental,
+                                    color: ScreenConfig.theme.primaryColor,
+                                    size:
+                                        MediaQuery.sizeOf(context).width * 0.15,
+                                  )),
+                                )),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Vehicle Image',
+                      style: ScreenConfig.theme.textTheme.headline6
+                          ?.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                )
+              ],
             ),
           ],
         );
@@ -305,6 +487,55 @@ class _RegisterDriverVehicleInfoScreenState
                         ],
                       ),
                       if (picError) displayRegistrationValidation("image"),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      _displayTextField(
+                          name: 'Driver Name',
+                          hint: 'Enter Your Name',
+                          validator: (value) {
+                            return null;
+                          },
+                          lengthLimit: LengthLimitingTextInputFormatter(30),
+                          filterTextInput: FilteringTextInputFormatter.allow(
+                              RegExp("[a-zA-Z ]")),
+                          controller: drivername,
+                          onChanged: (val) {
+                            if (val.isEmpty || val.length < 2) {
+                              setState(() {
+                                nameerror = true;
+                              });
+                            } else {
+                              setState(() {
+                                nameerror = false;
+                              });
+                            }
+                          },
+                          inputType: TextInputType.text),
+                      if (nameerror) displayRegistrationValidation("nameerror"),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      _displayTextField(
+                          name: 'Driver Phone',
+                          hint: 'Enter Your Phone Number',
+                          validator: (value) {
+                            return null;
+                          },
+                          lengthLimit: LengthLimitingTextInputFormatter(13),
+                          filterTextInput: FilteringTextInputFormatter.allow(
+                              RegExp("[0-9+ ]")),
+                          controller: driverphonenumber,
+                          onChanged: (val) {
+                            if (val.isEmpty || val.length < 2) {
+                              setState(() {
+                                phoneerror = true;
+                              });
+                            } else {
+                              setState(() {
+                                phoneerror = false;
+                              });
+                            }
+                          },
+                          inputType: TextInputType.text),
+                      if (phoneerror)
+                        displayRegistrationValidation("phoneerror"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       Stack(
                         children: [

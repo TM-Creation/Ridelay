@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/register_driver_vehicle_info_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/register_info_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/snack_bars/custom_snack_bar.dart';
@@ -10,6 +11,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 
 class ChoiceCustomerDriverScreen extends StatefulWidget {
   static const routeName = '/choiceCustomerDriver-screen';
+
   const ChoiceCustomerDriverScreen({Key? key}) : super(key: key);
 
   @override
@@ -45,13 +47,9 @@ class _ChoiceCustomerDriverScreenState
                     "assets/images/Customer.png",
                     "Customer",
                     "Register as a Customer", () {
-                  ScaffoldMessenger.of(context).showSnackBar(showSnackbar(
-                      "You have been registered successfully. Please login to book a ride."));
-                  Future.delayed(const Duration(seconds: 3), () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        LoginNumberEnterScreen.routeName,
-                        ModalRoute.withName("/"));
-                  });
+                  Navigator.of(context).pushNamed(
+                    RegisterInfoScreen.routeName,
+                  );
 
                   // Navigator.pushNamed(context, RideSelectionScreen.routeName);
                   // Navigator.of(context).pushNamed(VehicleSelectionScreen.routeName);

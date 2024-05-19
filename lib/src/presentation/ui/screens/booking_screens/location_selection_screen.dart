@@ -137,24 +137,40 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                 onTap: () {
                                   if (pickupEnterController.text != '' &&
                                       dropoffEnterController.text != '') {
-                                    Navigator.of(context).pushNamed(
-                                      RideShownScreen.routeName,
-                                      arguments: {
-                                        'pickupLocation':
-                                        pickupEnterController.text,
-                                        'dropoffLocation':
-                                        dropoffEnterController.text,
-                                        'vah':argument,
-                                        'distance': distance!.totalDistance
+                                    if( double.tryParse(distance!.totalDistance.replaceAll(RegExp(r'[^0-9.]'), ''))!<60){
+                                      print("${distance!.totalDuration} duration");
+                                      Navigator.of(context).pushNamed(
+                                        RideShownScreen.routeName,
+                                        arguments: {
+                                          'pickupLocation':
+                                          pickupEnterController.text,
+                                          'dropoffLocation':
+                                          dropoffEnterController.text,
+                                          'vah':argument,
+                                          'distance':distance!.totalDistance,
+                                          'duration':distance!.totalDuration
+                                        },
+                                      );
+                                    }
+                                    else{
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Center(
+                                            child: Text(
+                                              'Please Select Below 60KM Distance',style: TextStyle(fontSize: 15,color: Colors.white),),
+                                          ),
+                                          backgroundColor: Colors.black,
+                                          behavior: SnackBarBehavior.floating,
+                                        ),
+                                      );
+                                    }
 
-                                      },
-                                    );
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Center(
                                           child: Text(
-                                            'Please Select Pick-Up & Drop Off Location',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white),),
+                                            'Please Select Pick-Up & Drop Off Location',style: TextStyle(fontSize: 15,color: Colors.white),),
                                         ),
                                         backgroundColor: Colors.black,
                                         behavior: SnackBarBehavior.floating,
