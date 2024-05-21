@@ -31,7 +31,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: GenericAppBars.appBarWithBackButtonAndTitle(
-            "Confirm Your Ride", context, false),
+            "Confirm Your Ride Partner", context, false),
         body: SizedBox(
             width: ScreenConfig.screenSizeWidth,
             child: Center(
