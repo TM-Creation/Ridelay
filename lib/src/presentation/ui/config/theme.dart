@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 const themeColor = Color(0xff003240);
 const thirdColor = Color(0xffDAB666);
 const redFourthColor = Color(0xffDA6666);
