@@ -26,50 +26,52 @@ class _ChoiceCustomerDriverScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
-      body: SizedBox(
-        height: ScreenConfig.screenSizeHeight,
-        width: ScreenConfig.screenSizeWidth,
-        child: Center(
-          child: SizedBox(
-            width: ScreenConfig.screenSizeWidth * 0.9,
-            // height: ScreenConfig.screenSizeHeight * 0.2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                displayText(
-                    'Are you a',
-                    ScreenConfig.theme.textTheme.headline6
-                        ?.copyWith(fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.center),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                Buttons.squareLargeSelectionScreenButton(
-                    "assets/images/Customer.png",
-                    "Passenger",
-                    "Register as a Customer", () {
-                  Navigator.of(context).pushNamed(
-                    RegisterInfoScreen.routeName,
-                  );
-
-                  // Navigator.pushNamed(context, RideSelectionScreen.routeName);
-                  // Navigator.of(context).pushNamed(VehicleSelectionScreen.routeName);
-                }),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                displayText(
-                    'Or a',
-                    ScreenConfig.theme.textTheme.headline6
-                        ?.copyWith(fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.center),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                Buttons.squareLargeSelectionScreenButton(
-                    "assets/images/DriverAsset.png",
-                    "Driver",
-                    "Register as a Driver", () {
-                  Navigator.of(context)
-                      .pushNamed(RegisterDriverVehicleInfoScreen.routeName);
-                }),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.07),
-              ],
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: ScreenConfig.screenSizeHeight,
+          width: ScreenConfig.screenSizeWidth,
+          child: Center(
+            child: SizedBox(
+              width: ScreenConfig.screenSizeWidth * 0.9,
+              // height: ScreenConfig.screenSizeHeight * 0.2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  displayText(
+                      'Are you a',
+                      ScreenConfig.theme.textTheme.headline6
+                          ?.copyWith(fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                  Buttons.squareLargeSelectionScreenButton(
+                      "assets/images/Customer.png",
+                      "Passenger",
+                      "Register as a Customer", () {
+                    Navigator.of(context).pushNamed(
+                      RegisterInfoScreen.routeName,
+                    );
+        
+                    // Navigator.pushNamed(context, RideSelectionScreen.routeName);
+                    // Navigator.of(context).pushNamed(VehicleSelectionScreen.routeName);
+                  }),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                  displayText(
+                      'Or a',
+                      ScreenConfig.theme.textTheme.headline6
+                          ?.copyWith(fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                  Buttons.squareLargeSelectionScreenButton(
+                      "assets/images/DriverAsset.png",
+                      "Driver",
+                      "Register as a Driver", () {
+                    Navigator.of(context)
+                        .pushNamed(RegisterDriverVehicleInfoScreen.routeName);
+                  }),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.07),
+                ],
+              ),
             ),
           ),
         ),

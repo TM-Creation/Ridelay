@@ -59,14 +59,14 @@ class _RegisterDriverVehicleInfoScreenState
     super.initState();
   }
 
-  bool nameerror = true;
-  bool phoneerror = true;
-  bool idNumberError = true;
-  bool picError = true;
-  bool licenseNumberError = true;
-  bool vehicleNameError = true;
-  bool plateNumberError = true;
-  bool vehicleTypeError = true;
+  bool nameerror = false;
+  bool phoneerror = false;
+  bool idNumberError = false;
+  bool picError = false;
+  bool licenseNumberError = false;
+  bool vehicleNameError = false;
+  bool plateNumberError = false;
+  bool vehicleTypeError = false;
 
   void navigate() {
     ScaffoldMessenger.of(context).showSnackBar(showSnackbar(

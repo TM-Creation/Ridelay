@@ -104,7 +104,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                   isFullScreen: false,
                   search: search,
                   image: "assets/images/RideSelectionScreenMap.png",
-                  hintFieldOne: "Search...",
+                  hintFieldOne: "Search Location",
                   fieldOneButtonFunction: () {},
                   suffixIconFieldOne: SizedBox(
                     height: 60,

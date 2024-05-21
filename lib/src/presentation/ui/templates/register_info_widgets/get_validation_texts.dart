@@ -16,7 +16,11 @@ Widget _getRegistrationValidations(String value) {
         'Enter a valid phone number with country extension', TextAlign.left);
   } else if (value == "firstName") {
     return errorValidator('Please enter a valid first name', TextAlign.left);
-  } else if (value == "lastName") {
+  } else if (value == "passd") {
+    return errorValidator('Please enter minimum 8 digit Password', TextAlign.left);
+  } else if (value == "conpassd") {
+    return errorValidator('Please enter minimum 8 digit Password', TextAlign.left);
+  }else if (value == "lastName") {
     return errorValidator('Please enter a valid last name', TextAlign.left);
   } else if (value == "email") {
     return errorValidator('Please enter a valid email address', TextAlign.left);

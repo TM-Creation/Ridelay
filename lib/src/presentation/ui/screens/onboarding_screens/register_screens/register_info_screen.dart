@@ -11,6 +11,7 @@ import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/config/compress_image.dart';
 import 'package:ridely/src/presentation/ui/config/validator.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/otp_verification_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
@@ -37,6 +38,10 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
 
   final TextEditingController phoneNumber = TextEditingController();
 
+  final TextEditingController password = TextEditingController();
+
+  final TextEditingController conpassword = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   String userNumber = "";
@@ -47,15 +52,17 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
   }
 
   baseulr burl = baseulr();
-  bool phoneNumberError = true;
-  bool fNameError = true;
-  bool emailError = true;
+  bool phoneNumberError = false;
+  bool pasd = false;
+  bool conpsd = false;
+  bool fNameError = false;
+  bool emailError = false;
 
   void navigate() {
     User user = User(
       name: firstName.text,
       email: email.text,
-      password: "Nothing",
+      password: password.text,
       phone: phoneNumber.text,
       location: Location(
         type: "Point",
@@ -106,7 +113,9 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
           ],
         );
 
-    Widget _displayBodyText() => Center(
+    Widget _displayBodyText() => Padding(
+          padding:
+              EdgeInsets.only(left: MediaQuery.sizeOf(context).width * 0.35),
           child: displayText(
             "Sign-up",
             ScreenConfig.theme.textTheme.headline1
@@ -129,7 +138,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _displayBodyText(),
-                      spaceHeight(ScreenConfig.screenSizeHeight * 0.10),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.05),
                       _displayTextField(
                         name: 'Driver Name',
                         hint: 'Enter Your Name',
@@ -225,6 +234,55 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
                           controller: email),
                       if (emailError) displayRegistrationValidation("email"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      _displayTextField(
+                        name: 'Password',
+                        hint: 'Set a Complex Password',
+                        validator: (value) {
+                          return null;
+                        },
+                        lengthLimit: LengthLimitingTextInputFormatter(30),
+                        filterTextInput: FilteringTextInputFormatter.allow(
+                            RegExp('[a-zA-Z0-9!@#%^&*(),.?":{}|<>]')),
+                        controller: password,
+                        onChanged: (val) {
+                          if (val.isEmpty || val.length < 8) {
+                            setState(() {
+                              pasd = true;
+                            });
+                          } else {
+                            setState(() {
+                              pasd = false;
+                            });
+                          }
+                        },
+                      ),
+                      if (pasd) displayRegistrationValidation("passd"),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      _displayTextField(
+                        name: 'Confirm Password',
+                        hint: 'Re-Enter Same Password',
+                        validator: (value) {
+                          return null;
+                        },
+                        lengthLimit: LengthLimitingTextInputFormatter(30),
+                        filterTextInput: FilteringTextInputFormatter.allow(
+                            RegExp(r'[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]')),
+                        controller: conpassword,
+                        onChanged: (val) {
+                          if (val.isEmpty || val.length < 8) {
+                            setState(() {
+                              conpsd = true;
+                            });
+                          } else {
+                            setState(() {
+                              conpsd = false;
+                            });
+                          }
+                        },
+                      ),
+                      if (conpsd) displayRegistrationValidation("conpassd"),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      SizedBox(height: 100,)
                     ],
                   ),
                 ),
@@ -243,7 +301,6 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
         color: Colors.white,
         child: Center(
           child: Buttons.longWidthButton("Continue", () {
-            // navigate();
             FocusScope.of(context).unfocus();
             if (!validatePhoneNumber(phoneNumber.text) ||
                 phoneNumber.text.length != 13) {
@@ -275,9 +332,25 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
             }
             if (phoneNumberError == false &&
                 fNameError == false &&
-                emailError == false) {
+                emailError == false &&
+                pasd == false &&
+                conpsd == false && password.text==conpassword.text) {
               print("Accepted");
               navigate();
+            }else {
+              print("snakbar");
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Center(
+                    child: Text(
+                      'Password & Confirom Password are not Equal',
+                      style: TextStyle(fontSize: 15, color: Colors.white),
+                    ),
+                  ),
+                  backgroundColor: Colors.black,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
             }
           }),
         ),
@@ -288,7 +361,8 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
   }
 
   Future<void> postUserData(User user) async {
-    final url = Uri.parse('${burl.burl}/api/v1/passenger/register'); // Replace with your API endpoint
+    final url = Uri.parse(
+        '${burl.burl}/api/v1/passenger/register'); // Replace with your API endpoint
     final body = jsonEncode(user.toJson());
     final headers = {
       HttpHeaders.contentTypeHeader: 'application/json',
@@ -300,7 +374,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
-        Navigator.of(context).pushNamed(ChoiceCustomerDriverScreen.routeName);
+        Navigator.of(context).pushNamed(OTPVerificationScreen.routeName);
       } else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');
@@ -311,5 +385,4 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
       print('Error: $error');
     }
   }
-
 }
