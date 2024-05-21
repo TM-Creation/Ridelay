@@ -65,7 +65,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
       password: password.text,
       phone: phoneNumber.text,
       location: Location(
-        type: "Point",
+        type: "Passenger",
         coordinates: [-73.935242, 40.730610], // Static example coordinates
       ),
       preferences: Preferences(
@@ -282,7 +282,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
                       ),
                       if (conpsd) displayRegistrationValidation("conpassd"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                      SizedBox(height: 100,)
+                      SizedBox(height: 50,)
                     ],
                   ),
                 ),

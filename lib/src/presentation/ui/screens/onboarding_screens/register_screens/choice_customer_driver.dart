@@ -43,7 +43,6 @@ class _ChoiceCustomerDriverScreenState
                       ScreenConfig.theme.textTheme.headline6
                           ?.copyWith(fontWeight: FontWeight.w500),
                       textAlign: TextAlign.center),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   Buttons.squareLargeSelectionScreenButton(
                       "assets/images/Customer.png",
                       "Passenger",
@@ -55,13 +54,11 @@ class _ChoiceCustomerDriverScreenState
                     // Navigator.pushNamed(context, RideSelectionScreen.routeName);
                     // Navigator.of(context).pushNamed(VehicleSelectionScreen.routeName);
                   }),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   displayText(
                       'Or a',
                       ScreenConfig.theme.textTheme.headline6
                           ?.copyWith(fontWeight: FontWeight.w500),
                       textAlign: TextAlign.center),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   Buttons.squareLargeSelectionScreenButton(
                       "assets/images/DriverAsset.png",
                       "Driver",

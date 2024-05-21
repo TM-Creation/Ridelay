@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/config/debug_helper.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/otp_verification_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/register_info_screen.dart';
@@ -83,6 +84,11 @@ class _LoginNumberEnterScreenState extends State<LoginNumberEnterScreen> {
                   Buttons.splashScreenButton("Signup/Register", () {
                     Navigator.of(context)
                         .pushNamed(ChoiceCustomerDriverScreen.routeName);
+                  }),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                  Buttons.splashScreenButton("Login", () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context)=>Login()));
                   }),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                 ],
