@@ -45,7 +45,7 @@ class _ChoiceCustomerDriverScreenState
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 Buttons.squareLargeSelectionScreenButton(
                     "assets/images/Customer.png",
-                    "Customer",
+                    "Passenger",
                     "Register as a Customer", () {
                   Navigator.of(context).pushNamed(
                     RegisterInfoScreen.routeName,
