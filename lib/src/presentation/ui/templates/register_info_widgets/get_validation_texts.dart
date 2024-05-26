@@ -28,11 +28,16 @@ Widget _getRegistrationValidations(String value) {
     return errorValidator('Please enter a valid vehicle type', TextAlign.left);
   } else if (value == "vehicleModelName") {
     return errorValidator('Please enter a valid vehicle model', TextAlign.left);
-  } else if (value == "plateNumber") {
+  } else if (value == "year") {
+    return errorValidator('Please enter a valid Year', TextAlign.left);
+  }  else if (value == "plateNumber") {
     return errorValidator('Please enter a valid plate number', TextAlign.left);
-  } else if (value == "idNumber") {
+  }else if (value == "idNumber") {
     return errorValidator(
         'Please enter a valid identifiation number', TextAlign.left);
+  }else if (value == "color") {
+    return errorValidator(
+        'Please enter Your Vehicle Color', TextAlign.left);
   } else if (value == "licenseNumber") {
     return errorValidator(
         'Please enter a valid license number', TextAlign.left);

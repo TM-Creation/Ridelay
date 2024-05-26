@@ -1,15 +1,12 @@
+/*
 class Location {
   final String type;
   final List<double> coordinates;
 
-  Location({required this.type, required this.coordinates});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'coordinates': coordinates,
-    };
-  }
+  Location({
+    required this.type,
+    required this.coordinates,
+  });
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
@@ -17,13 +14,30 @@ class Location {
       coordinates: List<double>.from(json['coordinates']),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'coordinates': coordinates,
+    };
+  }
 }
 
 class Preferences {
   final String language;
   final double preferredDriverRating;
 
-  Preferences({required this.language, required this.preferredDriverRating});
+  Preferences({
+    required this.language,
+    required this.preferredDriverRating,
+  });
+
+  factory Preferences.fromJson(Map<String, dynamic> json) {
+    return Preferences(
+      language: json['language'],
+      preferredDriverRating: json['preferredDriverRating'].toDouble(),
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -31,33 +45,38 @@ class Preferences {
       'preferredDriverRating': preferredDriverRating,
     };
   }
-
-  factory Preferences.fromJson(Map<String, dynamic> json) {
-    return Preferences(
-      language: json['language'],
-      preferredDriverRating: json['preferredDriverRating'],
-    );
-  }
 }
 
-class passanger {
+class User {
   final String name;
   final String email;
   final String password;
   final String phone;
   final Location location;
+  final String role;
   final Preferences preferences;
-  final String wallet;
 
-  passanger({
+  User({
     required this.name,
     required this.email,
     required this.password,
     required this.phone,
     required this.location,
+    required this.role,
     required this.preferences,
-    required this.wallet,
   });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      name: json['name'],
+      email: json['email'],
+      password: json['password'],
+      phone: json['phone'],
+      location: Location.fromJson(json['location']),
+      role: json['role'],
+      preferences: Preferences.fromJson(json['preferences']),
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -66,20 +85,9 @@ class passanger {
       'password': password,
       'phone': phone,
       'location': location.toJson(),
+      'role': role,
       'preferences': preferences.toJson(),
-      'wallet': wallet,
     };
   }
-
-  factory passanger.fromJson(Map<String, dynamic> json) {
-    return passanger(
-      name: json['name'],
-      email: json['email'],
-      password: json['password'],
-      phone: json['phone'],
-      location: Location.fromJson(json['location']),
-      preferences: Preferences.fromJson(json['preferences']),
-      wallet: json['wallet'],
-    );
-  }
 }
+*/

@@ -11,7 +11,8 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
 
-class RideWaitingScreen extends StatefulWidget {
+class
+RideWaitingScreen extends StatefulWidget {
   const RideWaitingScreen({Key? key}) : super(key: key);
   static const routeName = '/ridewaiting-screen';
 
@@ -23,8 +24,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
   int currentIndex = -1;
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
-  String image = "assets/images/LocationDistanceScreenMap.png",distance='',vahicle='';
-  List namesList = ["Mini", "Go", "Comfort", "Mini"];
+  String image = "assets/images/LocationDistanceScreenMap.png",distance='',vahicle='',duration='';
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
@@ -36,6 +36,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
         dropoffEnterController.text = args['dropoffLocation']!;
         vahicle = args['vah']!;
         distance = args['distance']!;
+        duration=args['duration']!;
         print('${pickupEnterController.text} oy pick a gya');
       });
     }
@@ -67,7 +68,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                   ),
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                rideDetailsWidget("Mini", "Cancel Ride", context),
+                rideDetailsWidget(vahicle, "Cancel Ride", context),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               ],
             ),

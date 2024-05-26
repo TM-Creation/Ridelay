@@ -297,6 +297,7 @@ class _WalletState extends State<Wallet> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
          leading:  IconButton(
               onPressed: () => Navigator.of(context).pop(),

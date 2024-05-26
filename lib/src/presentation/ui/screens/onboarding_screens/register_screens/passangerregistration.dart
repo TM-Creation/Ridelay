@@ -28,10 +28,10 @@ class RegisterInfoScreen extends StatefulWidget {
   static const routeName = '/registerInfo-screen';
 
   @override
-  State<RegisterInfoScreen> createState() => _RegisterInfoScreenState();
+  State<RegisterInfoScreen> createState() => PassangerRegistrationScreen();
 }
 
-class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
+class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
   final TextEditingController firstName = TextEditingController();
 
   final TextEditingController email = TextEditingController();
@@ -59,13 +59,13 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
   bool emailError = false;
 
   void navigate() {
-    User user = User(
+    passanger user = passanger(
       name: firstName.text,
       email: email.text,
       password: password.text,
       phone: phoneNumber.text,
       location: Location(
-        type: "Passenger",
+        type: "Point",
         coordinates: [-73.935242, 40.730610], // Static example coordinates
       ),
       preferences: Preferences(
@@ -360,7 +360,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
     );
   }
 
-  Future<void> postUserData(User user) async {
+  Future<void> postUserData(passanger user) async {
     final url = Uri.parse(
         '${burl.burl}/api/v1/passenger/register'); // Replace with your API endpoint
     final body = jsonEncode(user.toJson());

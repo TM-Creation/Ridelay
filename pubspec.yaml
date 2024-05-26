@@ -43,7 +43,7 @@ dependencies:
   dio: ^5.4.3+1
   http: ^1.2.1
   uuid: ^4.4.0
-  pinput: ^4.0.0
+  pinput: ^3.0.1
   get:
   geocoding: ^3.0.0
   image_picker: ^0.8.5+3

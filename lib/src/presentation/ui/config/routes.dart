@@ -20,8 +20,8 @@ import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_numb
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/onboarding_cards_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/otp_verification_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/register_driver_vehicle_info_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/register_info_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/driver_registration.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/splash_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_ride_detail_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
@@ -32,8 +32,8 @@ final Map<String, Widget Function(BuildContext)> routes = {
   LoginNumberEnterScreen.routeName: (ctx) => const LoginNumberEnterScreen(),
   OTPVerificationScreen.routeName: (ctx) => const OTPVerificationScreen(),
   RegisterInfoScreen.routeName: (ctx) => const RegisterInfoScreen(),
-  RegisterDriverVehicleInfoScreen.routeName: (ctx) =>
-      const RegisterDriverVehicleInfoScreen(),
+  DriverRegistrationScreen.routeName: (ctx) =>
+      const DriverRegistrationScreen(),
   ChoiceCustomerDriverScreen.routeName: (ctx) =>
       const ChoiceCustomerDriverScreen(),
   RideSelectionScreen.routeName: (ctx) => const RideSelectionScreen(),

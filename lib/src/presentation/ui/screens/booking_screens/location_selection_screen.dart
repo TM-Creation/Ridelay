@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_shown_screen.dart';
@@ -43,6 +44,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
      }
    });
  }
+  List<Location> search=[];
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,8 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                     child: Row(
                       children: [
                         Buttons.smallSquareButton(
-                            "assets/images/CircularIconButton.png", () {}),
+                            "assets/images/CircularIconButton.png", () {
+                        }),
                       ],
                     ),
                   ),

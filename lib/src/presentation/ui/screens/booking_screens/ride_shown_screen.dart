@@ -24,11 +24,16 @@ class _RideShownScreenState extends State<RideShownScreen> {
   String image = "assets/images/LocationDistanceScreenMap.png", vahicle = '';
   List namesList = ["Mini", "Go", "Comfort"];
   int mini = 50, Go = 50, Comfort = 50;
-  bool min = false, go = false, comfrt = false,rikshaw=false,bik=false;
+  bool min = false, go = false, comfrt = false, rikshaw = false, bik = false;
   bool showConfirmYourRide = false;
-  String distance='',duration='';
+  String distance = '', duration = '';
   double? totaldistance;
-  double minifare=0,gofare=0,comfortfare=0,rickshawfare=0,bykefare=0;
+  double minifare = 0,
+      gofare = 0,
+      comfortfare = 0,
+      rickshawfare = 0,
+      bykefare = 0;
+
   @override
   void initState() {
     super.initState();
@@ -45,14 +50,15 @@ class _RideShownScreenState extends State<RideShownScreen> {
         pickupEnterController.text = args['pickupLocation']!;
         dropoffEnterController.text = args['dropoffLocation']!;
         vahicle = args['vah']!;
-        distance=args['distance']!;
-        duration=args['duration']!;
-        totaldistance=double.tryParse(distance.replaceAll(RegExp(r'[^0-9.]'), ''));
-        minifare=60*totaldistance!;
-        gofare=70*totaldistance!;
-        comfortfare=80*totaldistance!;
-        rickshawfare=45*totaldistance!;
-        bykefare=35*totaldistance!;
+        distance = args['distance']!;
+        duration = args['duration']!;
+        totaldistance =
+            double.tryParse(distance.replaceAll(RegExp(r'[^0-9.]'), ''));
+        minifare = 60 * totaldistance!;
+        gofare = 70 * totaldistance!;
+        comfortfare = 80 * totaldistance!;
+        rickshawfare = 45 * totaldistance!;
+        bykefare = 35 * totaldistance!;
       });
     }
   }
@@ -107,12 +113,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                showConfirmYourRide=false;
-                                min=false;
-                                go=false;
-                                comfrt=false;
-                                bik=false;
-                                rikshaw=false;
+                                showConfirmYourRide = false;
+                                min = false;
+                                go = false;
+                                comfrt = false;
+                                bik = false;
+                                rikshaw = false;
                               });
                             },
                             child: Container(
@@ -129,15 +135,16 @@ class _RideShownScreenState extends State<RideShownScreen> {
                           GestureDetector(
                             onTap: () {
                               Navigator.of(context).pushNamed(
-                                  RideWaitingScreen.routeName,
+                                RideWaitingScreen.routeName,
                                 arguments: {
-                              'pickupLocation':
-                              pickupEnterController.text,
-                              'dropoffLocation':
-                              dropoffEnterController.text,
-                              'vah':typeofvahicle,
-
-                              },);
+                                  'pickupLocation': pickupEnterController.text,
+                                  'dropoffLocation':
+                                      dropoffEnterController.text,
+                                  'vah': typeofvahicle,
+                                  'distance': distance,
+                                  'duration': distance
+                                },
+                              );
                             },
                             child: Container(
                               height: 25,
@@ -524,7 +531,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                               onTap: () {
                                 setState(() {
                                   showConfirmYourRide = !showConfirmYourRide;
-                                  rikshaw=!rikshaw;
+                                  rikshaw = !rikshaw;
                                   typeofvahicle = "Rickshaw";
                                   print("$typeofvahicle");
                                 });
@@ -622,12 +629,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                               ? GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      showConfirmYourRide = !showConfirmYourRide;
-                                      bik=!bik;
+                                      showConfirmYourRide =
+                                          !showConfirmYourRide;
+                                      bik = !bik;
                                       typeofvahicle = "Bike";
                                       print("$typeofvahicle");
                                     });
-
                                   },
                                   child: Column(
                                     children: [
@@ -732,6 +739,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
         ),
       );
     }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
@@ -745,7 +753,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
             child: Column(
               children: [
                 MapScreen(
-                  search: [],
+                    search: [],
                     showAds: false,
                     showTextFields: true,
                     isFieldsReadOnly: true,
@@ -781,8 +789,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
                       ),
                     ),
                     fieldTwoController: dropoffEnterController),
-
-
                 spaceHeight(
                   ScreenConfig.screenSizeHeight * 0.2,
                 )
