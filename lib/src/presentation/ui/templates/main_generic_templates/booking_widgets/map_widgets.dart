@@ -39,29 +39,30 @@ class MapScreen extends StatefulWidget {
   bool check;
   List<Location>? search = [];
 
-  MapScreen(
-      {Key? kek,
-      this.onInfoReceived,
-      required this.isFullScreen,
-      required this.isShowMyLocationIcon,
-      required this.image,
-      required this.hintFieldOne,
-      required this.fieldOneButtonFunction,
-      required this.isDisplayFieldTwo,
-      required this.hintFieldTwo,
-      required this.fieldTwoButtonFunction,
-      required this.suffixIconFieldTwo,
-      required this.fieldTwoController,
-      required this.fieldOneController,
-      required this.suffixIconFieldOne,
-      this.fieldButtonFunction,
-      this.isFieldsReadOnly,
-      this.showAds,
-      this.showTextFields,
-      this.userLocation,
-      this.autoupdatepolyline,
-      required this.check,
-      required this.search,});
+  MapScreen({
+    Key? kek,
+    this.onInfoReceived,
+    required this.isFullScreen,
+    required this.isShowMyLocationIcon,
+    required this.image,
+    required this.hintFieldOne,
+    required this.fieldOneButtonFunction,
+    required this.isDisplayFieldTwo,
+    required this.hintFieldTwo,
+    required this.fieldTwoButtonFunction,
+    required this.suffixIconFieldTwo,
+    required this.fieldTwoController,
+    required this.fieldOneController,
+    required this.suffixIconFieldOne,
+    this.fieldButtonFunction,
+    this.isFieldsReadOnly,
+    this.showAds,
+    this.showTextFields,
+    this.userLocation,
+    this.autoupdatepolyline,
+    required this.check,
+    required this.search,
+  });
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -430,7 +431,7 @@ class _MapScreenState extends State<MapScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () async {
-                                    widget.fieldOneController.text='';
+                                    widget.fieldOneController.text = '';
                                     List<Placemark> placemarks =
                                         await placemarkFromCoordinates(
                                             userlocation.latitude,
@@ -611,8 +612,9 @@ class _MapScreenState extends State<MapScreen> {
                     drop = await locationFromAddress(
                         widget.fieldTwoController.text);
                     setState(() {
-                      pickanddrop().pickloc=LatLng(pick[0].latitude, pick[0].longitude);
-                      pickanddrop().droploc=LatLng(drop[0].latitude, drop[0].longitude);
+                      pickanddrop().pickloc=LatLng(pick[0].longitude, pick[0].latitude);
+                      pickanddrop().droploc=LatLng(drop[0].longitude, drop[0].latitude);
+                      print("${pickanddrop().pickloc} pickloc a gya");
                     });
                     print("${pick} and  ${drop} both a done");
                     showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
@@ -713,6 +715,7 @@ bool DistanceLessThenFiftyKM() {
     return false;
   }
 }
+
 class pickanddrop {
   static final pickanddrop _instance = pickanddrop._internal();
 
@@ -722,5 +725,5 @@ class pickanddrop {
 
   pickanddrop._internal();
 
-  LatLng? pickloc,droploc;
+  LatLng? pickloc, droploc;
 }

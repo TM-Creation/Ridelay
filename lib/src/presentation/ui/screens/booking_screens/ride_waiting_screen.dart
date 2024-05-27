@@ -49,37 +49,6 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
     }
   }
 
-  late IO.Socket socket;
-
-  @override
-  void initState() {
-    initSocket();
-    super.initState();
-    print("$id $pickuplocation $dropofflocation sab kuch a gya");
-  }
-
-  initSocket() {
-    socket =
-        IO.io('https://3ace-110-93-223-135.ngrok-free.app', <String, dynamic>{
-      'transports': ['websocket'],
-      'autoConnect': false,
-    });
-    socket.connect();
-    socket.onConnect((_) {
-      print("Server Connect with Socket");
-    });
-  }
-
-  @override
-  void dispose() {
-    socket.disconnect();
-    socket.dispose();
-    super.dispose();
-  }
-
-  final String? id = PassId().id;
-  final LatLng? pickuplocation = pickanddrop().pickloc,
-      dropofflocation = pickanddrop().droploc;
 
   @override
   Widget build(BuildContext context) {
