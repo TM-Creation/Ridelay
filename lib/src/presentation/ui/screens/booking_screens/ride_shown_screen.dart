@@ -96,6 +96,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
     socket.onConnect((_) {
       print("Server Connect with Socket");
     });
+    socket.emit('registerPassenger', "6654523062cc5411c069d411");
   }
    void sendridereq(){
      // Create payload
@@ -109,6 +110,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
      // Emit the 'rideRequest' event with the payload
      socket.emit('rideRequest', payload);
      print('Emitted rideRequest with payload: $payload');
+     socket.on('rideRequested', (data) {
+       print("data of riderequest $data");
+     });
    }
 //6654523062cc5411c069d411
   @override

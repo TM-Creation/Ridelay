@@ -16,6 +16,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/driver_ride_detail_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class DriverRideSelectionScreen extends StatefulWidget {
   const DriverRideSelectionScreen({Key? key}) : super(key: key);
@@ -29,7 +30,24 @@ class DriverRideSelectionScreen extends StatefulWidget {
 class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
   List namesList = ["Mini", "Go", "Comfort", "Mini"];
-
+  @override
+  void initState() {
+    initSocket();
+    super.initState();
+  }
+  late IO.Socket socket;
+  initSocket() {
+    socket =
+        IO.io('https://3ace-110-93-223-135.ngrok-free.app', <String, dynamic>{
+          'transports': ['websocket'],
+          'autoConnect': false,
+        });
+    socket.connect();
+    socket.onConnect((_) {
+      print("Server Connect with Socket");
+    });
+    socket.emit('registerPassenger', "6654c19110f43154535cc4f5");
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
