@@ -610,6 +610,11 @@ class _MapScreenState extends State<MapScreen> {
                         widget.fieldOneController.text);
                     drop = await locationFromAddress(
                         widget.fieldTwoController.text);
+                    setState(() {
+                      pickanddrop().pickloc=LatLng(pick[0].latitude, pick[0].longitude);
+                      pickanddrop().droploc=LatLng(drop[0].latitude, drop[0].longitude);
+                    });
+                    print("${pick} and  ${drop} both a done");
                     showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
                         LatLng(drop[0].latitude, drop[0].longitude));
                   } else {
@@ -707,4 +712,15 @@ bool DistanceLessThenFiftyKM() {
   } else {
     return false;
   }
+}
+class pickanddrop {
+  static final pickanddrop _instance = pickanddrop._internal();
+
+  factory pickanddrop() {
+    return _instance;
+  }
+
+  pickanddrop._internal();
+
+  LatLng? pickloc,droploc;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_in_progress_and_finish_screen.dart';
 
@@ -10,9 +11,12 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/othe
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart';
 
-class
-RideWaitingScreen extends StatefulWidget {
+import '../onboarding_screens/register_screens/passangerregistration.dart';
+
+class RideWaitingScreen extends StatefulWidget {
   const RideWaitingScreen({Key? key}) : super(key: key);
   static const routeName = '/ridewaiting-screen';
 
@@ -24,23 +28,59 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
   int currentIndex = -1;
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
-  String image = "assets/images/LocationDistanceScreenMap.png",distance='',vahicle='',duration='';
+  String image = "assets/images/LocationDistanceScreenMap.png",
+      distance = '',
+      vahicle = '',
+      duration = '';
+
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
     final args =
-    ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+        ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
     if (args != null) {
       setState(() {
         pickupEnterController.text = args['pickupLocation']!;
         dropoffEnterController.text = args['dropoffLocation']!;
         vahicle = args['vah']!;
         distance = args['distance']!;
-        duration=args['duration']!;
-        print('${pickupEnterController.text} oy pick a gya');
+        duration = args['duration']!;
       });
     }
   }
+
+  late IO.Socket socket;
+
+  @override
+  void initState() {
+    initSocket();
+    super.initState();
+    print("$id $pickuplocation $dropofflocation sab kuch a gya");
+  }
+
+  initSocket() {
+    socket =
+        IO.io('https://3ace-110-93-223-135.ngrok-free.app', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+    socket.connect();
+    socket.onConnect((_) {
+      print("Server Connect with Socket");
+    });
+  }
+
+  @override
+  void dispose() {
+    socket.disconnect();
+    socket.dispose();
+    super.dispose();
+  }
+
+  final String? id = PassId().id;
+  final LatLng? pickuplocation = pickanddrop().pickloc,
+      dropofflocation = pickanddrop().droploc;
+
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -95,7 +135,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
               child: Column(
                 children: [
                   MapScreen(
-                    check: true,
+                      check: true,
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,
