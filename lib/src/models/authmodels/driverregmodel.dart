@@ -19,44 +19,29 @@ class Location {
   }
 }
 
-class Preferences {
-  final String language;
-  final double preferredDriverRating;
-
-  Preferences({required this.language, required this.preferredDriverRating});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'language': language,
-      'preferredDriverRating': preferredDriverRating,
-    };
-  }
-
-  factory Preferences.fromJson(Map<String, dynamic> json) {
-    return Preferences(
-      language: json['language'],
-      preferredDriverRating: json['preferredDriverRating'],
-    );
-  }
-}
-
-class passanger {
+class driverregmodel {
   final String name;
   final String email;
   final String password;
   final String phone;
   final Location location;
-  final Preferences preferences;
+  final double rating;
+  final String identityCardNumber;
+  final String status;
   final String wallet;
+  final String driverImage;
 
-  passanger({
+  driverregmodel({
     required this.name,
     required this.email,
     required this.password,
     required this.phone,
     required this.location,
-    required this.preferences,
+    required this.rating,
+    required this.identityCardNumber,
+    required this.status,
     required this.wallet,
+    required this.driverImage,
   });
 
   Map<String, dynamic> toJson() {
@@ -66,20 +51,26 @@ class passanger {
       'password': password,
       'phone': phone,
       'location': location.toJson(),
-      'preferences': preferences.toJson(),
+      'rating': rating,
+      'identityCardNumber': identityCardNumber,
+      'status': status,
       'wallet': wallet,
+      'driverImage': driverImage,
     };
   }
 
-  factory passanger.fromJson(Map<String, dynamic> json) {
-    return passanger(
+  factory driverregmodel.fromJson(Map<String, dynamic> json) {
+    return driverregmodel(
       name: json['name'],
       email: json['email'],
       password: json['password'],
       phone: json['phone'],
       location: Location.fromJson(json['location']),
-      preferences: Preferences.fromJson(json['preferences']),
+      rating: json['rating'],
+      identityCardNumber: json['identityCardNumber'],
+      status: json['status'],
       wallet: json['wallet'],
+      driverImage: json['driverImage'],
     );
   }
 }

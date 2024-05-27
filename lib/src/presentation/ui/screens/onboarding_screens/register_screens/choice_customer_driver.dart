@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/register_driver_vehicle_info_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/register_info_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/driver_registration.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/snack_bars/custom_snack_bar.dart';
@@ -64,7 +64,7 @@ class _ChoiceCustomerDriverScreenState
                       "Driver",
                       "Register as a Driver", () {
                     Navigator.of(context)
-                        .pushNamed(RegisterDriverVehicleInfoScreen.routeName);
+                        .pushNamed(DriverRegistrationScreen.routeName);
                   }),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.07),
                 ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_waiting_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
@@ -9,6 +10,9 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/book
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/slider_for_bottom_navigation.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+
+import '../onboarding_screens/register_screens/passangerregistration.dart';
 
 class RideShownScreen extends StatefulWidget {
   const RideShownScreen({Key? key}) : super(key: key);
@@ -24,37 +28,94 @@ class _RideShownScreenState extends State<RideShownScreen> {
   String image = "assets/images/LocationDistanceScreenMap.png", vahicle = '';
   List namesList = ["Mini", "Go", "Comfort"];
   int mini = 50, Go = 50, Comfort = 50;
-  bool min = false, go = false, comfrt = false,rikshaw=false,bik=false;
+  bool min = false, go = false, comfrt = false, rikshaw = false, bik = false;
   bool showConfirmYourRide = false;
-  String distance='',duration='';
+  String distance = '', duration = '';
   double? totaldistance;
-  double minifare=0,gofare=0,comfortfare=0,rickshawfare=0,bykefare=0;
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  double minifare = 0,
+      gofare = 0,
+      comfortfare = 0,
+      rickshawfare = 0,
+      bykefare = 0;
+  double fare=454;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
     final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+    ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
     if (args != null) {
       setState(() {
         pickupEnterController.text = args['pickupLocation']!;
         dropoffEnterController.text = args['dropoffLocation']!;
         vahicle = args['vah']!;
-        distance=args['distance']!;
-        duration=args['duration']!;
-        totaldistance=double.tryParse(distance.replaceAll(RegExp(r'[^0-9.]'), ''));
-        minifare=60*totaldistance!;
-        gofare=70*totaldistance!;
-        comfortfare=80*totaldistance!;
-        rickshawfare=45*totaldistance!;
-        bykefare=35*totaldistance!;
+        distance = args['distance']!;
+        duration = args['duration']!;
+        totaldistance =
+            double.tryParse(distance.replaceAll(RegExp(r'[^0-9.]'), ''));
+        minifare = 60 * totaldistance!;
+        gofare = 70 * totaldistance!;
+        comfortfare = 80 * totaldistance!;
+        rickshawfare = 45 * totaldistance!;
+        bykefare = 35 * totaldistance!;
       });
     }
+  }
+  void assignFare() {
+    if (go) {
+      fare = gofare;
+    } else if (min) {
+      fare = minifare;
+    } else if (comfrt) {
+      fare = comfortfare;
+    } else if (rikshaw) {
+      fare = rickshawfare;
+    } else if (bik) {
+      fare = bykefare;
+    } else {
+      fare = 0.0; // Default fare if no condition is true
+    }
+    setState(() {});
+  }
+  @override
+  void initState() {
+    initSocket();
+    super.initState();
+  }
+  late IO.Socket socket;
+  final String? id = PassId().id;
+  final LatLng? pickuplocation = pickanddrop().pickloc,
+      dropofflocation = pickanddrop().droploc;
+  initSocket() {
+    socket =
+        IO.io('https://3ace-110-93-223-135.ngrok-free.app', <String, dynamic>{
+          'transports': ['websocket'],
+          'autoConnect': false,
+        });
+    socket.connect();
+    socket.onConnect((_) {
+      print("Server Connect with Socket");
+    });
+  }
+   void sendridereq(){
+     // Create payload
+     final payload = {
+       'passengerId': '6654523062cc5411c069d411',
+       'pickupLocation':{'coordinates':pickanddrop().pickloc} ,
+       'dropoffLocation':{'coordinates':pickanddrop().droploc},
+       'fare': fare,
+     };
+
+     // Emit the 'rideRequest' event with the payload
+     socket.emit('rideRequest', payload);
+     print('Emitted rideRequest with payload: $payload');
+   }
+//6654523062cc5411c069d411
+  @override
+  void dispose() {
+    socket.disconnect();
+    socket.dispose();
+    super.dispose();
   }
 
   String typeofvahicle = '';
@@ -107,12 +168,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                showConfirmYourRide=false;
-                                min=false;
-                                go=false;
-                                comfrt=false;
-                                bik=false;
-                                rikshaw=false;
+                                showConfirmYourRide = false;
+                                min = false;
+                                go = false;
+                                comfrt = false;
+                                bik = false;
+                                rikshaw = false;
                               });
                             },
                             child: Container(
@@ -128,16 +189,20 @@ class _RideShownScreenState extends State<RideShownScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  RideWaitingScreen.routeName,
+                              /*Navigator.of(context).pushNamed(
+                                RideWaitingScreen.routeName,
                                 arguments: {
-                              'pickupLocation':
-                              pickupEnterController.text,
-                              'dropoffLocation':
-                              dropoffEnterController.text,
-                              'vah':typeofvahicle,
+                                  'pickupLocation': pickupEnterController.text,
+                                  'dropoffLocation':
+                                      dropoffEnterController.text,
+                                  'vah': typeofvahicle,
+                                  'distance': distance,
+                                  'duration': distance
+                                },
+                              );*/
+                              assignFare();
+                              sendridereq();
 
-                              },);
                             },
                             child: Container(
                               height: 25,
@@ -524,7 +589,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                               onTap: () {
                                 setState(() {
                                   showConfirmYourRide = !showConfirmYourRide;
-                                  rikshaw=!rikshaw;
+                                  rikshaw = !rikshaw;
                                   typeofvahicle = "Rickshaw";
                                   print("$typeofvahicle");
                                 });
@@ -622,12 +687,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                               ? GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      showConfirmYourRide = !showConfirmYourRide;
-                                      bik=!bik;
+                                      showConfirmYourRide =
+                                          !showConfirmYourRide;
+                                      bik = !bik;
                                       typeofvahicle = "Bike";
                                       print("$typeofvahicle");
                                     });
-
                                   },
                                   child: Column(
                                     children: [
@@ -732,6 +797,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
         ),
       );
     }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
@@ -745,7 +811,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
             child: Column(
               children: [
                 MapScreen(
-                  search: [],
+                    search: [],
                     showAds: false,
                     showTextFields: true,
                     isFieldsReadOnly: true,
@@ -781,8 +847,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
                       ),
                     ),
                     fieldTwoController: dropoffEnterController),
-
-
                 spaceHeight(
                   ScreenConfig.screenSizeHeight * 0.2,
                 )

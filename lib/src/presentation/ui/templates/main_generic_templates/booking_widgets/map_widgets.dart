@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart'; // Import the permission_handler package
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/space_line_between_two_text_fields.dart';
@@ -36,7 +37,7 @@ class MapScreen extends StatefulWidget {
   bool? showAds = false;
   LatLng? userLocation;
   bool check;
-  List<Location>? search=[];
+  List<Location>? search = [];
 
   MapScreen({
     Key? kek,
@@ -77,6 +78,7 @@ class _MapScreenState extends State<MapScreen> {
   List<dynamic> placeList2 = [];
   bool flag1 = false;
   bool flag2 = true;
+  LatLng userlocation = LatLng(9.0, 7.9);
 
   @override
   void initState() {
@@ -165,10 +167,10 @@ class _MapScreenState extends State<MapScreen> {
       );
 
       // Update the map to show the user's current location
-      LatLng userLocation = LatLng(position.latitude, position.longitude);
+      userlocation = LatLng(position.latitude, position.longitude);
       _mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: userLocation,
+          target: userlocation,
           zoom: 15.0,
         ),
       ));
@@ -278,15 +280,18 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  late String livelocationdata;
+
   @override
   Widget build(BuildContext context) {
     if (widget.check == true) {
       locationUpdate();
     }
-    if(widget.search!.isNotEmpty){
+    if (widget.search!.isNotEmpty) {
       _mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: LatLng(widget.search![0].latitude, widget.search![0].longitude),
+          target:
+              LatLng(widget.search![0].latitude, widget.search![0].longitude),
           zoom: 15.0,
         ),
       ));
@@ -320,7 +325,8 @@ class _MapScreenState extends State<MapScreen> {
                       anchor: Offset(0.5, 0.5),
                     ),
                     icon: BitmapDescriptor.defaultMarker!,
-                    position: LatLng(widget.search![0].latitude, widget.search![0].longitude)),
+                    position: LatLng(widget.search![0].latitude,
+                        widget.search![0].longitude)),
               if (pick != null && pick.isNotEmpty)
                 Marker(
                     markerId: MarkerId('pickup'),
@@ -361,7 +367,7 @@ class _MapScreenState extends State<MapScreen> {
             onMapCreated: (GoogleMapController controller) async {
               _mapController = controller;
               if (widget.check != true) {
-                  _requestPermissionAndGetCurrentLocation();
+                _requestPermissionAndGetCurrentLocation();
               }
               // Request permission and get current location
             },
@@ -422,44 +428,99 @@ class _MapScreenState extends State<MapScreen> {
                               borderRadius: BorderRadius.circular(20)),
                           child: SingleChildScrollView(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: List.generate(
-                                placeList1.length,
-                                (index) {
-                                  return ListTile(
-                                    onTap: () async {
-                                      flag1 = false;
-                                      // Set the text of the controller to the tapped place's description
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    widget.fieldOneController.text = '';
+                                    List<Placemark> placemarks =
+                                        await placemarkFromCoordinates(
+                                            userlocation.latitude,
+                                            userlocation.longitude);
+                                    setState(() {
                                       widget.fieldOneController.text =
-                                          placeList1[index]['description'];
-                                      // Call getSuggestion with the tapped place's description to update suggestions
-                                      getSuggestion1(
-                                          placeList1[index]['description']);
-                                      try {
-                                        List<Location> locations =
-                                            await locationFromAddress(
-                                                "${placeList1[index]['description']}");
-                                        print("locations: $locations");
-                                        if (locations != null &&
-                                            locations.isNotEmpty) {
-                                          print(
-                                              "longitude: ${locations.last.longitude}");
-                                          print(
-                                              "latitude: ${locations.last.latitude}");
-                                        } else {
-                                          print(
-                                              'No location found for this address');
-                                        }
-                                      } catch (e) {
-                                        print('Error getting location: $e');
-                                      }
-                                    },
-                                    title: Text(
-                                      placeList1[index]['description'],
+                                          '${placemarks.reversed.last.name}' +
+                                              '' +
+                                              '${placemarks.reversed.last.street}' +
+                                              '' +
+                                              '${placemarks.reversed.last.administrativeArea}' +
+                                              '' +
+                                              '${placemarks.reversed.last.country}';
+                                      print('$placemarks');
+                                      flag1 = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: ScreenConfig.theme.primaryColor,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            topRight: Radius.circular(20))),
+                                    height: 50,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.navigation,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          "Select Your Live Location",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13),
+                                        )
+                                      ],
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(
+                                    placeList1.length,
+                                    (index) {
+                                      return ListTile(
+                                        onTap: () async {
+                                          flag1 = false;
+                                          // Set the text of the controller to the tapped place's description
+                                          widget.fieldOneController.text =
+                                              placeList1[index]['description'];
+                                          // Call getSuggestion with the tapped place's description to update suggestions
+                                          getSuggestion1(
+                                              placeList1[index]['description']);
+                                          try {
+                                            List<Location> locations =
+                                                await locationFromAddress(
+                                                    "${placeList1[index]['description']}");
+                                            print("locations: $locations");
+                                            if (locations != null &&
+                                                locations.isNotEmpty) {
+                                              print(
+                                                  "longitude: ${locations.last.longitude}");
+                                              print(
+                                                  "latitude: ${locations.last.latitude}");
+                                            } else {
+                                              print(
+                                                  'No location found for this address');
+                                            }
+                                          } catch (e) {
+                                            print('Error getting location: $e');
+                                          }
+                                        },
+                                        title: Text(
+                                          placeList1[index]['description'],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -497,17 +558,17 @@ class _MapScreenState extends State<MapScreen> {
                                 (index) {
                                   return ListTile(
                                     onTap: () async {
-                                      flag2=false;
+                                      flag2 = false;
                                       // Set the text of the controller to the tapped place's description
                                       widget.fieldTwoController.text =
-                                      placeList2[index]['description'];
+                                          placeList2[index]['description'];
                                       // Call getSuggestion with the tapped place's description to update suggestions
                                       getSuggestion2(
                                           placeList2[index]['description']);
                                       try {
                                         List<Location> locations =
-                                        await locationFromAddress(
-                                            "${placeList2[index]['description']}");
+                                            await locationFromAddress(
+                                                "${placeList2[index]['description']}");
                                         print("locations: $locations");
                                         if (locations != null &&
                                             locations.isNotEmpty) {
@@ -550,6 +611,12 @@ class _MapScreenState extends State<MapScreen> {
                         widget.fieldOneController.text);
                     drop = await locationFromAddress(
                         widget.fieldTwoController.text);
+                    setState(() {
+                      pickanddrop().pickloc=LatLng(pick[0].longitude, pick[0].latitude);
+                      pickanddrop().droploc=LatLng(drop[0].longitude, drop[0].latitude);
+                      print("${pickanddrop().pickloc} pickloc a gya");
+                    });
+                    print("${pick} and  ${drop} both a done");
                     showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
                         LatLng(drop[0].latitude, drop[0].longitude));
                   } else {
@@ -626,7 +693,7 @@ class DirectionsRepository {
         'key': 'AIzaSyC3zIrn8aFCIboCPmMyE52wKgFeQizPRNI',
       },
     );
-
+    print('$destination helo');
     // Check if response is successful
     if (response.statusCode == 200) {
       return Directions.fromMap(response.data);
@@ -647,4 +714,16 @@ bool DistanceLessThenFiftyKM() {
   } else {
     return false;
   }
+}
+
+class pickanddrop {
+  static final pickanddrop _instance = pickanddrop._internal();
+
+  factory pickanddrop() {
+    return _instance;
+  }
+
+  pickanddrop._internal();
+
+  LatLng? pickloc, droploc;
 }

@@ -15,6 +15,7 @@ import 'package:ridely/src/presentation/ui/config/validator.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/otp_verification_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
@@ -249,6 +250,12 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200) {
         // Successful POST request
         print('User Login Successfully: ${response.body}');
+        final responseData = jsonDecode(response.body);
+        final data= responseData['data'];
+        final id = data['_id'];
+        setState(() {
+          PassId().id = id;
+        });
         Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
       } else {
         // Error occurred

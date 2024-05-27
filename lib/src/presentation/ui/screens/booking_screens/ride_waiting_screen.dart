@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_in_progress_and_finish_screen.dart';
 
@@ -10,6 +11,10 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/othe
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart';
+
+import '../onboarding_screens/register_screens/passangerregistration.dart';
 
 class RideWaitingScreen extends StatefulWidget {
   const RideWaitingScreen({Key? key}) : super(key: key);
@@ -23,23 +28,28 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
   int currentIndex = -1;
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
-  String image = "assets/images/LocationDistanceScreenMap.png",distance='',vahicle='';
-  List namesList = ["Mini", "Go", "Comfort", "Mini"];
+  String image = "assets/images/LocationDistanceScreenMap.png",
+      distance = '',
+      vahicle = '',
+      duration = '';
+
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
     final args =
-    ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+        ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
     if (args != null) {
       setState(() {
         pickupEnterController.text = args['pickupLocation']!;
         dropoffEnterController.text = args['dropoffLocation']!;
         vahicle = args['vah']!;
         distance = args['distance']!;
-        print('${pickupEnterController.text} oy pick a gya');
+        duration = args['duration']!;
       });
     }
   }
+
+
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -67,7 +77,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                   ),
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                rideDetailsWidget("Mini", "Cancel Ride", context),
+                rideDetailsWidget(vahicle, "Cancel Ride", context),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               ],
             ),
@@ -94,7 +104,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
               child: Column(
                 children: [
                   MapScreen(
-                    check: true,
+                      check: true,
                       showAds: false,
                       showTextFields: true,
                       isFieldsReadOnly: true,

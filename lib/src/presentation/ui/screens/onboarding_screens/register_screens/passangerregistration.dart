@@ -11,6 +11,9 @@ import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/config/compress_image.dart';
 import 'package:ridely/src/presentation/ui/config/validator.dart';
+import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/otp_verification_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
@@ -28,10 +31,10 @@ class RegisterInfoScreen extends StatefulWidget {
   static const routeName = '/registerInfo-screen';
 
   @override
-  State<RegisterInfoScreen> createState() => _RegisterInfoScreenState();
+  State<RegisterInfoScreen> createState() => PassangerRegistrationScreen();
 }
 
-class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
+class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
   final TextEditingController firstName = TextEditingController();
 
   final TextEditingController email = TextEditingController();
@@ -50,7 +53,6 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
   void initState() {
     super.initState();
   }
-
   baseulr burl = baseulr();
   bool phoneNumberError = false;
   bool pasd = false;
@@ -59,13 +61,13 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
   bool emailError = false;
 
   void navigate() {
-    User user = User(
+    passanger user = passanger(
       name: firstName.text,
       email: email.text,
       password: password.text,
       phone: phoneNumber.text,
       location: Location(
-        type: "Passenger",
+        type: "Point",
         coordinates: [-73.935242, 40.730610], // Static example coordinates
       ),
       preferences: Preferences(
@@ -140,7 +142,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
                       _displayBodyText(),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.05),
                       _displayTextField(
-                        name: 'Driver Name',
+                        name: 'Passanger Name',
                         hint: 'Enter Your Name',
                         validator: (value) {
                           return null;
@@ -360,7 +362,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
     );
   }
 
-  Future<void> postUserData(User user) async {
+  Future<void> postUserData(passanger user) async {
     final url = Uri.parse(
         '${burl.burl}/api/v1/passenger/register'); // Replace with your API endpoint
     final body = jsonEncode(user.toJson());
@@ -374,7 +376,18 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
-        Navigator.of(context).pushNamed(OTPVerificationScreen.routeName);
+        final responseData = jsonDecode(response.body);
+        final data= responseData['data'];
+        final id = data['_id'];
+        setState(() {
+          PassId().id = id;
+        });
+        print('responce$responseData');
+        if (PassId().id != null) {
+          Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
+        } else {
+          print('Error: _id is null');
+        }
       } else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');
@@ -385,4 +398,16 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
       print('Error: $error');
     }
   }
+}
+
+class PassId {
+  static final PassId _instance = PassId._internal();
+
+  factory PassId() {
+    return _instance;
+  }
+
+  PassId._internal();
+
+  String? id;
 }

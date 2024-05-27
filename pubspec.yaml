@@ -43,12 +43,13 @@ dependencies:
   dio: ^5.4.3+1
   http: ^1.2.1
   uuid: ^4.4.0
-  pinput: ^4.0.0
+  pinput: ^3.0.1
   get:
   geocoding: ^3.0.0
   image_picker: ^0.8.5+3
   overlay_support: ^2.0.1
   shared_preferences: ^2.0.15
+  socket_io_client: ^2.0.3+1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.10.0
