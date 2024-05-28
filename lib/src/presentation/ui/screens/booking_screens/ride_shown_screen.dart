@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
@@ -84,6 +85,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   }
   late IO.Socket socket;
   final String? id = PassId().id;
+  var reqrideid='';
   final LatLng? pickuplocation = pickanddrop().pickloc,
       dropofflocation = pickanddrop().droploc;
   initSocket() {
@@ -97,6 +99,10 @@ class _RideShownScreenState extends State<RideShownScreen> {
       print("Server Connect with Socket");
     });
     socket.emit('registerPassenger', "6654523062cc5411c069d411");
+    socket.on('rideRequested', (data){
+      print("$data ride is accepted ");
+      reqrideid=data['_id'];
+    });
   }
    void sendridereq(){
      // Create payload
@@ -110,7 +116,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
      // Emit the 'rideRequest' event with the payload
      socket.emit('rideRequest', payload);
      print('Emitted rideRequest with payload: $payload');
-     socket.on('rideRequested', (data) {
+     socket.on('rideRequest', (data) {
        print("data of riderequest $data");
      });
    }
@@ -123,7 +129,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
   }
 
   String typeofvahicle = '';
-
+  void acceptstatus(){
+    final payload={
+      'rideId': '6654e5cfbf06b713b965fb5c'
+    };
+    socket.emit('confirmRide',payload);
+  }
   @override
   Widget build(BuildContext context) {
     Widget confirmYourRideWidget(String typeofvahicle) {
@@ -244,16 +255,54 @@ class _RideShownScreenState extends State<RideShownScreen> {
               children: [
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                Container(
-                  height: 35,
-                  width: 35,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/AppIcon.png"),
-                        fit: BoxFit.contain),
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                        acceptstatus();
+                      },
+                      child: Container(
+                        height: 35,
+                        width: 35,
+                        decoration: const BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    GestureDetector(
+                      onTap: (){
+
+                      },
+                      child: Container(
+                        height: 35,
+                        width: 35,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                      height: 35,
+                      width: 35,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        image: DecorationImage(
+                            image: AssetImage("assets/images/AppIcon.png"),
+                            fit: BoxFit.contain),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                    ),
+                  ],
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 SizedBox(
