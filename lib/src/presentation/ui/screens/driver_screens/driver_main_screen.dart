@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/vehicle_selection_screen.dart';
@@ -21,6 +22,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../../templates/ride_widgets/ride_widget_buttons.dart';
+import '../onboarding_screens/register_screens/passangerregistration.dart';
 
 class DriverRideSelectionScreen extends StatefulWidget {
   const DriverRideSelectionScreen({Key? key}) : super(key: key);
@@ -35,6 +37,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
   List namesList = ["Mini", "Go", "Comfort", "Mini"];
    var datarespose='';
+   int rideRequestCount = 0;
   @override
   void initState() {
     initSocket();
@@ -43,8 +46,12 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   late IO.Socket socket;
   initSocket() {
     socket =
-        IO.io('https://3ace-110-93-223-135.ngrok-free.app', <String, dynamic>{
+        IO.io('https://5975-39-45-24-33.ngrok-free.app', <String, dynamic>{
           'transports': ['websocket'],
+          'extraHeaders': {
+            'authorization': PassId().token,
+            'usertype': PassId().type
+          },
           'autoConnect': false,
         });
     socket.connect();
@@ -53,18 +60,23 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     });
     socket.emit('registerPassenger', "6654c19110f43154535cc4f5");
     socket.on('rideRequest',(data){
+      rideRequestCount++;
       print("ridedata arrive $data");
       datarespose=data['_id'];
-      print(" and id is=$datarespose");
+      print(" and id is=$datarespose ");
     });
     socket.on('a', (data){
       print(">>>>>$data");
+    });
+    setState(() {
+
     });
   }
 
   void acceptrides(){
     final payload={
-      'rideId': datarespose
+      'rideId': datarespose,
+      'driverId': PassId().id
     };
     socket.emit('acceptRide',payload);
   }
@@ -222,7 +234,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                       children: [
                         spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                         Column(
-                          children: List.generate(4, (index) {
+                          children: List.generate(rideRequestCount, (index) {
                             return Column(
                               children: [
                                 Container(
