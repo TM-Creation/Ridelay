@@ -30,6 +30,7 @@ class DriverRideSelectionScreen extends StatefulWidget {
 class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
   List namesList = ["Mini", "Go", "Comfort", "Mini"];
+   var datarespose='';
   @override
   void initState() {
     initSocket();
@@ -47,6 +48,21 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       print("Server Connect with Socket");
     });
     socket.emit('registerPassenger', "6654c19110f43154535cc4f5");
+    socket.on('rideRequest',(data){
+      print("ridedata arrive $data");
+      datarespose=data['_id'];
+      print(" and id is=$datarespose");
+    });
+    socket.on('a', (data){
+      print(">>>>>$data");
+    });
+  }
+
+  void acceptrides(){
+    final payload={
+      'rideId': datarespose
+    };
+    socket.emit('acceptRide',payload);
   }
   @override
   Widget build(BuildContext context) {
@@ -199,6 +215,17 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                 child: SingleChildScrollView(
                     physics: const ClampingScrollPhysics(),
                     child: Column(children: [
+                      GestureDetector(
+                        onTap: (){
+                          acceptrides();
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          color: Colors.black,
+                          child: Text('Ride Accep',style: TextStyle(color: Colors.white),),
+                        ),
+                      ),
                       Column(
                         children: [
                           spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
