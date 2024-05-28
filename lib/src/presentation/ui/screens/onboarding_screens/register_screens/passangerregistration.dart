@@ -68,7 +68,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
       phone: phoneNumber.text,
       location: Location(
         type: "Point",
-        coordinates: [-73.935242, 40.730610], // Static example coordinates
+        coordinates: [userLiveLocation().userlivelocation!.latitude, userLiveLocation().userlivelocation!.longitude], // Static example coordinates
       ),
       preferences: Preferences(
         language: 'en',
@@ -377,17 +377,8 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
         final responseData = jsonDecode(response.body);
-        final data= responseData['data'];
-        final id = data['_id'];
-        setState(() {
-          PassId().id = id;
-        });
         print('responce$responseData');
-        if (PassId().id != null) {
-          Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
-        } else {
-          print('Error: _id is null');
-        }
+        Navigator.of(context).pushNamed(Login.routeName);
       } else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');
@@ -409,5 +400,5 @@ class PassId {
 
   PassId._internal();
 
-  String? id;
+  String? id,token,type;
 }
