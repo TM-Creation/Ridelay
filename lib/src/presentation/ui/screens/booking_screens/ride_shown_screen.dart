@@ -37,6 +37,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   bool showConfirmYourRide = false;
   String distance = '', duration = '';
   double? totaldistance;
+  int counter=0;
   double minifare = 0,
       gofare = 0,
       comfortfare = 0,
@@ -117,6 +118,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
     socket.on('rideAccepted', (data) {
       print("$data ride is accepted ");
       reqrideid = data['_id'];
+      counter++;
       isdriveraccept=false;
       requestshow=true;
       setState(() {
@@ -876,7 +878,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                       padding: const EdgeInsets.only(top: 15),
                       child: SingleChildScrollView(
                         child: Column(
-                          children: List.generate(8, (index) {
+                          children: List.generate(counter, (index) {
                             return Column(
                               children: [
                                 Container(
