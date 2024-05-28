@@ -76,7 +76,7 @@ Widget driverRectangleSquareButton(String type, void Function() func) {
           child: displayNoSizedText(
               type,
               ScreenConfig.theme.textTheme.caption
-                  ?.copyWith(color: Colors.white),
+                  ?.copyWith(color: ScreenConfig.theme.primaryColor,fontWeight: FontWeight.bold),
               textAlign: TextAlign.center)),
     ),
   );
