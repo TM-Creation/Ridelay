@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_waiting_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
@@ -84,7 +85,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
     setState(() {});
   }
 
-  bool isdriversccept = false, requestshow = false;
+  bool isdriveraccept = false, requestshow = false;
 
   @override
   void initState() {
@@ -100,8 +101,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
   initSocket() {
     socket =
-        IO.io('https://3ace-110-93-223-135.ngrok-free.app', <String, dynamic>{
+        IO.io('https://5975-39-45-24-33.ngrok-free.app', <String, dynamic>{
       'transports': ['websocket'],
+      'extraHeaders': {
+        'authorization': PassId().token,
+        'usertype': PassId().type
+      },
       'autoConnect': false,
     });
     socket.connect();
@@ -109,11 +114,14 @@ class _RideShownScreenState extends State<RideShownScreen> {
       print("Server Connect with Socket");
     });
     socket.emit('registerPassenger', PassId().id);
-    socket.on('rideRequested', (data) {
+    socket.on('rideAccepted', (data) {
       print("$data ride is accepted ");
       reqrideid = data['_id'];
-      isdriversccept = false;
-      requestshow = true;
+      isdriveraccept=false;
+      requestshow=true;
+      setState(() {
+
+      });
     });
   }
 
@@ -128,17 +136,16 @@ class _RideShownScreenState extends State<RideShownScreen> {
     // Emit the 'rideRequest' event with the payload
     socket.emit('rideRequest', payload);
     print('Emitted rideRequest with payload: $payload');
-    socket.on('rideRequest', (data) {
+    socket.on('rideRequested', (data) {
       print("data of riderequest $data");
     });
-    isdriversccept = true;
+    isdriveraccept=true;
   }
 
 //6654523062cc5411c069d411
   @override
   void dispose() {
     socket.disconnect();
-    socket.dispose();
     super.dispose();
   }
 
@@ -183,7 +190,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       Buttons.crossSmallButton(context, () {
                         setState(() {
-                          showConfirmYourRide=false;
+                          showConfirmYourRide = false;
                           min = false;
                           go = false;
                           comfrt = false;
@@ -837,11 +844,14 @@ class _RideShownScreenState extends State<RideShownScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
-      backgroundColor:  requestshow ? ScreenConfig.theme.primaryColor: Colors.white,
-      appBar: isdriversccept || requestshow ? null :GenericAppBars.appBarWithBackButtonOnly(context, false),
-      body: isdriversccept
+      backgroundColor:
+          requestshow ? ScreenConfig.theme.primaryColor : Colors.white,
+      appBar: isdriveraccept || requestshow
+          ? null
+          : GenericAppBars.appBarWithBackButtonOnly(context, false),
+      body: isdriveraccept
           ? Center(
-            child: Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
@@ -853,185 +863,237 @@ class _RideShownScreenState extends State<RideShownScreen> {
                           fontSize: 15)),
                 ],
               ),
-          )
-          : requestshow ? Center(
-            child: Container(
-              height: ScreenConfig.screenSizeHeight*0.95,
-              width:  ScreenConfig.screenSizeWidth*0.9,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: List.generate(8, (index){
-                      return Column(
-                        children: [
-                          Container(
-                            height: ScreenConfig.screenSizeHeight*0.18,
-                            width:  ScreenConfig.screenSizeWidth*0.85,
-                            decoration: blueContainerTemplate(),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
-                              child: Center(
-                                child: SizedBox(
-                                  width: ScreenConfig.screenSizeWidth * 0.8,
-                                  child: Column(
-                                    children: [
-                                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          userDetailsContainer(
-                                              "assets/images/UserProfileImage.png",
-                                              "Altaf Ahmed",
-                                              "4.9",
-                                              true,
-                                              false,
-                                              " "),
-                                          userDetailsContainer("assets/images/UserCarImage.png",
-                                              "Honda Civic", "LXV 5675", false, true, "2019")
-                                        ],
-                                      ),
-                                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 8),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            )
+          : requestshow
+              ? Center(
+                  child: Container(
+                    height: ScreenConfig.screenSizeHeight * 0.95,
+                    width: ScreenConfig.screenSizeWidth * 0.9,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(8, (index) {
+                            return Column(
+                              children: [
+                                Container(
+                                  height: ScreenConfig.screenSizeHeight * 0.18,
+                                  width: ScreenConfig.screenSizeWidth * 0.85,
+                                  decoration: blueContainerTemplate(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0, vertical: 15),
+                                    child: Center(
+                                      child: SizedBox(
+                                        width:
+                                            ScreenConfig.screenSizeWidth * 0.8,
+                                        child: Column(
                                           children: [
-                                            GestureDetector(
-                                              onTap: (){
-                                                acceptstatus();
-                                              },
-                                              child: Container(
-                                                  height: 40,
-                                                  width: ScreenConfig.screenSizeWidth * 0.3,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.green,
-                                                      borderRadius:
-                                                      BorderRadius.all(Radius.circular(10)),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.grey.withOpacity(0.40),
-                                                          offset: const Offset(0.0, 1.2), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        )
-                                                      ]),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(
-                                                        horizontal: 10.0, vertical: 5),
-                                                    child: Center(child: Text("Accept",style: TextStyle(
-                                                        fontSize: 14
-                                                    ),)),
-                                                  )),
+                                            spaceHeight(
+                                                ScreenConfig.screenSizeHeight *
+                                                    0.02),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                userDetailsContainer(
+                                                    "assets/images/UserProfileImage.png",
+                                                    "Altaf Ahmed",
+                                                    "4.9",
+                                                    true,
+                                                    false,
+                                                    " "),
+                                                userDetailsContainer(
+                                                    "assets/images/UserCarImage.png",
+                                                    "Honda Civic",
+                                                    "LXV 5675",
+                                                    false,
+                                                    true,
+                                                    "2019")
+                                              ],
                                             ),
-                                            GestureDetector(
-                                              onTap: () => null,
-                                              child: Container(
-                                                  height: 40,
-                                                  width: ScreenConfig.screenSizeWidth * 0.3,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.red,
-                                                      borderRadius:
-                                                      BorderRadius.all(Radius.circular(10)),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.grey.withOpacity(0.40),
-                                                          offset: const Offset(0.0, 1.2), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        )
-                                                      ]),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(
-                                                        horizontal: 10.0, vertical: 5),
-                                                    child: Center(child: Text("Deny",style: TextStyle(
-                                                        fontSize: 14
-                                                    ),)),
-                                                  )),
-                                            ),
+                                            spaceHeight(
+                                                ScreenConfig.screenSizeHeight *
+                                                    0.02),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 8),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      acceptstatus();
+                                                    },
+                                                    child: Container(
+                                                        height: 40,
+                                                        width: ScreenConfig
+                                                                .screenSizeWidth *
+                                                            0.3,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.green,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.40),
+                                                                offset: const Offset(
+                                                                    0.0,
+                                                                    1.2), //(x,y)
+                                                                blurRadius: 6.0,
+                                                              )
+                                                            ]),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      10.0,
+                                                                  vertical: 5),
+                                                          child: Center(
+                                                              child: Text(
+                                                            "Accept",
+                                                            style: TextStyle(
+                                                                fontSize: 14),
+                                                          )),
+                                                        )),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () => null,
+                                                    child: Container(
+                                                        height: 40,
+                                                        width: ScreenConfig
+                                                                .screenSizeWidth *
+                                                            0.3,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.40),
+                                                                offset: const Offset(
+                                                                    0.0,
+                                                                    1.2), //(x,y)
+                                                                blurRadius: 6.0,
+                                                              )
+                                                            ]),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      10.0,
+                                                                  vertical: 5),
+                                                          child: Center(
+                                                              child: Text(
+                                                            "Deny",
+                                                            style: TextStyle(
+                                                                fontSize: 14),
+                                                          )),
+                                                        )),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
                                           ],
                                         ),
-                                      )
-                                    ],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                ),
-              ),
-            ),
-          ): Stack(
-              alignment: AlignmentDirectional.bottomCenter,
-              children: [
-                SizedBox(
-                  height: ScreenConfig.screenSizeHeight * 1.2,
-                  child: Column(
-                    children: [
-                      MapScreen(
-                          search: [],
-                          showAds: false,
-                          showTextFields: true,
-                          isFieldsReadOnly: true,
-                          isFullScreen: false,
-                          autoupdatepolyline: true,
-                          isShowMyLocationIcon: false,
-                          check: true,
-                          image: image,
-                          hintFieldOne: "Pick-Up Location",
-                          fieldOneButtonFunction: () {},
-                          suffixIconFieldOne: SizedBox(
-                            height: 60,
-                            width: 50,
-                            child: Row(
-                              children: [
-                                Buttons.smallSquareButton(
-                                    "assets/images/CircularIconButton.png",
-                                    () {}),
+                                SizedBox(
+                                  height: 15,
+                                ),
                               ],
-                            ),
-                          ),
-                          fieldOneController: pickupEnterController,
-                          isDisplayFieldTwo: true,
-                          hintFieldTwo: "Drop Off Location",
-                          fieldTwoButtonFunction: () {},
-                          suffixIconFieldTwo: SizedBox(
-                            height: 60,
-                            width: 50,
-                            child: Row(
-                              children: [
-                                Buttons.smallSquareButton(
-                                    "assets/images/PinPointIcon.png", () {}),
-                              ],
-                            ),
-                          ),
-                          fieldTwoController: dropoffEnterController),
-                      spaceHeight(
-                        ScreenConfig.screenSizeHeight * 0.2,
-                      )
-                    ],
+                            );
+                          }),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    if (showConfirmYourRide)
-                      confirmYourRideWidget(typeofvahicle),
-                    spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
-                    bottomModalNonSlideable(),
-                  ],
                 )
-              ],
-            ),
+              : Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    SizedBox(
+                      height: ScreenConfig.screenSizeHeight * 1.2,
+                      child: Column(
+                        children: [
+                          MapScreen(
+                              search: [],
+                              showAds: false,
+                              showTextFields: true,
+                              isFieldsReadOnly: true,
+                              isFullScreen: false,
+                              autoupdatepolyline: true,
+                              isShowMyLocationIcon: false,
+                              check: true,
+                              image: image,
+                              hintFieldOne: "Pick-Up Location",
+                              fieldOneButtonFunction: () {},
+                              suffixIconFieldOne: SizedBox(
+                                height: 60,
+                                width: 50,
+                                child: Row(
+                                  children: [
+                                    Buttons.smallSquareButton(
+                                        "assets/images/CircularIconButton.png",
+                                        () {}),
+                                  ],
+                                ),
+                              ),
+                              fieldOneController: pickupEnterController,
+                              isDisplayFieldTwo: true,
+                              hintFieldTwo: "Drop Off Location",
+                              fieldTwoButtonFunction: () {},
+                              suffixIconFieldTwo: SizedBox(
+                                height: 60,
+                                width: 50,
+                                child: Row(
+                                  children: [
+                                    Buttons.smallSquareButton(
+                                        "assets/images/PinPointIcon.png",
+                                        () {}),
+                                  ],
+                                ),
+                              ),
+                              fieldTwoController: dropoffEnterController),
+                          spaceHeight(
+                            ScreenConfig.screenSizeHeight * 0.2,
+                          )
+                        ],
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (showConfirmYourRide)
+                          confirmYourRideWidget(typeofvahicle),
+                        spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
+                        bottomModalNonSlideable(),
+                      ],
+                    )
+                  ],
+                ),
     );
   }
 }
