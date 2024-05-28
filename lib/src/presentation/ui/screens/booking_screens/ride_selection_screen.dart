@@ -27,12 +27,9 @@ class RideSelectionScreen extends StatefulWidget {
 
 class _RideSelectionScreenState extends State<RideSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
-  GoogleMapController? _mapController;
-  LatLng? _userLocation;
   @override
   void initState() {
     super.initState();
-    _getLocationPermission();
   }
   List<Location> search=[];
   void searchupdate()async{
@@ -42,47 +39,6 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
       print('$search search a gya');
     });
   }
-  @override
-  Future<void> _getLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permission is denied.');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permission is permanently denied, we cannot request permissions.');
-    }
-
-    _showUserLocation();
-  }
-
-  void _showUserLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    setState(() {
-      _userLocation = LatLng(position.latitude, position.longitude);
-    });
-
-    if (_mapController != null) {
-      _mapController!.animateCamera(CameraUpdate.newLatLngZoom(
-        _userLocation!,
-        15.0,
-      ));
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +58,6 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                   isFieldsReadOnly: false,
                   showTextFields: true,
                   showAds: false,
-                  userLocation: _userLocation,
                   isShowMyLocationIcon: true,
                   isFullScreen: false,
                   search: search,

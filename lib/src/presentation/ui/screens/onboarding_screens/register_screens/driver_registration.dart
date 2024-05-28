@@ -72,7 +72,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       phone: driverphonenumber.text,
       location: Location(
         type: "Point",
-        coordinates: [-73.935242, 40.730610], // Static example coordinates
+        coordinates: [userLiveLocation().userlivelocation!.latitude, userLiveLocation().userlivelocation!.longitude], // Static example coordinates
       ),
       rating: 4.8,
       identityCardNumber:idNumber.text,

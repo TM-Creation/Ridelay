@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,6 +15,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../onboarding_screens/register_screens/passangerregistration.dart';
 
 class RideShownScreen extends StatefulWidget {
@@ -38,13 +41,14 @@ class _RideShownScreenState extends State<RideShownScreen> {
       comfortfare = 0,
       rickshawfare = 0,
       bykefare = 0;
-  double fare=454;
+  double fare = 454;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
     final args =
-    ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+        ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
     if (args != null) {
       setState(() {
         pickupEnterController.text = args['pickupLocation']!;
@@ -62,6 +66,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
       });
     }
   }
+
   void assignFare() {
     if (go) {
       fare = gofare;
@@ -78,48 +83,57 @@ class _RideShownScreenState extends State<RideShownScreen> {
     }
     setState(() {});
   }
+
+  bool isdriversccept = false, requestshow = false;
+
   @override
   void initState() {
     initSocket();
     super.initState();
   }
+
   late IO.Socket socket;
   final String? id = PassId().id;
-  var reqrideid='';
+  var reqrideid = '';
   final LatLng? pickuplocation = pickanddrop().pickloc,
       dropofflocation = pickanddrop().droploc;
+
   initSocket() {
     socket =
         IO.io('https://3ace-110-93-223-135.ngrok-free.app', <String, dynamic>{
-          'transports': ['websocket'],
-          'autoConnect': false,
-        });
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
     socket.connect();
     socket.onConnect((_) {
       print("Server Connect with Socket");
     });
-    socket.emit('registerPassenger', "6654523062cc5411c069d411");
-    socket.on('rideRequested', (data){
+    socket.emit('registerPassenger', PassId().id);
+    socket.on('rideRequested', (data) {
       print("$data ride is accepted ");
-      reqrideid=data['_id'];
+      reqrideid = data['_id'];
+      isdriversccept = false;
+      requestshow = true;
     });
   }
-   void sendridereq(){
-     // Create payload
-     final payload = {
-       'passengerId': '6654523062cc5411c069d411',
-       'pickupLocation':{'coordinates':pickanddrop().pickloc} ,
-       'dropoffLocation':{'coordinates':pickanddrop().droploc},
-       'fare': fare,
-     };
 
-     // Emit the 'rideRequest' event with the payload
-     socket.emit('rideRequest', payload);
-     print('Emitted rideRequest with payload: $payload');
-     socket.on('rideRequest', (data) {
-       print("data of riderequest $data");
-     });
-   }
+  void sendridereq() {
+    // Create payload
+    final payload = {
+      'passengerId': PassId().id,
+      'pickupLocation': {'coordinates': pickanddrop().pickloc},
+      'dropoffLocation': {'coordinates': pickanddrop().droploc},
+      'fare': fare,
+    };
+    // Emit the 'rideRequest' event with the payload
+    socket.emit('rideRequest', payload);
+    print('Emitted rideRequest with payload: $payload');
+    socket.on('rideRequest', (data) {
+      print("data of riderequest $data");
+    });
+    isdriversccept = true;
+  }
+
 //6654523062cc5411c069d411
   @override
   void dispose() {
@@ -129,12 +143,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
   }
 
   String typeofvahicle = '';
-  void acceptstatus(){
-    final payload={
-      'rideId': '6654e5cfbf06b713b965fb5c'
-    };
-    socket.emit('confirmRide',payload);
+
+  void acceptstatus() {
+    final payload = {'rideId': '6654e5cfbf06b713b965fb5c'};
+    socket.emit('confirmRide', payload);
+    print('Driver Accepted');
   }
+
   @override
   Widget build(BuildContext context) {
     Widget confirmYourRideWidget(String typeofvahicle) {
@@ -167,7 +182,14 @@ class _RideShownScreenState extends State<RideShownScreen> {
                     children: [
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       Buttons.crossSmallButton(context, () {
-                        setState(() {});
+                        setState(() {
+                          showConfirmYourRide=false;
+                          min = false;
+                          go = false;
+                          comfrt = false;
+                          bik = false;
+                          rikshaw = false;
+                        });
                       }),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                       displayText(
@@ -217,7 +239,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
                               );*/
                               assignFare();
                               sendridereq();
-
                             },
                             child: Container(
                               height: 25,
@@ -255,54 +276,16 @@ class _RideShownScreenState extends State<RideShownScreen> {
               children: [
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: (){
-                        acceptstatus();
-                      },
-                      child: Container(
-                        height: 35,
-                        width: 35,
-                        decoration: const BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    GestureDetector(
-                      onTap: (){
-
-                      },
-                      child: Container(
-                        height: 35,
-                        width: 35,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Container(
-                      height: 35,
-                      width: 35,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        image: DecorationImage(
-                            image: AssetImage("assets/images/AppIcon.png"),
-                            fit: BoxFit.contain),
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                    ),
-                  ],
+                Container(
+                  height: 35,
+                  width: 35,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/AppIcon.png"),
+                        fit: BoxFit.contain),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 SizedBox(
@@ -854,68 +837,201 @@ class _RideShownScreenState extends State<RideShownScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
-      body: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
-        children: [
-          SizedBox(
-            height: ScreenConfig.screenSizeHeight * 1.2,
+      backgroundColor:  requestshow ? ScreenConfig.theme.primaryColor: Colors.white,
+      appBar: isdriversccept || requestshow ? null :GenericAppBars.appBarWithBackButtonOnly(context, false),
+      body: isdriversccept
+          ? Center(
             child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Finding Driver...',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15)),
+                ],
+              ),
+          )
+          : requestshow ? Center(
+            child: Container(
+              height: ScreenConfig.screenSizeHeight*0.95,
+              width:  ScreenConfig.screenSizeWidth*0.9,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10)
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: List.generate(8, (index){
+                      return Column(
+                        children: [
+                          Container(
+                            height: ScreenConfig.screenSizeHeight*0.18,
+                            width:  ScreenConfig.screenSizeWidth*0.85,
+                            decoration: blueContainerTemplate(),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
+                              child: Center(
+                                child: SizedBox(
+                                  width: ScreenConfig.screenSizeWidth * 0.8,
+                                  child: Column(
+                                    children: [
+                                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          userDetailsContainer(
+                                              "assets/images/UserProfileImage.png",
+                                              "Altaf Ahmed",
+                                              "4.9",
+                                              true,
+                                              false,
+                                              " "),
+                                          userDetailsContainer("assets/images/UserCarImage.png",
+                                              "Honda Civic", "LXV 5675", false, true, "2019")
+                                        ],
+                                      ),
+                                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: (){
+                                                acceptstatus();
+                                              },
+                                              child: Container(
+                                                  height: 40,
+                                                  width: ScreenConfig.screenSizeWidth * 0.3,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.green,
+                                                      borderRadius:
+                                                      BorderRadius.all(Radius.circular(10)),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey.withOpacity(0.40),
+                                                          offset: const Offset(0.0, 1.2), //(x,y)
+                                                          blurRadius: 6.0,
+                                                        )
+                                                      ]),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(
+                                                        horizontal: 10.0, vertical: 5),
+                                                    child: Center(child: Text("Accept",style: TextStyle(
+                                                        fontSize: 14
+                                                    ),)),
+                                                  )),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () => null,
+                                              child: Container(
+                                                  height: 40,
+                                                  width: ScreenConfig.screenSizeWidth * 0.3,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius:
+                                                      BorderRadius.all(Radius.circular(10)),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey.withOpacity(0.40),
+                                                          offset: const Offset(0.0, 1.2), //(x,y)
+                                                          blurRadius: 6.0,
+                                                        )
+                                                      ]),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(
+                                                        horizontal: 10.0, vertical: 5),
+                                                    child: Center(child: Text("Deny",style: TextStyle(
+                                                        fontSize: 14
+                                                    ),)),
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ),
+              ),
+            ),
+          ): Stack(
+              alignment: AlignmentDirectional.bottomCenter,
               children: [
-                MapScreen(
-                    search: [],
-                    showAds: false,
-                    showTextFields: true,
-                    isFieldsReadOnly: true,
-                    isFullScreen: false,
-                    autoupdatepolyline: true,
-                    isShowMyLocationIcon: false,
-                    check: true,
-                    image: image,
-                    hintFieldOne: "Pick-Up Location",
-                    fieldOneButtonFunction: () {},
-                    suffixIconFieldOne: SizedBox(
-                      height: 60,
-                      width: 50,
-                      child: Row(
-                        children: [
-                          Buttons.smallSquareButton(
-                              "assets/images/CircularIconButton.png", () {}),
-                        ],
-                      ),
-                    ),
-                    fieldOneController: pickupEnterController,
-                    isDisplayFieldTwo: true,
-                    hintFieldTwo: "Drop Off Location",
-                    fieldTwoButtonFunction: () {},
-                    suffixIconFieldTwo: SizedBox(
-                      height: 60,
-                      width: 50,
-                      child: Row(
-                        children: [
-                          Buttons.smallSquareButton(
-                              "assets/images/PinPointIcon.png", () {}),
-                        ],
-                      ),
-                    ),
-                    fieldTwoController: dropoffEnterController),
-                spaceHeight(
-                  ScreenConfig.screenSizeHeight * 0.2,
+                SizedBox(
+                  height: ScreenConfig.screenSizeHeight * 1.2,
+                  child: Column(
+                    children: [
+                      MapScreen(
+                          search: [],
+                          showAds: false,
+                          showTextFields: true,
+                          isFieldsReadOnly: true,
+                          isFullScreen: false,
+                          autoupdatepolyline: true,
+                          isShowMyLocationIcon: false,
+                          check: true,
+                          image: image,
+                          hintFieldOne: "Pick-Up Location",
+                          fieldOneButtonFunction: () {},
+                          suffixIconFieldOne: SizedBox(
+                            height: 60,
+                            width: 50,
+                            child: Row(
+                              children: [
+                                Buttons.smallSquareButton(
+                                    "assets/images/CircularIconButton.png",
+                                    () {}),
+                              ],
+                            ),
+                          ),
+                          fieldOneController: pickupEnterController,
+                          isDisplayFieldTwo: true,
+                          hintFieldTwo: "Drop Off Location",
+                          fieldTwoButtonFunction: () {},
+                          suffixIconFieldTwo: SizedBox(
+                            height: 60,
+                            width: 50,
+                            child: Row(
+                              children: [
+                                Buttons.smallSquareButton(
+                                    "assets/images/PinPointIcon.png", () {}),
+                              ],
+                            ),
+                          ),
+                          fieldTwoController: dropoffEnterController),
+                      spaceHeight(
+                        ScreenConfig.screenSizeHeight * 0.2,
+                      )
+                    ],
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (showConfirmYourRide)
+                      confirmYourRideWidget(typeofvahicle),
+                    spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
+                    bottomModalNonSlideable(),
+                  ],
                 )
               ],
             ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (showConfirmYourRide) confirmYourRideWidget(typeofvahicle),
-              spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
-              bottomModalNonSlideable(),
-            ],
-          )
-        ],
-      ),
     );
   }
 }

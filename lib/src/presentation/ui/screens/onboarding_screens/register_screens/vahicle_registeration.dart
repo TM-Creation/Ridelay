@@ -11,6 +11,7 @@ import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/config/compress_image.dart';
 import 'package:ridely/src/presentation/ui/config/validator.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
@@ -613,7 +614,7 @@ baseulr burl=baseulr();
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
-        Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
+        Navigator.of(context).pushNamed(Login.routeName);
       } else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');

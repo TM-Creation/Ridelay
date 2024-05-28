@@ -13,6 +13,7 @@ import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/config/compress_image.dart';
 import 'package:ridely/src/presentation/ui/config/validator.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/otp_verification_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
@@ -238,7 +239,7 @@ class _LoginState extends State<Login> {
 
   Future<void> postUserData(Passangerloginmodel user) async {
     final url = Uri.parse(
-        '${burl.burl}/api/v1/passenger/login'); // Replace with your API endpoint
+        '${burl.burl}/api/v1/driver/login'); // Replace with your API endpoint
     final body = jsonEncode(user.toJson());
     final headers = {
       HttpHeaders.contentTypeHeader: 'application/json',
@@ -252,11 +253,29 @@ class _LoginState extends State<Login> {
         print('User Login Successfully: ${response.body}');
         final responseData = jsonDecode(response.body);
         final data= responseData['data'];
-        final id = data['_id'];
+        final iddata = data['data'];
+        final id=iddata['_id'];
+        final typeofuser=iddata['type'];
+        final tokenofuser=data['token'];
+        print("id a gi $id");
         setState(() {
           PassId().id = id;
+          PassId().token=tokenofuser;
+          PassId().type=typeofuser;
         });
-        Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
+        if (PassId().id != null && PassId().token!=null && typeofuser!=null){
+          if(typeofuser=='driver'){
+            print("Driver Done");
+            Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
+          }else if(typeofuser=='passenger'){
+            print("Passenger Done");
+            Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
+          }else{
+            print("Nothing");
+          }
+        } else {
+          print('Error: Something null in response');
+        }
       } else {
         // Error occurred
         print('Failed to Login: ${response.statusCode}');

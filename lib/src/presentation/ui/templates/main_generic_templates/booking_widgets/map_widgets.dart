@@ -10,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/space_line_between_two_text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/generic_textfield.dart';
@@ -35,7 +36,6 @@ class MapScreen extends StatefulWidget {
   bool? isFieldsReadOnly = false;
   bool? showTextFields = true;
   bool? showAds = false;
-  LatLng? userLocation;
   bool check;
   List<Location>? search = [];
 
@@ -58,7 +58,6 @@ class MapScreen extends StatefulWidget {
     this.isFieldsReadOnly,
     this.showAds,
     this.showTextFields,
-    this.userLocation,
     this.autoupdatepolyline,
     required this.check,
     required this.search,
@@ -78,7 +77,7 @@ class _MapScreenState extends State<MapScreen> {
   List<dynamic> placeList2 = [];
   bool flag1 = false;
   bool flag2 = true;
-  LatLng userlocation = LatLng(9.0, 7.9);
+  LatLng? userlocation = userLiveLocation().userlivelocation;
 
   @override
   void initState() {
@@ -115,9 +114,11 @@ class _MapScreenState extends State<MapScreen> {
         var data = jsonDecode(response.body);
         print("data: $data");
         if (data['status'] == 'OK') {
-          setState(() {
-            placeList1 = data['predictions'];
-          });
+          if(mounted){
+            setState(() {
+              placeList1 = data['predictions'];
+            });
+          }
         } else {
           throw Exception('Failed to get suggestions: ${data['status']}');
         }
@@ -142,9 +143,9 @@ class _MapScreenState extends State<MapScreen> {
         var data = jsonDecode(response.body);
         print("data: $data");
         if (data['status'] == 'OK') {
-          setState(() {
+          if(mounted){setState(() {
             placeList2 = data['predictions'];
-          });
+          });}
         } else {
           throw Exception('Failed to get suggestions: ${data['status']}');
         }
@@ -158,26 +159,12 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Future<void> _requestPermissionAndGetCurrentLocation() async {
-    // Check if location permission is granted
-    var status = await Permission.location.request();
-    if (status.isGranted) {
-      // Get current position
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      // Update the map to show the user's current location
-      userlocation = LatLng(position.latitude, position.longitude);
-      _mapController?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: userlocation,
-          zoom: 15.0,
-        ),
-      ));
-    } else {
-      // Handle if permission is denied
-      print('Location permission denied');
-    }
+    _mapController?.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: userlocation!,
+        zoom: 15.0,
+      ),
+    ));
   }
 
   void _adjustCameraToBounds() {
@@ -225,7 +212,7 @@ class _MapScreenState extends State<MapScreen> {
           widget.fieldButtonFunction!();
         }
         _adjustCameraToBounds();
-        setState(() {});
+        if(mounted){setState(() {});}
       }
     } else {
       print("direction null");
@@ -260,14 +247,18 @@ class _MapScreenState extends State<MapScreen> {
   );
 
   @override
-  // void dispose() {
-  //   _mapController?.dispose();
-  //  }
+  void dispose() {
+    widget.fieldOneController.removeListener(onChange);
+    widget.fieldTwoController.removeListener(onChange);
+    _mapController?.dispose();
+    super.dispose();
+  }
+
   void locationUpdate() async {
     final pickLocations =
-    await locationFromAddress(widget.fieldOneController.text);
+        await locationFromAddress(widget.fieldOneController.text);
     final dropLocations =
-    await locationFromAddress(widget.fieldTwoController.text);
+        await locationFromAddress(widget.fieldTwoController.text);
 
     // Update the state within setState
     setState(() {
@@ -291,7 +282,7 @@ class _MapScreenState extends State<MapScreen> {
       _mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
           target:
-          LatLng(widget.search![0].latitude, widget.search![0].longitude),
+              LatLng(widget.search![0].latitude, widget.search![0].longitude),
           zoom: 15.0,
         ),
       ));
@@ -355,13 +346,9 @@ class _MapScreenState extends State<MapScreen> {
                   polylineId: const PolylineId('overview_polyline'),
                   color: Color(0XFFFC0A0A),
                   width: 5,
-                  // patterns: [
-                  //   PatternItem.dot,
-                  //   PatternItem.gap(15),
-                  // ],
                   points: _info?.polylinePoints
-                      ?.map((e) => LatLng(e.latitude, e.longitude))
-                      .toList() ??
+                          ?.map((e) => LatLng(e.latitude, e.longitude))
+                          .toList() ??
                       [],
                 ),
             },
@@ -413,7 +400,7 @@ class _MapScreenState extends State<MapScreen> {
                       widget.hintFieldOne,
                       widget.suffixIconFieldOne,
                       widget.fieldOneController,
-                          (value) {
+                      (value) {
                         setState(() {
                           flag1 = !value.isEmpty;
                         });
@@ -437,9 +424,9 @@ class _MapScreenState extends State<MapScreen> {
                                   onTap: () async {
                                     widget.fieldOneController.text = '';
                                     List<Placemark> placemarks =
-                                    await placemarkFromCoordinates(
-                                        userlocation.latitude,
-                                        userlocation.longitude);
+                                        await placemarkFromCoordinates(
+                                            userlocation!.latitude,
+                                            userlocation!.longitude);
                                     setState(() {
                                       widget.fieldOneController.text =
                                           '${placemarks.reversed.last.name}' +
@@ -462,9 +449,9 @@ class _MapScreenState extends State<MapScreen> {
                                     height: 50,
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.navigation,
@@ -488,20 +475,20 @@ class _MapScreenState extends State<MapScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: List.generate(
                                     placeList1.length,
-                                        (index) {
+                                    (index) {
                                       return ListTile(
                                         onTap: () async {
                                           flag1 = false;
                                           // Set the text of the controller to the tapped place's description
                                           widget.fieldOneController.text =
-                                          placeList1[index]['description'];
+                                              placeList1[index]['description'];
                                           // Call getSuggestion with the tapped place's description to update suggestions
                                           getSuggestion1(
                                               placeList1[index]['description']);
                                           try {
                                             List<Location> locations =
-                                            await locationFromAddress(
-                                                "${placeList1[index]['description']}");
+                                                await locationFromAddress(
+                                                    "${placeList1[index]['description']}");
                                             print("locations: $locations");
                                             if (locations != null &&
                                                 locations.isNotEmpty) {
@@ -537,7 +524,7 @@ class _MapScreenState extends State<MapScreen> {
                         widget.hintFieldTwo,
                         widget.suffixIconFieldTwo,
                         widget.fieldTwoController,
-                            (value) {
+                        (value) {
                           setState(() {
                             flag2 = !value.isEmpty;
                           });
@@ -559,20 +546,20 @@ class _MapScreenState extends State<MapScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: List.generate(
                                 placeList2.length,
-                                    (index) {
+                                (index) {
                                   return ListTile(
                                     onTap: () async {
                                       flag2 = false;
                                       // Set the text of the controller to the tapped place's description
                                       widget.fieldTwoController.text =
-                                      placeList2[index]['description'];
+                                          placeList2[index]['description'];
                                       // Call getSuggestion with the tapped place's description to update suggestions
                                       getSuggestion2(
                                           placeList2[index]['description']);
                                       try {
                                         List<Location> locations =
-                                        await locationFromAddress(
-                                            "${placeList2[index]['description']}");
+                                            await locationFromAddress(
+                                                "${placeList2[index]['description']}");
                                         print("locations: $locations");
                                         if (locations != null &&
                                             locations.isNotEmpty) {
@@ -670,7 +657,7 @@ class Directions {
     return Directions(
       bounds: bounds,
       polylinePoints:
-      PolylinePoints().decodePolyline(data['overview_polyline']['points']),
+          PolylinePoints().decodePolyline(data['overview_polyline']['points']),
       totalDistance: distance,
       totalDuration: duration,
     );
@@ -731,4 +718,3 @@ class pickanddrop {
 
   LatLng? pickloc, droploc;
 }
-
