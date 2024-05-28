@@ -257,7 +257,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                 Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    displayText('Mini', ScreenConfig.theme.textTheme.button,
+                                                    displayText('Mini ', ScreenConfig.theme.textTheme.button,
                                                         width: 0.3),
                                                     displayText(
                                                         "1-8 mins",
