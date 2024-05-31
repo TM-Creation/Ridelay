@@ -123,6 +123,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
       reqrideid = data['_id'];
       driverid=data['driverId'];
       print("$data ride is accepted");
+      setState(() {
+
+      });
     });
   }
 
