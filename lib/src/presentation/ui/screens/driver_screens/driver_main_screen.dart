@@ -38,6 +38,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   List namesList = ["Mini", "Go", "Comfort", "Mini"];
    var datarespose='';
    int rideRequestCount = 0;
+   String name='';
   @override
   void initState() {
     initSocket();
