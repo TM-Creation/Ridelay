@@ -65,7 +65,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       datarespose=data['_id'];
       print(" and id is=$datarespose ");
     });
-    socket.on('a', (data){
+    socket.on('ridecompleted', (data){
       print(">>>>>$data");
     });
     setState(() {

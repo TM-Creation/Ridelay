@@ -97,6 +97,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   late IO.Socket socket;
   final String? id = PassId().id;
   var reqrideid = '';
+  var driverid = '';
   final LatLng? pickuplocation = pickanddrop().pickloc,
       dropofflocation = pickanddrop().droploc;
 
