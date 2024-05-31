@@ -69,7 +69,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       });
     });
     socket.on('rideCompleted', (data){
-      print(">>>>$data");
+      print(">>>>>$data");
     });
   }
   @override
