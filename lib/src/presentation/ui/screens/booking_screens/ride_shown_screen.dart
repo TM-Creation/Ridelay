@@ -103,7 +103,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
   initSocket() {
     socket =
-        IO.io('https://05e2-39-45-46-219.ngrok-free.app', <String, dynamic>{
+        IO.io('https://a6c2-110-93-223-135.ngrok-free.app', <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {
         'authorization': PassId().token,
