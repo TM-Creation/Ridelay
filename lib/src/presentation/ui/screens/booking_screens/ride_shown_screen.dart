@@ -117,12 +117,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
     });
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideAccepted', (data) {
-      isdriveraccept=false;
-      requestshow=true;
-      counter++;
+      print("$data ride is accepted ");
       reqrideid = data['_id'];
       driverid=data['driverId'];
-      print("$data ride is accepted");
+      counter++;
+      isdriveraccept=false;
+      requestshow=true;
       setState(() {
 
       });
