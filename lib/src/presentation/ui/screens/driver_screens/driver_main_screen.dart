@@ -46,7 +46,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   late IO.Socket socket;
   initSocket() {
     socket =
-        IO.io('https://5975-39-45-24-33.ngrok-free.app', <String, dynamic>{
+        IO.io('https://05e2-39-45-46-219.ngrok-free.app', <String, dynamic>{
           'transports': ['websocket'],
           'extraHeaders': {
             'authorization': PassId().token,
@@ -58,21 +58,25 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     socket.onConnect((_) {
       print("Server Connect with Socket");
     });
-    socket.emit('registerPassenger', "6654c19110f43154535cc4f5");
+    socket.emit('registerPassenger', PassId().id);
     socket.on('rideRequest',(data){
       rideRequestCount++;
       print("ridedata arrive $data");
       datarespose=data['_id'];
       print(" and id is=$datarespose ");
+      setState(() {
+        print("setstate is run");
+      });
     });
-    socket.on('ridecompleted', (data){
+    socket.on('rideCompleted', (data){
       print(">>>>>$data");
     });
-    setState(() {
-
-    });
   }
-
+  @override
+  void dispose() {
+    socket.disconnect();
+    super.dispose();
+  }
   void acceptrides(){
     final payload={
       'rideId': datarespose,

@@ -97,13 +97,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
   late IO.Socket socket;
   final String? id = PassId().id;
   var reqrideid = '';
-  var driverid = '';
+  var driverid='';
   final LatLng? pickuplocation = pickanddrop().pickloc,
       dropofflocation = pickanddrop().droploc;
 
   initSocket() {
     socket =
-        IO.io('https://5975-39-45-24-33.ngrok-free.app', <String, dynamic>{
+        IO.io('https://05e2-39-45-46-219.ngrok-free.app', <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {
         'authorization': PassId().token,
@@ -117,11 +117,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
     });
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideAccepted', (data) {
-      print("$data ride is accepted ");
-      reqrideid = data['_id'];
-      counter++;
       isdriveraccept=false;
       requestshow=true;
+      counter++;
+      reqrideid = data['_id'];
+      driverid=data['driverId'];
+      print("$data ride is accepted");
       setState(() {
 
       });
@@ -153,9 +154,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
   }
 
   String typeofvahicle = '';
-
   void acceptstatus() {
-    final payload = {'rideId': '6654e5cfbf06b713b965fb5c'};
+    final payload = {'rideId': reqrideid,
+    'driverId':driverid};
     socket.emit('confirmRide', payload);
     print('Driver Accepted');
   }
