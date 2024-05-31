@@ -37,7 +37,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   bool showConfirmYourRide = false;
   String distance = '', duration = '';
   double? totaldistance;
-  var driverid='';
+  int counter=0;
   double minifare = 0,
       gofare = 0,
       comfortfare = 0,
@@ -87,7 +87,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   }
 
   bool isdriveraccept = false, requestshow = false;
-  int counter=0;
+
   @override
   void initState() {
     initSocket();
@@ -102,7 +102,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
   initSocket() {
     socket =
-        IO.io('https://05e2-39-45-46-219.ngrok-free.app', <String, dynamic>{
+        IO.io('https://5975-39-45-24-33.ngrok-free.app', <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {
         'authorization': PassId().token,
@@ -115,13 +115,10 @@ class _RideShownScreenState extends State<RideShownScreen> {
       print("Server Connect with Socket");
     });
     socket.emit('registerPassenger', PassId().id);
-    socket.on('rideAccepted',(data){
+    socket.on('rideAccepted', (data) {
       print("$data ride is accepted ");
-      counter++;
       reqrideid = data['_id'];
-      final driver=data['driver'];
-      driverid=driver['_id'];
-      print("Counter $counter");
+      counter++;
       isdriveraccept=false;
       requestshow=true;
       setState(() {
@@ -157,15 +154,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
   String typeofvahicle = '';
 
   void acceptstatus() {
-    final payload = {'rideId': reqrideid,
-      'driverId': driverid};  // chanhe in this line add driverId': PassId().id
+    final payload = {'rideId': '6654e5cfbf06b713b965fb5c'};
     socket.emit('confirmRide', payload);
-    print('Driver Accepted ${PassId().id}');
+    print('Driver Accepted');
   }
 
   @override
   Widget build(BuildContext context) {
-    print("updated");
     Widget confirmYourRideWidget(String typeofvahicle) {
       return Container(
         height: ScreenConfig.screenSizeHeight * 0.25,
