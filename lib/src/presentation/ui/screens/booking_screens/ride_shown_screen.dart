@@ -91,6 +91,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   @override
   void initState() {
     initSocket();
+    print("initState call");
     super.initState();
   }
 
@@ -117,14 +118,21 @@ class _RideShownScreenState extends State<RideShownScreen> {
     });
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideAccepted', (data) {
-      print("$data ride is accepted ");
-      reqrideid = data['_id'];
-      final driver=data['driver'];
-      driverid=driver['_id'];
-      counter++;
+      //print("$data ride is accept ");
       isdriveraccept=false;
+      print("check isdriveraccept");
       requestshow=true;
+      print("check requestshow");
+      reqrideid = data['_id'];
+      print("check reqrideid");
+      final driver=data['driver'];
+      print("check driver");
+      driverid=driver['_id'];
+      print("check driverid");
+      counter++;
+      print("check counter");
       setState(() {
+        print("check sestate");
       });
     });
   }
@@ -163,6 +171,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("Counting $counter");
     Widget confirmYourRideWidget(String typeofvahicle) {
       return Container(
         height: ScreenConfig.screenSizeHeight * 0.25,
