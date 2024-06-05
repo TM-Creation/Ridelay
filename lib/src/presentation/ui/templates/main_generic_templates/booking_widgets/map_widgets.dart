@@ -596,20 +596,23 @@ class _MapScreenState extends State<MapScreen> {
               left: 20,
               child: FloatingActionButton(
                 onPressed: () async {
-
+                  if (widget.fieldOneController.text.isNotEmpty &&
+                      widget.fieldTwoController.text.isNotEmpty) {
                     pick = await locationFromAddress(
                         widget.fieldOneController.text);
                     drop = await locationFromAddress(
                         widget.fieldTwoController.text);
                     setState(() {
-                      pickanddrop().pickloc=const LatLng(31.4914, 74.2385);
-                      pickanddrop().droploc=const LatLng(31.4597, 74.2834);
+                      pickanddrop().pickloc=LatLng(pick[0].longitude, pick[0].latitude);
+                      pickanddrop().droploc=LatLng(drop[0].longitude, drop[0].latitude);
                       print("${pickanddrop().pickloc} pickloc a gya");
                     });
                     print("${pick} and  ${drop} both a done");
-                    showpolyline(const LatLng(31.4914, 74.2385),
-                       const LatLng(31.4597, 74.2834));
-
+                    showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
+                        LatLng(drop[0].latitude, drop[0].longitude));
+                  } else {
+                    print('ni aya');
+                  }
                 },
                 child: Icon(Icons.directions),
               )),
