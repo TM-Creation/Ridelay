@@ -596,8 +596,7 @@ class _MapScreenState extends State<MapScreen> {
               left: 20,
               child: FloatingActionButton(
                 onPressed: () async {
-                  if (widget.fieldOneController.text.isNotEmpty &&
-                      widget.fieldTwoController.text.isNotEmpty) {
+
                     pick = await locationFromAddress(
                         widget.fieldOneController.text);
                     drop = await locationFromAddress(
@@ -610,9 +609,7 @@ class _MapScreenState extends State<MapScreen> {
                     print("${pick} and  ${drop} both a done");
                     showpolyline(const LatLng(31.4914, 74.2385),
                        const LatLng(31.4597, 74.2834));
-                  } else {
-                    print('ni aya');
-                  }
+
                 },
                 child: Icon(Icons.directions),
               )),
