@@ -47,7 +47,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   late IO.Socket socket;
   initSocket() {
     socket =
-        IO.io('https://riding-app-backend.vercel.app', <String, dynamic>{
+        IO.io('https://cfa5-39-45-1-152.ngrok-free.app', <String, dynamic>{
           'transports': ['websocket'],
           'extraHeaders': {
             'authorization': PassId().token,
