@@ -104,7 +104,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
   initSocket() {
     socket =
-        IO.io('https://a6c2-110-93-223-135.ngrok-free.app', <String, dynamic>{
+        IO.io('https://cfa5-39-45-1-152.ngrok-free.app', <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {
         'authorization': PassId().token,
@@ -118,7 +118,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
     });
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideAccepted', (data) {
-      //print("$data ride is accept ");
+      print("$data ride is accept ");
       isdriveraccept=false;
       print("check isdriveraccept");
       requestshow=true;
