@@ -102,7 +102,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void getSuggestion1(String input) async {
-    String KPLACES_API_KEY = "AIzaSyDqZTJoPimkbiGd4K6PZATCP7Zu0QYM2q8";
+    String KPLACES_API_KEY = "AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE";
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
@@ -131,7 +131,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void getSuggestion2(String input) async {
-    String KPLACES_API_KEY = "AIzaSyDqZTJoPimkbiGd4K6PZATCP7Zu0QYM2q8";
+    String KPLACES_API_KEY = "AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE";
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
@@ -402,7 +402,7 @@ class _MapScreenState extends State<MapScreen> {
                       widget.fieldOneController,
                       (value) {
                         setState(() {
-                          flag1 = !value.isEmpty;
+                         flag1 = !value.isEmpty;
                         });
                         getSuggestion1(widget.fieldOneController.text);
                       },
@@ -607,6 +607,7 @@ class _MapScreenState extends State<MapScreen> {
                       pickanddrop().droploc=LatLng(drop[0].longitude, drop[0].latitude);
                       print("${pickanddrop().pickloc} pickloc a gya");
                     });
+
                     print("${pick} and  ${drop} both a done");
                     showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
                         LatLng(drop[0].latitude, drop[0].longitude));
@@ -681,7 +682,7 @@ class DirectionsRepository {
       queryParameters: {
         'origin': '${origin.latitude},${origin.longitude}',
         'destination': '${destination.latitude},${destination.longitude}',
-        'key': 'AIzaSyC3zIrn8aFCIboCPmMyE52wKgFeQizPRNI',
+        'key': 'AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE',
       },
     );
     print('$destination helo');
