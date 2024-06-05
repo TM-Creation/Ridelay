@@ -603,13 +603,13 @@ class _MapScreenState extends State<MapScreen> {
                     drop = await locationFromAddress(
                         widget.fieldTwoController.text);
                     setState(() {
-                      pickanddrop().pickloc=LatLng(pick[0].longitude, pick[0].latitude);
-                      pickanddrop().droploc=LatLng(drop[0].longitude, drop[0].latitude);
+                      pickanddrop().pickloc=const LatLng(31.4914, 74.2385);
+                      pickanddrop().droploc=const LatLng(31.4597, 74.2834);
                       print("${pickanddrop().pickloc} pickloc a gya");
                     });
                     print("${pick} and  ${drop} both a done");
-                    showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
-                        LatLng(drop[0].latitude, drop[0].longitude));
+                    showpolyline(const LatLng(31.4914, 74.2385),
+                       const LatLng(31.4597, 74.2834));
                   } else {
                     print('ni aya');
                   }
