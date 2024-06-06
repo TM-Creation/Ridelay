@@ -130,6 +130,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
       driverimage=data['driver']['driverImage'];
       driverraiting=data['driver']['rating'];
       vahicleimage=data['vehicle']['vehicleImage'];
+      vahiclename=data['vehicle']['name'];
       numberplate=data['vehicle']['numberPlate'];
       reqrideid = data['_id'];
       final driver=data['driver'];
@@ -859,7 +860,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
         ),
       );
     }
-
+    print('$driverimage driver image');
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
@@ -932,17 +933,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             0.12,
                                                         decoration:
                                                         BoxDecoration(
-                                                          image: DecorationImage(
-                                                              image: NetworkImage(
-                                                                  '$driverimage'),
-                                                              fit:
-                                                              BoxFit.cover),
                                                           borderRadius:
                                                           const BorderRadius
                                                               .all(Radius
                                                               .circular(
                                                               5)),
                                                         ),
+                                                        child: Image.network('$driverimage',fit: BoxFit.cover,),
                                                       ),
                                                       spaceWidth(ScreenConfig
                                                           .screenSizeWidth *
@@ -985,17 +982,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             0.12,
                                                         decoration:
                                                         BoxDecoration(
-                                                          image: DecorationImage(
-                                                              image: NetworkImage(
-                                                                  '$driverimage'),
-                                                              fit:
-                                                              BoxFit.cover),
                                                           borderRadius:
                                                           const BorderRadius
                                                               .all(Radius
                                                               .circular(
                                                               5)),
                                                         ),
+                                                          child: Image.network('$driverimage',fit: BoxFit.cover,)
                                                       ),
                                                       spaceWidth(ScreenConfig
                                                           .screenSizeWidth *
