@@ -35,7 +35,7 @@ class DriverRideSelectionScreen extends StatefulWidget {
 
 class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
-  List namesList = ["Mini", "Go", "Comfort", "Mini"];
+  List namesList = ["Mini ", "Go", "Comfort", "Mini"];
    var datarespose='';
    int rideRequestCount = 0;
    String name='';
