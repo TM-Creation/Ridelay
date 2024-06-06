@@ -91,6 +91,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   double driverraiting=4.2;
   String driverimage='';
   String? vahicleimage;
+  String vahiclename='';
   String numberplate='';
   @override
   void initState() {

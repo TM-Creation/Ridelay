@@ -77,7 +77,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       datarespose = data['_id'];
       print(" and id is=$datarespose");
       passangerName=data['passenger']['name'];
-      phonenumber=data['passenger']['phoneNumber'];
+      phonenumber=data['passenger']['phone'];
       fare=data['fare'];
       pick=List<double>.from(data['pickupLocation']['coordinates']);
       drop=List<double>.from(data['dropoffLocation']['coordinates']);
