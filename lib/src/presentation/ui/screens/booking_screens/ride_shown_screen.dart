@@ -108,7 +108,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
   initSocket() {
     socket =
-        IO.io('https://92f9-110-93-223-135.ngrok-free.app', <String, dynamic>{
+        IO.io('https://995c-110-93-223-135.ngrok-free.app', <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {
         'authorization': PassId().token,
@@ -931,8 +931,8 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                         decoration:
                                                         BoxDecoration(
                                                           image: DecorationImage(
-                                                              image: AssetImage(
-                                                                  'assets/images/UserProfileImage.png'),
+                                                              image: NetworkImage(
+                                                                  '$driverimage'),
                                                               fit:
                                                               BoxFit.cover),
                                                           borderRadius:
@@ -951,7 +951,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             .start,
                                                         children: [
                                                           Text(
-                                                            "Taha",
+                                                            "$drivername",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -959,7 +959,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                     0.03),
                                                           ),
                                                           Text(
-                                                            "Rating: 4.2 *",
+                                                            "Rating: $driverraiting *",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -984,8 +984,8 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                         decoration:
                                                         BoxDecoration(
                                                           image: DecorationImage(
-                                                              image: AssetImage(
-                                                                  'assets/images/UserProfileImage.png'),
+                                                              image: NetworkImage(
+                                                                  '$driverimage'),
                                                               fit:
                                                               BoxFit.cover),
                                                           borderRadius:
@@ -1004,7 +1004,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             .start,
                                                         children: [
                                                           Text(
-                                                            "Taha",
+                                                            "Civic",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -1012,7 +1012,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                     0.03),
                                                           ),
                                                           Text(
-                                                            "Rating: 4.2 *",
+                                                            "$numberplate",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
