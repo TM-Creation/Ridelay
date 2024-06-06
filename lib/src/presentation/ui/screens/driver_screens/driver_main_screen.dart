@@ -25,7 +25,9 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../../templates/ride_widgets/ride_widget_buttons.dart';
+import '../booking_screens/solo_ride_flow/solo_ride_shown_screen.dart';
 import '../onboarding_screens/register_screens/passangerregistration.dart';
+import 'driver_solo_ride_waiting_screen.dart';
 
 class DriverRideSelectionScreen extends StatefulWidget {
   const DriverRideSelectionScreen({Key? key}) : super(key: key);
@@ -88,6 +90,8 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     });
     socket.on('rideCompleted', (data) {
       print(">>>>>$data");
+      Navigator.of(context).pushNamed(
+          DriverSoloRideWaitingScreen.routeName);
     });
   }
   String calculateDistance(

@@ -171,6 +171,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
     'driverId':driverid};
     socket.emit('confirmRide', payload);
     print('Driver Accepted');
+    Navigator.pushNamed(context, RideWaitingScreen.routeName);
   }
 
   @override
@@ -959,7 +960,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                     0.03),
                                                           ),
                                                           Text(
-                                                            "Rating: $driverraiting *",
+                                                            "$driverraiting *",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig

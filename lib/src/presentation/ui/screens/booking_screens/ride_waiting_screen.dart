@@ -77,7 +77,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                   ),
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                rideDetailsWidget(vahicle, "Cancel Ride", context),
+                rideDetailsWidget('vahicle', "Cancel Ride", context),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               ],
             ),
