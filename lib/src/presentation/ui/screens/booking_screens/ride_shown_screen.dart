@@ -87,7 +87,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
   }
 
   bool isdriveraccept = false, requestshow = false;
-
+  String drivername='';
+  double driverraiting=4.2;
+  String driverimage='';
+  String? vahicleimage;
+  String numberplate='';
   @override
   void initState() {
     initSocket();
@@ -120,17 +124,16 @@ class _RideShownScreenState extends State<RideShownScreen> {
     socket.on('rideAccepted', (data) {
       print("$data ride is accept ");
       isdriveraccept=false;
-      print("check isdriveraccept");
       requestshow=true;
-      print("check requestshow");
+      drivername=data['driver']['name'];
+      driverimage=data['driver']['driverImage'];
+      driverraiting=data['driver']['rating'];
+      vahicleimage=data['vehicle']['vehicleImage'];
+      numberplate=data['vehicle']['numberPlate'];
       reqrideid = data['_id'];
-      print("check reqrideid");
       final driver=data['driver'];
-      print("check driver");
       driverid=driver['_id'];
-      print("check driverid");
       counter++;
-      print("check counter");
       setState(() {
         print("check sestate");
       });
@@ -894,7 +897,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                             return Column(
                               children: [
                                 Container(
-                                  height: ScreenConfig.screenSizeHeight * 0.18,
+                                  height: ScreenConfig.screenSizeHeight * 0.2,
                                   width: ScreenConfig.screenSizeWidth * 0.85,
                                   decoration: blueContainerTemplate(),
                                   child: Padding(
@@ -914,20 +917,113 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                userDetailsContainer(
-                                                    "assets/images/UserProfileImage.png",
-                                                    "Altaf Ahmed",
-                                                    "4.9",
-                                                    true,
-                                                    false,
-                                                    " "),
-                                                userDetailsContainer(
-                                                    "assets/images/UserCarImage.png",
-                                                    "Honda Civic",
-                                                    "LXV 5675",
-                                                    false,
-                                                    true,
-                                                    "2019")
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        width: ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.12,
+                                                        height: ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.12,
+                                                        decoration:
+                                                        BoxDecoration(
+                                                          image: DecorationImage(
+                                                              image: AssetImage(
+                                                                  'assets/images/UserProfileImage.png'),
+                                                              fit:
+                                                              BoxFit.cover),
+                                                          borderRadius:
+                                                          const BorderRadius
+                                                              .all(Radius
+                                                              .circular(
+                                                              5)),
+                                                        ),
+                                                      ),
+                                                      spaceWidth(ScreenConfig
+                                                          .screenSizeWidth *
+                                                          0.03),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          Text(
+                                                            "Taha",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                ScreenConfig
+                                                                    .screenSizeWidth *
+                                                                    0.03),
+                                                          ),
+                                                          Text(
+                                                            "Rating: 4.2 *",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                ScreenConfig
+                                                                    .screenSizeWidth *
+                                                                    0.03),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),Container(
+                                                  color: Colors.transparent,
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        width: ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.12,
+                                                        height: ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.12,
+                                                        decoration:
+                                                        BoxDecoration(
+                                                          image: DecorationImage(
+                                                              image: AssetImage(
+                                                                  'assets/images/UserProfileImage.png'),
+                                                              fit:
+                                                              BoxFit.cover),
+                                                          borderRadius:
+                                                          const BorderRadius
+                                                              .all(Radius
+                                                              .circular(
+                                                              5)),
+                                                        ),
+                                                      ),
+                                                      spaceWidth(ScreenConfig
+                                                          .screenSizeWidth *
+                                                          0.03),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          Text(
+                                                            "Taha",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                ScreenConfig
+                                                                    .screenSizeWidth *
+                                                                    0.03),
+                                                          ),
+                                                          Text(
+                                                            "Rating: 4.2 *",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                ScreenConfig
+                                                                    .screenSizeWidth *
+                                                                    0.03),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                             spaceHeight(

@@ -46,6 +46,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   int fare = 10;
   int rideRequestCount = 0;
   String distance='';
+  String phonenumber='';
   @override
   void initState() {
     initSocket();
@@ -74,6 +75,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       datarespose = data['_id'];
       print(" and id is=$datarespose");
       passangerName=data['passenger']['name'];
+      phonenumber=data['passenger']['phoneNumber'];
       fare=data['fare'];
       pick=List<double>.from(data['pickupLocation']['coordinates']);
       drop=List<double>.from(data['dropoffLocation']['coordinates']);
