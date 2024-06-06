@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/config/theme.dart';
@@ -36,55 +39,91 @@ class DriverRideSelectionScreen extends StatefulWidget {
 class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
   List namesList = ["Mini ", "Go", "Comfort", "Mini"];
-   var datarespose='';
-   int rideRequestCount = 0;
-   String name='';
+  var datarespose = '';
+  String passangerName = '';
+  List<double> pick = [];
+  List<double> drop =[];
+  int fare = 10;
+  int rideRequestCount = 0;
+  String distance='';
   @override
   void initState() {
     initSocket();
     super.initState();
   }
+
   late IO.Socket socket;
+
   initSocket() {
     socket =
         IO.io('https://92f9-110-93-223-135.ngrok-free.app', <String, dynamic>{
-          'transports': ['websocket'],
-          'extraHeaders': {
-            'authorization': PassId().token,
-            'usertype': PassId().type
-          },
-          'autoConnect': false,
-        });
+      'transports': ['websocket'],
+      'extraHeaders': {
+        'authorization': PassId().token,
+        'usertype': PassId().type
+      },
+      'autoConnect': false,
+    });
     socket.connect();
     socket.onConnect((_) {
       print("Server Connect with Socket");
     });
     socket.emit('registerPassenger', PassId().id);
-    socket.on('rideRequest',(data){
-      rideRequestCount++;
+    socket.on('rideRequest', (data) {
       print("ridedata arrive $data");
-      datarespose=data['_id'];
-      print(" and id is=$datarespose ");
+      datarespose = data['_id'];
+      print(" and id is=$datarespose");
+      passangerName=data['passenger']['name'];
+      fare=data['fare'];
+      pick=List<double>.from(data['pickupLocation']['coordinates']);
+      drop=List<double>.from(data['dropoffLocation']['coordinates']);
+      distance=calculateDistance(pick[1], pick[0], drop[1], drop[0]);
+      print('Dynamic Data is: name=$passangerName, fare=$fare, distance=$distance');
+      rideRequestCount++;
       setState(() {
         print("setstate is run");
       });
     });
-    socket.on('rideCompleted', (data){
+    socket.on('rideCompleted', (data) {
       print(">>>>>$data");
     });
   }
+  String calculateDistance(
+      double pickupLat, double pickupLon, double dropoffLat, double dropoffLon) {
+    const double earthRadiusKm = 6371; // Earth's radius in kilometers
+
+    double degreeToRadian(double degree) {
+      return degree * pi / 180;
+    }
+
+    final double lat1Rad = degreeToRadian(pickupLat);
+    final double lon1Rad = degreeToRadian(pickupLon);
+    final double lat2Rad = degreeToRadian(dropoffLat);
+    final double lon2Rad = degreeToRadian(dropoffLon);
+
+    final double dLat = lat2Rad - lat1Rad;
+    final double dLon = lon2Rad - lon1Rad;
+
+    final double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1Rad) * cos(lat2Rad) * sin(dLon / 2) * sin(dLon / 2);
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    double distanceKm = earthRadiusKm * c;
+    distanceKm=distanceKm*1.58500;
+    return '${distanceKm.toStringAsFixed(2)} km';
+  }
+
   @override
   void dispose() {
     socket.disconnect();
     super.dispose();
   }
-  void acceptrides(){
-    final payload={
-      'rideId': datarespose,
-      'driverId': PassId().id
-    };
-    socket.emit('acceptRide',payload);
+
+  void acceptrides() {
+    final payload = {'rideId': datarespose, 'driverId': PassId().id};
+    socket.emit('acceptRide', payload);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +143,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
           backgroundColor: Colors.white,
           width: MediaQuery.sizeOf(context).width * 0.6,
           child: Padding(
-            padding:  EdgeInsets.all(MediaQuery.sizeOf(context).width*0.04),
+            padding: EdgeInsets.all(MediaQuery.sizeOf(context).width * 0.04),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -116,14 +155,14 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                       icon: Image.asset(
                         "assets/images/CrossIcon.png",
                         color: ScreenConfig.theme.primaryColor,
-                        width:MediaQuery.sizeOf(context).width*0.03,
-                        height: MediaQuery.sizeOf(context).height*0.03,
+                        width: MediaQuery.sizeOf(context).width * 0.03,
+                        height: MediaQuery.sizeOf(context).height * 0.03,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.sizeOf(context).height*0.03,
+                  height: MediaQuery.sizeOf(context).height * 0.03,
                 ),
                 Center(
                   child: Container(
@@ -135,54 +174,63 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                         image: AssetImage('assets/images/AppIcon.png'),
                         fit: BoxFit.cover,
                       ),
-                      borderRadius: BorderRadius.all( Radius.circular(50.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.sizeOf(context).height*0.01,
+                  height: MediaQuery.sizeOf(context).height * 0.01,
                 ),
                 Center(
-                  child: Text("Moeen",style: TextStyle(
-                      color: ScreenConfig.theme.primaryColor,
-                      fontSize:  MediaQuery.sizeOf(context).width*0.062
-                  ),),
+                  child: Text(
+                    "Moeen",
+                    style: TextStyle(
+                        color: ScreenConfig.theme.primaryColor,
+                        fontSize: MediaQuery.sizeOf(context).width * 0.062),
+                  ),
                 ),
                 SizedBox(
-                  height: MediaQuery.sizeOf(context).height*0.04,
-                ),
-                SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Wallet(),));
-                        },
-                        child: const Text("Wallet"),
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      foregroundColor: Colors.white,
-                      backgroundColor: ScreenConfig.theme.primaryColor,
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      textStyle:  TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize:  MediaQuery.sizeOf(context).width*0.04,
-                          color: Colors.white
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)
-                      ),
-                    ),
-                    ),),
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height*0.03,
+                  height: MediaQuery.sizeOf(context).height * 0.04,
                 ),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionHistory(),));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Wallet(),
+                          ));
+                    },
+                    child: const Text("Wallet"),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      foregroundColor: Colors.white,
+                      backgroundColor: ScreenConfig.theme.primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: MediaQuery.sizeOf(context).width * 0.04,
+                          color: Colors.white),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.03,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TransactionHistory(),
+                          ));
                     },
                     child: const Text("Transaction History"),
                     style: ElevatedButton.styleFrom(
@@ -190,39 +238,37 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                       foregroundColor: Colors.white,
                       backgroundColor: ScreenConfig.theme.primaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 18),
-                      textStyle:  TextStyle(
+                      textStyle: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize:  MediaQuery.sizeOf(context).width*0.04,
-                          color: Colors.white
-                      ),
+                          fontSize: MediaQuery.sizeOf(context).width * 0.04,
+                          color: Colors.white),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)
-                      ),
+                          borderRadius: BorderRadius.circular(12)),
                     ),
-                  ),),
+                  ),
+                ),
                 SizedBox(
-                  height: MediaQuery.sizeOf(context).height*0.03,
+                  height: MediaQuery.sizeOf(context).height * 0.03,
                 ),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () =>  null,
+                    onPressed: () => null,
                     child: const Text("Ride History"),
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       foregroundColor: Colors.white,
                       backgroundColor: ScreenConfig.theme.primaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 18),
-                      textStyle:  TextStyle(
+                      textStyle: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize:  MediaQuery.sizeOf(context).width*0.04,
-                          color: Colors.white
-                      ),
+                          fontSize: MediaQuery.sizeOf(context).width * 0.04,
+                          color: Colors.white),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)
-                      ),
+                          borderRadius: BorderRadius.circular(12)),
                     ),
-                  ),),
+                  ),
+                ),
               ],
             ),
           ),
@@ -248,108 +294,184 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                   decoration: blueContainerTemplate(),
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
-                                        vertical: ScreenConfig.screenSizeHeight * 0.02,
-                                        horizontal: ScreenConfig.screenSizeWidth * 0.05),
+                                        vertical:
+                                        ScreenConfig.screenSizeHeight *
+                                            0.02,
+                                        horizontal:
+                                        ScreenConfig.screenSizeWidth *
+                                            0.05),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  height: 35,
-                                                  width: 35,
-                                                  decoration: squareButtonTemplate(radius: 8),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(3.0),
-                                                    child: Image.asset("assets/images/CarIconColored.png",
-                                                        fit: BoxFit.contain),
-                                                  ),
-                                                ),
-                                                spaceWidth(ScreenConfig.screenSizeWidth * 0.03),
-                                                Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    displayText('Mini ', ScreenConfig.theme.textTheme.button,
-                                                        width: 0.3),
-                                                    displayText(
-                                                        "1-8 mins",
-                                                        ScreenConfig.theme.textTheme.button
-                                                            ?.copyWith(fontSize: 9),
-                                                        width: 0.3),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
-                                        displayText(
-                                            "You Found A Rider!",
+                                        displayText("You Found A Passenger!",
                                             ScreenConfig.theme.textTheme.button,
                                             width: 0.8),
-                                        spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                                        spaceHeight(
+                                            ScreenConfig.screenSizeHeight *
+                                                0.025),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.start,
                                               children: [
-                                                userDetailsContainer("assets/images/UserProfileImage.png",
-                                                    "Altaf Ahmed", "4.9", true, false, " "),
-                                                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        width: ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.15,
+                                                        height: ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.15,
+                                                        decoration:
+                                                        BoxDecoration(
+                                                          image: DecorationImage(
+                                                              image: AssetImage(
+                                                                  'assets/images/UserProfileImage.png'),
+                                                              fit:
+                                                              BoxFit.cover),
+                                                          borderRadius:
+                                                          const BorderRadius
+                                                              .all(Radius
+                                                              .circular(
+                                                              5)),
+                                                        ),
+                                                      ),
+                                                      spaceWidth(ScreenConfig
+                                                          .screenSizeWidth *
+                                                          0.03),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          Text(
+                                                            "$passangerName",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                ScreenConfig
+                                                                    .screenSizeWidth *
+                                                                    0.03),
+                                                          ),
+                                                          Text(
+                                                            "Rating: 4.2 *",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                ScreenConfig
+                                                                    .screenSizeWidth *
+                                                                    0.03),
+                                                          ),
+                                                          Text(
+                                                            "Distance: $distance",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                ScreenConfig
+                                                                    .screenSizeWidth *
+                                                                    0.03),
+                                                          ),
+                                                          Text(
+                                                            "Fare: $fare",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                ScreenConfig
+                                                                    .screenSizeWidth *
+                                                                    0.03),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                spaceHeight(ScreenConfig
+                                                    .screenSizeHeight *
+                                                    0.02),
                                                 // userDetailsContainer("assets/images/UserCarImage.png",
                                                 //     "Honda Civic", "LXV 5675", false, true, "2019")
                                               ],
                                             ),
                                             SizedBox(
-                                              width: ScreenConfig.screenSizeWidth * 0.22,
+                                              width:
+                                              ScreenConfig.screenSizeWidth *
+                                                  0.22,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                                 children: [
                                                   Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                     children: [
                                                       smallSquareButton(
-                                                          "assets/images/PhoneIcon.png", () {}),
+                                                          "assets/images/PhoneIcon.png",
+                                                              () {}),
                                                       smallSquareButton(
-                                                          "assets/images/EmailIcon.png", () {}),
+                                                          "assets/images/EmailIcon.png",
+                                                              () {}),
                                                     ],
                                                   ),
-                                                  spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
-                                                  displayText("15km Remaining",
-                                                      ScreenConfig.theme.textTheme.bodyText2,
-                                                      textAlign: TextAlign.center, width: 0.22),
-                                                  spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                                                  spaceHeight(ScreenConfig
+                                                      .screenSizeHeight *
+                                                      0.035),
                                                   GestureDetector(
-                                                    onTap: (){
+                                                    onTap: () {
                                                       acceptrides();
                                                     },
                                                     child: Container(
-                                                      width: ScreenConfig.screenSizeWidth * 0.25,
+                                                      width: ScreenConfig
+                                                          .screenSizeWidth *
+                                                          0.25,
                                                       decoration: BoxDecoration(
                                                           color: thirdColor,
-                                                          borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                                          borderRadius:
+                                                          const BorderRadius
+                                                              .all(Radius
+                                                              .circular(
+                                                              5)),
                                                           boxShadow: [
                                                             BoxShadow(
-                                                              color: Colors.grey.withOpacity(0.40),
-                                                              offset: const Offset(0.0, 1.2), //(x,y)
+                                                              color: Colors.grey
+                                                                  .withOpacity(
+                                                                  0.40),
+                                                              offset:
+                                                              const Offset(
+                                                                  0.0, 1.2),
+                                                              //(x,y)
                                                               blurRadius: 6.0,
                                                             )
                                                           ]),
                                                       child: Padding(
-                                                          padding: const EdgeInsets.all(5.0),
+                                                          padding:
+                                                          const EdgeInsets
+                                                              .all(5.0),
                                                           child: displayNoSizedText(
                                                               'Confirm Ride',
-                                                              ScreenConfig.theme.textTheme.caption
-                                                                  ?.copyWith(color: ScreenConfig.theme.primaryColor,fontWeight: FontWeight.bold),
-                                                              textAlign: TextAlign.center)),
+                                                              ScreenConfig
+                                                                  .theme
+                                                                  .textTheme
+                                                                  .caption
+                                                                  ?.copyWith(
+                                                                  color: ScreenConfig
+                                                                      .theme
+                                                                      .primaryColor,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                              textAlign:
+                                                              TextAlign
+                                                                  .center)),
                                                     ),
                                                   )
                                                 ],
@@ -361,7 +483,8 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                     ),
                                   ),
                                 ),
-                                spaceHeight(ScreenConfig.screenSizeHeight * 0.015),
+                                spaceHeight(
+                                    ScreenConfig.screenSizeHeight * 0.015),
                               ],
                             );
                           }),
