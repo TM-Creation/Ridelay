@@ -146,8 +146,8 @@ class _RideShownScreenState extends State<RideShownScreen> {
     // Create payload
     final payload = {
       'passengerId': PassId().id,
-      'pickupLocation': {'coordinates': pickanddrop().pickloc},
-      'dropoffLocation': {'coordinates': pickanddrop().droploc},
+      'pickupLocation': {'coordinates': LatLng(pickanddrop().pickloc!.longitude,pickanddrop().pickloc!.latitude)},
+      'dropoffLocation': {'coordinates': LatLng(pickanddrop().droploc!.longitude, pickanddrop().droploc!.latitude)},
       'fare': fare,
     };
     // Emit the 'rideRequest' event with the payload

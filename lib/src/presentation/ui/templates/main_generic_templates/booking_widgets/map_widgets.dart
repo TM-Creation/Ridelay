@@ -603,8 +603,8 @@ class _MapScreenState extends State<MapScreen> {
                     drop = await locationFromAddress(
                         widget.fieldTwoController.text);
                     setState(() {
-                      pickanddrop().pickloc=LatLng(pick[0].longitude, pick[0].latitude);
-                      pickanddrop().droploc=LatLng(drop[0].longitude, drop[0].latitude);
+                      pickanddrop().pickloc=LatLng(pick[0].latitude, pick[0].longitude);
+                      pickanddrop().droploc=LatLng(drop[0].latitude, drop[0].longitude);
                       print("${pickanddrop().pickloc} pickloc a gya");
                     });
 

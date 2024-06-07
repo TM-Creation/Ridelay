@@ -44,6 +44,7 @@ dependencies:
   http: ^1.2.1
   uuid: ^4.4.0
   pinput: ^3.0.1
+  googlemaps_flutter_webservices: ^1.0.2
   get:
   geocoding: ^3.0.0
   image_picker: ^0.8.5+3

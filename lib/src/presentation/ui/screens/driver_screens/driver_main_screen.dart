@@ -44,11 +44,12 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   var datarespose = '';
   String passangerName = '';
   List<double> pick = [];
-  List<double> drop =[];
+  List<double> drop = [];
   int fare = 10;
   int rideRequestCount = 0;
-  String distance='';
-  String phonenumber='';
+  String distance = '';
+  String phonenumber = '';
+
   @override
   void initState() {
     initSocket();
@@ -76,13 +77,18 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       print("ridedata arrive $data");
       datarespose = data['_id'];
       print(" and id is=$datarespose");
-      passangerName=data['passenger']['name'];
-      phonenumber=data['passenger']['phone'];
-      fare=data['fare'];
-      pick=List<double>.from(data['pickupLocation']['coordinates']);
-      drop=List<double>.from(data['dropoffLocation']['coordinates']);
-      distance=calculateDistance(pick[1], pick[0], drop[1], drop[0]);
-      print('Dynamic Data is: name=$passangerName, fare=$fare, distance=$distance');
+      passangerName = data['passenger']['name'];
+      phonenumber = data['passenger']['phone'];
+      fare = data['fare'];
+      pick =  (data['pickupLocation']['coordinates'] as List<dynamic>)
+          .map((coordinate) => coordinate is int ? coordinate.toDouble() : coordinate as double)
+          .toList();
+      drop = (data['dropoffLocation']['coordinates'] as List<dynamic>)
+          .map((coordinate) => coordinate is int ? coordinate.toDouble() : coordinate as double)
+          .toList();
+      distance = calculateDistance(pick[1], pick[0], drop[1], drop[0]);
+      print(
+          'Dynamic Data is: name=$passangerName, fare=$fare, distance=$distance');
       rideRequestCount++;
       setState(() {
         print("setstate is run");
@@ -90,12 +96,21 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     });
     socket.on('rideCompleted', (data) {
       print(">>>>>$data");
-      Navigator.of(context).pushNamed(
-          DriverSoloRideWaitingScreen.routeName);
+      print("data of eve: $pick $drop $passangerName $phonenumber $fare $distance");
+      Navigator.of(context)
+          .pushNamed(DriverSoloRideWaitingScreen.routeName, arguments: {
+        'pickuplocation': pick,
+        'dropofflocation': drop,
+        'passangername': passangerName,
+        'passangerphone': phonenumber,
+        'fare': fare,
+        'distance':distance
+      });
     });
   }
-  String calculateDistance(
-      double pickupLat, double pickupLon, double dropoffLat, double dropoffLon) {
+
+  String calculateDistance(double pickupLat, double pickupLon,
+      double dropoffLat, double dropoffLon) {
     const double earthRadiusKm = 6371; // Earth's radius in kilometers
 
     double degreeToRadian(double degree) {
@@ -115,7 +130,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     double distanceKm = earthRadiusKm * c;
-    distanceKm=distanceKm*1.58500;
+    distanceKm = distanceKm * 1.58500;
     return '${distanceKm.toStringAsFixed(2)} km';
   }
 
@@ -301,16 +316,16 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical:
-                                        ScreenConfig.screenSizeHeight *
-                                            0.02,
+                                            ScreenConfig.screenSizeHeight *
+                                                0.02,
                                         horizontal:
-                                        ScreenConfig.screenSizeWidth *
-                                            0.05),
+                                            ScreenConfig.screenSizeWidth *
+                                                0.05),
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.start,
+                                          MainAxisAlignment.start,
                                       children: [
                                         displayText("You Found A Passenger!",
                                             ScreenConfig.theme.textTheme.button,
@@ -320,13 +335,13 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                 0.025),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Container(
                                                   color: Colors.transparent,
@@ -334,64 +349,64 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                     children: [
                                                       Container(
                                                         width: ScreenConfig
-                                                            .screenSizeWidth *
+                                                                .screenSizeWidth *
                                                             0.15,
                                                         height: ScreenConfig
-                                                            .screenSizeWidth *
+                                                                .screenSizeWidth *
                                                             0.15,
                                                         decoration:
-                                                        BoxDecoration(
+                                                            BoxDecoration(
                                                           image: DecorationImage(
                                                               image: AssetImage(
                                                                   'assets/images/UserProfileImage.png'),
                                                               fit:
-                                                              BoxFit.cover),
+                                                                  BoxFit.cover),
                                                           borderRadius:
-                                                          const BorderRadius
-                                                              .all(Radius
-                                                              .circular(
-                                                              5)),
+                                                              const BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          5)),
                                                         ),
                                                       ),
                                                       spaceWidth(ScreenConfig
-                                                          .screenSizeWidth *
+                                                              .screenSizeWidth *
                                                           0.03),
                                                       Column(
                                                         crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Text(
                                                             "$passangerName",
                                                             style: TextStyle(
                                                                 fontSize:
-                                                                ScreenConfig
-                                                                    .screenSizeWidth *
-                                                                    0.03),
+                                                                    ScreenConfig
+                                                                            .screenSizeWidth *
+                                                                        0.03),
                                                           ),
                                                           Text(
                                                             "Rating: 4.2 *",
                                                             style: TextStyle(
                                                                 fontSize:
-                                                                ScreenConfig
-                                                                    .screenSizeWidth *
-                                                                    0.03),
+                                                                    ScreenConfig
+                                                                            .screenSizeWidth *
+                                                                        0.03),
                                                           ),
                                                           Text(
                                                             "Distance: $distance",
                                                             style: TextStyle(
                                                                 fontSize:
-                                                                ScreenConfig
-                                                                    .screenSizeWidth *
-                                                                    0.03),
+                                                                    ScreenConfig
+                                                                            .screenSizeWidth *
+                                                                        0.03),
                                                           ),
                                                           Text(
                                                             "Fare: $fare",
                                                             style: TextStyle(
                                                                 fontSize:
-                                                                ScreenConfig
-                                                                    .screenSizeWidth *
-                                                                    0.03),
+                                                                    ScreenConfig
+                                                                            .screenSizeWidth *
+                                                                        0.03),
                                                           ),
                                                         ],
                                                       ),
@@ -399,7 +414,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                   ),
                                                 ),
                                                 spaceHeight(ScreenConfig
-                                                    .screenSizeHeight *
+                                                        .screenSizeHeight *
                                                     0.02),
                                                 // userDetailsContainer("assets/images/UserCarImage.png",
                                                 //     "Honda Civic", "LXV 5675", false, true, "2019")
@@ -407,29 +422,29 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                             ),
                                             SizedBox(
                                               width:
-                                              ScreenConfig.screenSizeWidth *
-                                                  0.22,
+                                                  ScreenConfig.screenSizeWidth *
+                                                      0.22,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                                    CrossAxisAlignment.center,
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
                                                       smallSquareButton(
                                                           "assets/images/PhoneIcon.png",
-                                                              () {}),
+                                                          () {}),
                                                       smallSquareButton(
                                                           "assets/images/EmailIcon.png",
-                                                              () {}),
+                                                          () {}),
                                                     ],
                                                   ),
                                                   spaceHeight(ScreenConfig
-                                                      .screenSizeHeight *
+                                                          .screenSizeHeight *
                                                       0.035),
                                                   GestureDetector(
                                                     onTap: () {
@@ -437,31 +452,31 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                     },
                                                     child: Container(
                                                       width: ScreenConfig
-                                                          .screenSizeWidth *
+                                                              .screenSizeWidth *
                                                           0.25,
                                                       decoration: BoxDecoration(
                                                           color: thirdColor,
                                                           borderRadius:
-                                                          const BorderRadius
-                                                              .all(Radius
-                                                              .circular(
-                                                              5)),
+                                                              const BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          5)),
                                                           boxShadow: [
                                                             BoxShadow(
                                                               color: Colors.grey
                                                                   .withOpacity(
-                                                                  0.40),
+                                                                      0.40),
                                                               offset:
-                                                              const Offset(
-                                                                  0.0, 1.2),
+                                                                  const Offset(
+                                                                      0.0, 1.2),
                                                               //(x,y)
                                                               blurRadius: 6.0,
                                                             )
                                                           ]),
                                                       child: Padding(
                                                           padding:
-                                                          const EdgeInsets
-                                                              .all(5.0),
+                                                              const EdgeInsets
+                                                                  .all(5.0),
                                                           child: displayNoSizedText(
                                                               'Confirm Ride',
                                                               ScreenConfig
@@ -469,15 +484,15 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                                   .textTheme
                                                                   .caption
                                                                   ?.copyWith(
-                                                                  color: ScreenConfig
-                                                                      .theme
-                                                                      .primaryColor,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                                      color: ScreenConfig
+                                                                          .theme
+                                                                          .primaryColor,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
                                                               textAlign:
-                                                              TextAlign
-                                                                  .center)),
+                                                                  TextAlign
+                                                                      .center)),
                                                     ),
                                                   )
                                                 ],
