@@ -136,7 +136,12 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
 
   @override
   void dispose() {
+    socket.off('rideRequest');
+    socket.off('rideCompleted');
     socket.disconnect();
+    socket.onDisconnect((_) {
+      print("Server Disconnect with Socket");
+    });
     super.dispose();
   }
 

@@ -165,6 +165,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
   void dispose() {
     socket.off('rideAccepted');
     socket.disconnect();
+    socket.onDisconnect((_) {
+      print("Server Disconnect with Socket");
+    });
     super.dispose();
   }
 
