@@ -86,7 +86,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       drop = (data['dropoffLocation']['coordinates'] as List<dynamic>)
           .map((coordinate) => coordinate is int ? coordinate.toDouble() : coordinate as double)
           .toList();
-      distance = calculateDistance(pick[0], pick[1], drop[0], drop[1]);
+      distance = calculateDistance(pick[1], pick[0], drop[1], drop[0]);
       print(
           'Dynamic Data is: name=$passangerName, fare=$fare, distance=$distance');
       rideRequestCount++;

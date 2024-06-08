@@ -132,8 +132,8 @@ class _DriverSoloRideWaitingScreenState
   }
 
   void _updatePolyline() {
-    print("roooola: $_driverLocation and ${LatLng(pick![0], pick![1])}");
-    _getRoutePolylinePoints(_driverLocation, LatLng(pick![0], pick![1]))
+    print("roooola: $_driverLocation and ${LatLng(pick![1], pick![0])}");
+    _getRoutePolylinePoints(_driverLocation, LatLng(pick![1], pick![0]))
         .then((polylinePoints) {
       if(mounted){
         setState(() {
@@ -183,7 +183,7 @@ class _DriverSoloRideWaitingScreenState
       northeast: LatLng(maxLat, maxLong),
     );
   }
-  void _trackDriverLocation() {
+  void _trackDriverLocation(){
     Geolocator.getPositionStream().listen((Position position) {
       if(mounted){
         setState(() {
@@ -409,7 +409,7 @@ class _DriverSoloRideWaitingScreenState
                 ),
                 Marker(
                   markerId: MarkerId('passngerpick'),
-                  position: LatLng(pick![0], pick![1]),
+                  position: LatLng(pick![1], pick![0]),
                   infoWindow: InfoWindow(title: 'Passanger Pickup'),
                   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
                 ),
