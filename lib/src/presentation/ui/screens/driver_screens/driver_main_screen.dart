@@ -60,7 +60,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
 
   initSocket() {
     socket =
-        IO.io('https://995c-110-93-223-135.ngrok-free.app', <String, dynamic>{
+        IO.io('https://710b-39-45-48-186.ngrok-free.app', <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {
         'authorization': PassId().token,
