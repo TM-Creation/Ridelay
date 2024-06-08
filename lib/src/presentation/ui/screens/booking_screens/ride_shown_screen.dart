@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_waiting_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
@@ -99,28 +100,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
     print("initState call");
     super.initState();
   }
-
-  late IO.Socket socket;
+  IO.Socket socket=socketconnection().socket;
   final String? id = PassId().id;
   var reqrideid = '';
   var driverid='';
   final LatLng? pickuplocation = pickanddrop().pickloc,
       dropofflocation = pickanddrop().droploc;
-
   initSocket() {
-    socket =
-        IO.io('https://710b-39-45-48-186.ngrok-free.app', <String, dynamic>{
-      'transports': ['websocket'],
-      'extraHeaders': {
-        'authorization': PassId().token,
-        'usertype': PassId().type
-      },
-      'autoConnect': false,
-    });
-    socket.connect();
-    socket.onConnect((_) {
-      print("Server Connect with Socket");
-    });
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideAccepted', (data) {
       print("$data ride is accept ");

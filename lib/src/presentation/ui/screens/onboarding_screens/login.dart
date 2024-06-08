@@ -24,6 +24,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 
 
@@ -244,7 +245,7 @@ class _LoginState extends State<Login> {
     final headers = {
       HttpHeaders.contentTypeHeader: 'application/json',
     };
-
+    late IO.Socket socket;
     try {
       final response = await http.post(url, headers: headers, body: body);
 
@@ -266,9 +267,41 @@ class _LoginState extends State<Login> {
         if (PassId().id != null && PassId().token!=null && typeofuser!=null){
           if(typeofuser=='driver'){
             print("Driver Done");
+            socket =
+                IO.io('https://710b-39-45-48-186.ngrok-free.app', <String, dynamic>{
+                  'transports': ['websocket'],
+                  'extraHeaders': {
+                    'authorization': PassId().token,
+                    'usertype': PassId().type
+                  },
+                  'autoConnect': false,
+                });
+            socket.connect();
+            socket.onConnect((_) {
+              print("Server Connect with Socket");
+            });
+            setState(() {
+              socketconnection().socket=socket;
+            });
             Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
           }else if(typeofuser=='passenger'){
             print("Passenger Done");
+            socket =
+                IO.io('https://710b-39-45-48-186.ngrok-free.app', <String, dynamic>{
+                  'transports': ['websocket'],
+                  'extraHeaders': {
+                    'authorization': PassId().token,
+                    'usertype': PassId().type
+                  },
+                  'autoConnect': false,
+                });
+            socket.connect();
+            socket.onConnect((_) {
+              print("Server Connect with Socket");
+            });
+            setState(() {
+              socketconnection().socket=socket;
+            });
             Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
           }else{
             print("Nothing Done");

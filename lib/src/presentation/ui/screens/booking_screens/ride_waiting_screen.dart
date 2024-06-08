@@ -12,8 +12,8 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:socket_io_client/socket_io_client.dart';
 
+import '../driver_screens/driver_main_screen.dart';
 import '../onboarding_screens/register_screens/passangerregistration.dart';
 
 class RideWaitingScreen extends StatefulWidget {
@@ -48,8 +48,17 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       });
     }
   }
-
-
+  @override
+  void initState() {
+    initSocket();
+    super.initState();
+  }
+  initSocket(){
+    IO.Socket socket=socketconnection().socket;
+    socket.on('locationUpdate', (data){
+      print("Driver Live Location Reached $data");
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
