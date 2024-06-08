@@ -49,29 +49,27 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   int rideRequestCount = 0;
   String distance = '';
   String phonenumber = '';
-
+  late IO.Socket socket;
   @override
   void initState() {
     initSocket();
     super.initState();
   }
-
-  late IO.Socket socket;
-
   initSocket() {
     socket =
         IO.io('https://710b-39-45-48-186.ngrok-free.app', <String, dynamic>{
-      'transports': ['websocket'],
-      'extraHeaders': {
-        'authorization': PassId().token,
-        'usertype': PassId().type
-      },
-      'autoConnect': false,
-    });
+          'transports': ['websocket'],
+          'extraHeaders': {
+            'authorization': PassId().token,
+            'usertype': PassId().type
+          },
+          'autoConnect': false,
+        });
     socket.connect();
     socket.onConnect((_) {
       print("Server Connect with Socket");
     });
+    socketconnection().socket=socket;
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideRequest', (data) {
       print("ridedata arrive $data");
@@ -136,7 +134,6 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
 
   @override
   void dispose() {
-    socket.disconnect();
     super.dispose();
   }
 
@@ -515,4 +512,14 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
               ),
             )));
   }
+}
+
+class socketconnection{
+  static final socketconnection _instance = socketconnection._internal();
+
+  factory socketconnection() {
+    return _instance;
+  }
+  socketconnection._internal();
+  late IO.Socket socket;
 }

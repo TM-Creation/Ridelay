@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/solo_ride_in_progress_and_finish_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_solo_ride_in_progress_and_finished_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
 import 'package:http/http.dart' as http;
@@ -17,10 +18,12 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/othe
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/driver_ride_detail_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../templates/main_generic_templates/text_templates/display_text.dart';
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../../templates/ride_widgets/ride_widget_buttons.dart';
+import '../onboarding_screens/register_screens/passangerregistration.dart';
 
 class DriverSoloRideWaitingScreen extends StatefulWidget {
   const DriverSoloRideWaitingScreen({Key? key}) : super(key: key);
@@ -68,10 +71,12 @@ class _DriverSoloRideWaitingScreenState
   void initState() {
     super.initState();
   }
+  IO.Socket socket=socketconnection().socket;
   Future<void> _initLocationService() async {
     setState(() {
       _driverLocation = driverlocation!;
     });
+    socket.emit('locationUpdate',{'location':_driverLocation});
     _updatePolyline();
     _trackDriverLocation();
   }
@@ -146,52 +151,28 @@ class _DriverSoloRideWaitingScreenState
             )
           };
         });
-        LatLngBounds bounds = _getPolylineBounds(polylinePoints);
-
-        // Animate camera to fit bounds
-        _controller.animateCamera(
-          CameraUpdate.newLatLngBounds(bounds, 50), // Padding of 50 pixels
-        );
       }
+      /*_controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: _driverLocation,
+          zoom: 13.0,
+        ),
+      ));*/
     }).catchError((e) {
       print('Error fetching route: $e');
     });
-  }
-  LatLngBounds _getPolylineBounds(List<LatLng> polylinePoints) {
-    double minLat = polylinePoints[0].latitude;
-    double maxLat = polylinePoints[0].latitude;
-    double minLong = polylinePoints[0].longitude;
-    double maxLong = polylinePoints[0].longitude;
-
-    for (LatLng point in polylinePoints) {
-      if (point.latitude < minLat) {
-        minLat = point.latitude;
-      }
-      if (point.latitude > maxLat) {
-        maxLat = point.latitude;
-      }
-      if (point.longitude < minLong) {
-        minLong = point.longitude;
-      }
-      if (point.longitude > maxLong) {
-        maxLong = point.longitude;
-      }
-    }
-
-    return LatLngBounds(
-      southwest: LatLng(minLat, minLong),
-      northeast: LatLng(maxLat, maxLong),
-    );
   }
   void _trackDriverLocation(){
     Geolocator.getPositionStream().listen((Position position) {
       if(mounted){
         setState(() {
           _driverLocation = LatLng(position.latitude, position.longitude);
+          socket.emit('updatedLocation',{'location':_driverLocation});
           _updatePolyline();
         });
       }
     });
+
   }
   @override
   Widget build(BuildContext context) {
