@@ -285,7 +285,7 @@ class _DriverSoloRideWaitingScreenState
                                         ScreenConfig.screenSizeHeight * 0.01),
                                     GestureDetector(
                                       onTap: () {
-                                        socket.emit('pickupRide',{'rideId':rideId});
+                                        socket.emit('completeRide',{'rideId':rideId});
                                       },
                                       child: Container(
                                         width: ScreenConfig.screenSizeWidth *

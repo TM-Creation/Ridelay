@@ -71,7 +71,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       print("driver live location is: $driverlivelocation");
       _updatePolyline();
     });
-    socket.on('pickupRide', (data){
+    socket.on('completeRide', (data){
        print('on is run correctly');
     });
   }
