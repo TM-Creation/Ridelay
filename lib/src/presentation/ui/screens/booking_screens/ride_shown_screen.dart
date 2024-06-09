@@ -90,8 +90,8 @@ class _RideShownScreenState extends State<RideShownScreen> {
   bool isdriveraccept = false, requestshow = false;
   String drivername='';
   double driverraiting=4.2;
-  String driverimage='';
-  String? vahicleimage;
+  //String driverimage='';
+  //String? vahicleimage;
   String vahiclename='';
   String numberplate='';
   @override
@@ -113,9 +113,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
       isdriveraccept=false;
       requestshow=true;
       drivername=data['driver']['name'];
-      driverimage=data['driver']['driverImage'];
+      //driverimage=data['driver']['driverImage'];
       driverraiting=data['driver']['rating'];
-      vahicleimage=data['vehicle']['vehicleImage'];
+      //vahicleimage=data['vehicle']['vehicleImage'];
       vahiclename=data['vehicle']['name'];
       numberplate=data['vehicle']['numberPlate'];
       reqrideid = data['_id'];
@@ -850,7 +850,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
         ),
       );
     }
-    print('$driverimage driver image');
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
@@ -929,7 +928,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                               .circular(
                                                               5)),
                                                         ),
-                                                        child: Image.network('$driverimage',fit: BoxFit.cover,),
+                                                        child: Image.asset('assets/images/UserProfileImage.png',fit: BoxFit.cover,),
                                                       ),
                                                       spaceWidth(ScreenConfig
                                                           .screenSizeWidth *
@@ -978,7 +977,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                               .circular(
                                                               5)),
                                                         ),
-                                                          child: Image.network('$driverimage',fit: BoxFit.cover,)
+                                                          child: Image.asset('assets/images/UserCarImage.png',fit: BoxFit.cover,)
                                                       ),
                                                       spaceWidth(ScreenConfig
                                                           .screenSizeWidth *

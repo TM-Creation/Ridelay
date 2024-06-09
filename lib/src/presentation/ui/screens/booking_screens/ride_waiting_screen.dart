@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
@@ -12,7 +14,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-
+import 'package:http/http.dart' as http;
 import '../driver_screens/driver_main_screen.dart';
 import '../onboarding_screens/register_screens/passangerregistration.dart';
 
@@ -37,7 +39,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
     final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+    ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
     if (args != null) {
       setState(() {
         pickupEnterController.text = args['pickupLocation']!;
@@ -48,6 +50,9 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       });
     }
   }
+  late GoogleMapController _controller;
+  Set<Polyline> _polylines = {};
+  List<double> driverlivelocation=[];
   @override
   void initState() {
     initSocket();
@@ -57,6 +62,96 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
     IO.Socket socket=socketconnection().socket;
     socket.on('locationUpdate', (data){
       print("Driver Live Location Reached $data");
+      driverlivelocation=(data['location'] as List<dynamic>)
+          .map((coordinate) => coordinate is int ? coordinate.toDouble() : coordinate as double)
+          .toList();
+      setState(() {
+
+      });
+      print("driver live location is: $driverlivelocation");
+      _updatePolyline();
+    });
+  }
+  Future<List<LatLng>> _getRoutePolylinePoints(LatLng origin, LatLng destination) async {
+    String apiUrl = 'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
+
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      final decoded = json.decode(response.body);
+      List<LatLng> polylinePoints = [];
+
+      // Extracting route polyline points from API response
+      List steps = decoded['routes'][0]['legs'][0]['steps'];
+      steps.forEach((step) {
+        String points = step['polyline']['points'];
+        List<LatLng> decodedPolylinePoints =
+        decodeEncodedPolyline(points);
+        polylinePoints.addAll(decodedPolylinePoints);
+      });
+
+      return polylinePoints;
+    } else {
+      throw Exception('Failed to load route');
+    }
+  }
+
+  List<LatLng> decodeEncodedPolyline(String encoded) {
+    List<LatLng> polylinePoints = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int b, shift = 0, result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lng += dlng;
+
+      double latitude = lat / 1E5;
+      double longitude = lng / 1E5;
+      polylinePoints.add(LatLng(latitude, longitude));
+    }
+    return polylinePoints;
+  }
+
+  void _updatePolyline() {
+    print("roooola:  ${pickanddrop().pickloc} and ${LatLng(driverlivelocation[0], driverlivelocation[1])}");
+    _getRoutePolylinePoints(pickanddrop().pickloc!, LatLng(driverlivelocation[0], driverlivelocation[1]))
+        .then((polylinePoints) {
+      if(mounted){
+        setState(() {
+          _polylines = {
+            Polyline(
+              polylineId: PolylineId('route'),
+              points: polylinePoints,
+              color: Colors.red,
+              width: 5,
+            )
+          };
+        });
+      }
+      /*_controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: _driverLocation,
+          zoom: 13.0,
+        ),
+      ));*/
+    }).catchError((e) {
+      print('Error fetching route: $e');
     });
   }
   @override
@@ -108,85 +203,30 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
           children: [
-            SizedBox(
-              height: ScreenConfig.screenSizeHeight * 1.2,
-              child: Column(
-                children: [
-                  MapScreen(
-                      check: true,
-                      showAds: false,
-                      showTextFields: true,
-                      isFieldsReadOnly: true,
-                      search: [],
-                      isFullScreen: false,
-                      isShowMyLocationIcon: false,
-                      image: image,
-                      hintFieldOne: "Pick-Up Location",
-                      fieldOneButtonFunction: () {},
-                      suffixIconFieldOne: SizedBox(
-                        height: 60,
-                        width: 50,
-                        child: Row(
-                          children: [
-                            Buttons.smallSquareButton(
-                                "assets/images/CircularIconButton.png", () {}),
-                          ],
-                        ),
-                      ),
-                      fieldOneController: pickupEnterController,
-                      isDisplayFieldTwo: true,
-                      hintFieldTwo: "Drop Off Location",
-                      fieldTwoButtonFunction: () {},
-                      suffixIconFieldTwo: SizedBox(
-                        height: 60,
-                        width: 50,
-                        child: Row(
-                          children: [
-                            Buttons.smallSquareButton(
-                                "assets/images/PinPointIcon.png", () {}),
-                          ],
-                        ),
-                      ),
-                      fieldTwoController: dropoffEnterController),
-                  // mapWidget(
-                  //     showAds: true,
-                  //     showTextFields: false,
-                  //     isFieldsReadOnly: true,
-                  //     isFullScreen: false,
-                  //     isShowMyLocationIcon: false,
-                  //     image: image,
-                  //     hintFieldOne: "Pick-Up Location",
-                  //     fieldOneButtonFunction: () {},
-                  //     suffixIconFieldOne: SizedBox(
-                  //       height: 60,
-                  //       width: 50,
-                  //       child: Row(
-                  //         children: [
-                  //           Buttons.smallSquareButton(
-                  //               "assets/images/CircularIconButton.png", () {}),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     fieldOneController: pickupEnterController,
-                  //     isDisplayFieldTwo: true,
-                  //     hintFieldTwo: "Drop Off Location",
-                  //     fieldTwoButtonFunction: () {},
-                  //     suffixIconFieldTwo: SizedBox(
-                  //       height: 60,
-                  //       width: 50,
-                  //       child: Row(
-                  //         children: [
-                  //           Buttons.smallSquareButton(
-                  //               "assets/images/PinPointIcon.png", () {}),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     fieldTwoController: dropoffEnterController),
-                  spaceHeight(
-                    ScreenConfig.screenSizeHeight * 0.2,
-                  )
-                ],
+            if(pickanddrop().pickloc!=null && driverlivelocation.isNotEmpty)
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: pickanddrop().pickloc!,
+                zoom: 15,
               ),
+              markers: {
+                Marker(
+                  markerId: MarkerId('passangerpickup'),
+                  position: pickanddrop().pickloc!,
+                  infoWindow: InfoWindow(title: 'Passanger Pickup'),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+                ),
+                Marker(
+                  markerId: MarkerId('driverlive'),
+                  position: LatLng(driverlivelocation[0],driverlivelocation[1]),
+                  infoWindow: InfoWindow(title: 'Driver Location'),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                ),
+              },
+              polylines: _polylines,
+              onMapCreated: (GoogleMapController controller) {
+                _controller = controller;
+              },
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
