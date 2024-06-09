@@ -279,11 +279,11 @@ class _LoginState extends State<Login> {
             socket.connect();
             socket.onConnect((_) {
               print("Server Connect with Socket");
+              setState(() {
+                socketconnection().socket=socket;
+              });
+              Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
             });
-            setState(() {
-              socketconnection().socket=socket;
-            });
-            Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
           }else if(typeofuser=='passenger'){
             print("Passenger Done");
             socket =
@@ -298,11 +298,12 @@ class _LoginState extends State<Login> {
             socket.connect();
             socket.onConnect((_) {
               print("Server Connect with Socket");
+              setState(() {
+                socketconnection().socket=socket;
+              });
+              Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
             });
-            setState(() {
-              socketconnection().socket=socket;
-            });
-            Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
+
           }else{
             print("Nothing Done");
           }
