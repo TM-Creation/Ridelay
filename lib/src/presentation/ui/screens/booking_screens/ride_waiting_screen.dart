@@ -71,6 +71,9 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       print("driver live location is: $driverlivelocation");
       _updatePolyline();
     });
+    socket.on('pickupRide', (data){
+       print('on is run correctly');
+    });
   }
   Future<List<LatLng>> _getRoutePolylinePoints(LatLng origin, LatLng destination) async {
     String apiUrl = 'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';

@@ -46,6 +46,7 @@ class _DriverSoloRideWaitingScreenState
   String? passangerphone = '';
   int? fare = 0;
   String? distance = '';
+  String rideId='';
   late GoogleMapController _controller;
   Set<Polyline> _polylines = {};
   late LatLng _driverLocation;
@@ -62,7 +63,8 @@ class _DriverSoloRideWaitingScreenState
         fare = args['fare']!;
         passangername = args['passangername']!;
         passangerphone = args['passangerphone']!;
-        print("data of eve 2: $pick $drop $passangername $passangerphone $fare $distance");
+        rideId=args['rideId'];
+        print("data of eve 2: $pick $drop $passangername $passangerphone $fare $distance $rideId");
       });
     }
     _initLocationService();
@@ -265,6 +267,7 @@ class _DriverSoloRideWaitingScreenState
                               children: [
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     userDetailsContainer(
                                         "assets/images/UserProfileImage.png",
@@ -274,9 +277,49 @@ class _DriverSoloRideWaitingScreenState
                                         false,
                                         " "),
                                     spaceHeight(
-                                        ScreenConfig.screenSizeHeight * 0.02),
+                                        ScreenConfig.screenSizeHeight * 0.01),
+                                    Text('If you pick the Passanger click on Below Button',style: TextStyle(color: Colors.white,fontSize: ScreenConfig.screenSizeWidth*0.022),),
                                     // userDetailsContainer("assets/images/UserCarImage.png",
                                     //     "Honda Civic", "LXV 5675", false, true, "2019")
+                                    spaceHeight(
+                                        ScreenConfig.screenSizeHeight * 0.01),
+                                    GestureDetector(
+                                      onTap: () {
+                                        socket.emit('pickupRide',{'rideId':rideId});
+                                      },
+                                      child: Container(
+                                        width: ScreenConfig.screenSizeWidth *
+                                            0.25,
+                                        decoration: BoxDecoration(
+                                            color: thirdColor,
+                                            borderRadius:
+                                            const BorderRadius.all(
+                                                Radius.circular(5)),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.40),
+                                                offset: const Offset(
+                                                    0.0, 1.2), //(x,y)
+                                                blurRadius: 6.0,
+                                              )
+                                            ]),
+                                        child: Padding(
+                                            padding:
+                                            const EdgeInsets.all(5.0),
+                                            child: displayNoSizedText(
+                                                'Passanger Picked',
+                                                ScreenConfig
+                                                    .theme.textTheme.caption
+                                                    ?.copyWith(
+                                                    color: ScreenConfig
+                                                        .theme
+                                                        .primaryColor,
+                                                    fontWeight:
+                                                    FontWeight.bold),
+                                                textAlign: TextAlign.center)),
+                                      ),
+                                    )
                                   ],
                                 ),
                                 SizedBox(
@@ -299,7 +342,7 @@ class _DriverSoloRideWaitingScreenState
                                         ],
                                       ),
                                       spaceHeight(
-                                          ScreenConfig.screenSizeHeight * 0.01),
+                                          ScreenConfig.screenSizeHeight * 0.017),
                                       displayText(
                                           "15km Remaining",
                                           ScreenConfig
@@ -368,47 +411,41 @@ class _DriverSoloRideWaitingScreenState
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
-      body: GestureDetector(
-        onTap: () {
-          Navigator.of(context)
-              .pushNamed(DriverSoloRideInProgressAndFinishedScreen.routeName);
-        },
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: driverlocation!,
-                zoom: 15,
-              ),
-              markers: {
-                Marker(
-                  markerId: MarkerId('driver'),
-                  position: _driverLocation,
-                  infoWindow: InfoWindow(title: 'Driver Location'),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-                ),
-                Marker(
-                  markerId: MarkerId('passngerpick'),
-                  position: LatLng(pick![1], pick![0]),
-                  infoWindow: InfoWindow(title: 'Passanger Pickup'),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-                ),
-              },
-              polylines: _polylines,
-              onMapCreated: (GoogleMapController controller) {
-                _controller = controller;
-              },
+      body: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: driverlocation!,
+              zoom: 15,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
-                bottomModalNonSlideable(),
-              ],
-            )
-          ],
-        ),
+            markers: {
+              Marker(
+                markerId: MarkerId('driver'),
+                position: _driverLocation,
+                infoWindow: InfoWindow(title: 'Driver Location'),
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+              ),
+              Marker(
+                markerId: MarkerId('passngerpick'),
+                position: LatLng(pick![1], pick![0]),
+                infoWindow: InfoWindow(title: 'Passanger Pickup'),
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+              ),
+            },
+            polylines: _polylines,
+            onMapCreated: (GoogleMapController controller) {
+              _controller = controller;
+            },
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
+              bottomModalNonSlideable(),
+            ],
+          )
+        ],
       ),
     );
   }
