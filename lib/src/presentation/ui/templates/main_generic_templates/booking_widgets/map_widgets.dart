@@ -295,7 +295,8 @@ class _MapScreenState extends State<MapScreen> {
               ? ScreenConfig.screenSizeHeight * 1.2
               : ScreenConfig.screenSizeHeight * 0.8,
           width: ScreenConfig.screenSizeWidth,
-          child: GoogleMap(
+          child:
+          GoogleMap(
             initialCameraPosition: initailposition,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,

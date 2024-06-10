@@ -63,7 +63,7 @@ class _DriverSoloRideWaitingScreenState
         distance = args['distance']!;
         fare = args['fare']!;
         passangername = args['name']!;
-        raiting=args['raiting'];
+        //raiting=args['raiting'];
         passangerphone = args['passangerphone']!;
         rideId=args['rideId'];
         print("data of eve 2: $pick $drop $passangername $passangerphone $fare $distance $rideId $raiting");

@@ -23,6 +23,7 @@ import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
+
 class DriverSoloRideInProgressAndFinishedScreen extends StatefulWidget {
   const DriverSoloRideInProgressAndFinishedScreen({Key? key}) : super(key: key);
   static const routeName = '/driversolorideinprogressandfinished-screen';
@@ -40,37 +41,46 @@ class _DriverSoloRideInProgressAndFinishedScreenState
   String image = "assets/images/LocationDistanceScreenMap.png";
   List namesList = ["Mini", "Go", "Comfort", "Mini"];
   List<double>? drop = [];
-  String rideId='';
+  String rideId = '';
   late GoogleMapController _controller;
   Set<Polyline> _polylines = {};
+
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null) {
       setState(() {
         drop = args['dropofflocation']!;
-        rideId=args['rideId'];
+        rideId = args['rideId'];
         print("data of eve 2: $drop");
       });
     }
     _initLocationService();
   }
-  LatLng driverlocation=LatLng(0.0,0.0);
+
+  LatLng driverlocation = LatLng(0.0, 0.0);
+
   @override
   void initState() {
     pickupEnterController.text = "Gulberg Phase II";
     dropoffEnterController.text = "Bahria Town";
-    driverlocation=userLiveLocation().userlivelocation!;
+    driverlocation = userLiveLocation().userlivelocation!;
     super.initState();
   }
+
   Future<void> _initLocationService() async {
     _updatePolyline();
     _trackDriverLocation();
   }
-  IO.Socket socket=socketconnection().socket;
-  Future<List<LatLng>> _getRoutePolylinePoints(LatLng origin, LatLng destination) async {
-    String apiUrl = 'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
+
+  IO.Socket socket = socketconnection().socket;
+
+  Future<List<LatLng>> _getRoutePolylinePoints(
+      LatLng origin, LatLng destination) async {
+    String apiUrl =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -82,8 +92,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
       List steps = decoded['routes'][0]['legs'][0]['steps'];
       steps.forEach((step) {
         String points = step['polyline']['points'];
-        List<LatLng> decodedPolylinePoints =
-        decodeEncodedPolyline(points);
+        List<LatLng> decodedPolylinePoints = decodeEncodedPolyline(points);
         polylinePoints.addAll(decodedPolylinePoints);
       });
 
@@ -126,9 +135,10 @@ class _DriverSoloRideInProgressAndFinishedScreenState
   }
 
   void _updatePolyline() {
-    _getRoutePolylinePoints(driverlocation,LatLng(drop![0], drop![1]))
+    print("update polyline check $driverlocation ${LatLng(drop![1], drop![0])}");
+    _getRoutePolylinePoints(driverlocation, LatLng(drop![1], drop![0]))
         .then((polylinePoints) {
-      if(mounted){
+      if (mounted) {
         setState(() {
           _polylines = {
             Polyline(
@@ -150,9 +160,10 @@ class _DriverSoloRideInProgressAndFinishedScreenState
       print('Error fetching route: $e');
     });
   }
-  void _trackDriverLocation(){
+
+  void _trackDriverLocation() {
     Geolocator.getPositionStream().listen((Position position) {
-      if(mounted){
+      if (mounted) {
         setState(() {
           driverlocation = LatLng(position.latitude, position.longitude);
           _updatePolyline();
@@ -160,6 +171,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -208,23 +220,28 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 width: 0.8),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                             Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   displayText("Distance Remaining",
                                       ScreenConfig.theme.textTheme.button,
                                       width: 0.5),
-                                  displayText("5 km", ScreenConfig.theme.textTheme.button,
+                                  displayText("5 km",
+                                      ScreenConfig.theme.textTheme.button,
                                       width: 0.3),
                                 ]),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                             Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  displayText("ETA", ScreenConfig.theme.textTheme.button,
+                                  displayText("ETA",
+                                      ScreenConfig.theme.textTheme.button,
                                       width: 0.5),
-                                  displayText("8 mins", ScreenConfig.theme.textTheme.button,
+                                  displayText("8 mins",
+                                      ScreenConfig.theme.textTheme.button,
                                       width: 0.3),
                                 ]),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
@@ -234,54 +251,67 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    userDetailsContainer("assets/images/UserProfileImage.png",
-                                        "Altaf Ahmed", "4.9", true, false, " "),
-                                    spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                                    userDetailsContainer(
+                                        "assets/images/UserProfileImage.png",
+                                        "Altaf Ahmed",
+                                        "4.9",
+                                        true,
+                                        false,
+                                        " "),
+                                    spaceHeight(
+                                        ScreenConfig.screenSizeHeight * 0.02),
                                     // userDetailsContainer("assets/images/UserCarImage.png",
                                     //     "Honda Civic", "LXV 5675", false, true, "2019")
                                   ],
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    socket.emit('completeRide',{'rideId':rideId});
-                                    Navigator.of(context)
-                                        .pushNamed(DriverSoloRideRatingScreen.routeName);
+                                    socket.emit(
+                                        'completeRide', {'rideId': rideId});
+                                    Navigator.of(context).pushNamed(
+                                        DriverSoloRideRatingScreen.routeName);
                                   },
                                   child: Container(
-                                    width: ScreenConfig.screenSizeWidth *
-                                        0.25,
+                                    width: ScreenConfig.screenSizeWidth * 0.25,
                                     decoration: BoxDecoration(
                                         color: thirdColor,
-                                        borderRadius:
-                                        const BorderRadius.all(
+                                        borderRadius: const BorderRadius.all(
                                             Radius.circular(5)),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.grey
-                                                .withOpacity(0.40),
-                                            offset: const Offset(
-                                                0.0, 1.2), //(x,y)
+                                            color:
+                                                Colors.grey.withOpacity(0.40),
+                                            offset:
+                                                const Offset(0.0, 1.2), //(x,y)
                                             blurRadius: 6.0,
                                           )
                                         ]),
                                     child: Padding(
-                                        padding:
-                                        const EdgeInsets.all(5.0),
+                                        padding: const EdgeInsets.all(5.0),
                                         child: displayNoSizedText(
                                             'Ride Complete',
-                                            ScreenConfig
-                                                .theme.textTheme.caption
+                                            ScreenConfig.theme.textTheme.caption
                                                 ?.copyWith(
-                                                color: ScreenConfig
-                                                    .theme
-                                                    .primaryColor,
-                                                fontWeight:
-                                                FontWeight.bold),
+                                                    color: ScreenConfig
+                                                        .theme.primaryColor,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                             textAlign: TextAlign.center)),
                                   ),
                                 )
                               ],
                             ),
+                            spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                            Text(
+                              'If you Drop the Passenger click on Ride Complete Button',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      ScreenConfig.screenSizeWidth * 0.022),
+                            ),
+                            // userDetailsContainer("assets/images/UserCarImage.png",
+                            //     "Honda Civic", "LXV 5675", false, true, "2019")
+                            spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                           ],
                         ),
                       ),
@@ -290,11 +320,6 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                   ],
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                Text('If you Drop the Passenger click on Ride Complete Button',style: TextStyle(color: Colors.white,fontSize: ScreenConfig.screenSizeWidth*0.022),),
-                // userDetailsContainer("assets/images/UserCarImage.png",
-                //     "Honda Civic", "LXV 5675", false, true, "2019")
-                spaceHeight(
-                    ScreenConfig.screenSizeHeight * 0.01),
               ],
             ),
           ),
@@ -320,13 +345,15 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                 markerId: MarkerId('driver'),
                 position: driverlocation,
                 infoWindow: InfoWindow(title: 'Driver Location'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
               ),
               Marker(
                 markerId: MarkerId('passngerpick'),
                 position: LatLng(drop![1], drop![0]),
                 infoWindow: InfoWindow(title: 'Passanger Pickup'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueRed),
               ),
             },
             polylines: _polylines,

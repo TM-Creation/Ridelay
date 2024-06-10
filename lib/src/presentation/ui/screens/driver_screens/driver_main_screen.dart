@@ -106,7 +106,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
         'distance':distance,
         'rideId':datarespose,
         'name':passangerName,
-        'raiting':raiting,
+        //'raiting':raiting,
         'passangerphone':phonenumber
       });
     });
