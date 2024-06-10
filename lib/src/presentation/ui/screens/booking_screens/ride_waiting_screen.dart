@@ -71,8 +71,10 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       print("driver live location is: $driverlivelocation");
       _updatePolyline();
     });
-    socket.on('completeRide', (data){
+    socket.on('pickupRide', (data){
        print('on is run correctly');
+       Navigator.of(context)
+           .pushNamed(RideInProgressAndFinishedScreen.routeName);
     });
   }
   Future<List<LatLng>> _getRoutePolylinePoints(LatLng origin, LatLng destination) async {
@@ -198,48 +200,42 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
-      body: GestureDetector(
-        onTap: () {
-          Navigator.of(context)
-              .pushNamed(RideInProgressAndFinishedScreen.routeName);
-        },
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            if(pickanddrop().pickloc!=null && driverlivelocation.isNotEmpty)
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: pickanddrop().pickloc!,
-                zoom: 15,
-              ),
-              markers: {
-                Marker(
-                  markerId: MarkerId('passangerpickup'),
-                  position: pickanddrop().pickloc!,
-                  infoWindow: InfoWindow(title: 'Passanger Pickup'),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-                ),
-                Marker(
-                  markerId: MarkerId('driverlive'),
-                  position: LatLng(driverlivelocation[0],driverlivelocation[1]),
-                  infoWindow: InfoWindow(title: 'Driver Location'),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-                ),
-              },
-              polylines: _polylines,
-              onMapCreated: (GoogleMapController controller) {
-                _controller = controller;
-              },
+      body: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          if(pickanddrop().pickloc!=null && driverlivelocation.isNotEmpty)
+          GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: pickanddrop().pickloc!,
+              zoom: 15,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
-                bottomModalNonSlideable(),
-              ],
-            )
-          ],
-        ),
+            markers: {
+              Marker(
+                markerId: MarkerId('passangerpickup'),
+                position: pickanddrop().pickloc!,
+                infoWindow: InfoWindow(title: 'Passanger Pickup'),
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+              ),
+              Marker(
+                markerId: MarkerId('driverlive'),
+                position: LatLng(driverlivelocation[0],driverlivelocation[1]),
+                infoWindow: InfoWindow(title: 'Driver Location'),
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+              ),
+            },
+            polylines: _polylines,
+            onMapCreated: (GoogleMapController controller) {
+              _controller = controller;
+            },
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
+              bottomModalNonSlideable(),
+            ],
+          )
+        ],
       ),
     );
   }
