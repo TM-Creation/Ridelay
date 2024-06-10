@@ -319,13 +319,13 @@ class _DriverSoloRideInProgressAndFinishedScreenState
               Marker(
                 markerId: MarkerId('driver'),
                 position: driverlocation,
-                infoWindow: InfoWindow(title: 'Driver Location'),
+                infoWindow: InfoWindow(title: 'Your Live Location'),
                 icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
               ),
               Marker(
-                markerId: MarkerId('passngerpick'),
+                markerId: MarkerId('passngerdrop'),
                 position: LatLng(drop![1], drop![0]),
-                infoWindow: InfoWindow(title: 'Passanger Pickup'),
+                infoWindow: InfoWindow(title: 'Passanger Drop Location'),
                 icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
               ),
             },
