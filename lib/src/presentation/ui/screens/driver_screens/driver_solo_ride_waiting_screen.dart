@@ -427,7 +427,7 @@ class _DriverSoloRideWaitingScreenState
               Marker(
                 markerId: MarkerId('driver'),
                 position: _driverLocation,
-                infoWindow: InfoWindow(title: 'Driver Location'),
+                infoWindow: InfoWindow(title: 'Yoyr Live Location'),
                 icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
               ),
               Marker(

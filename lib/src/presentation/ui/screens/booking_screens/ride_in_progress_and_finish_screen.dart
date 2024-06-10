@@ -214,16 +214,16 @@ class _RideInProgressAndFinishedScreenState
             ),
             markers: {
               Marker(
-                markerId: MarkerId('passangerpickup'),
+                markerId: MarkerId('passengerlivelocation'),
                 position: pick,
-                infoWindow: InfoWindow(title: 'Passanger Pickup'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+                infoWindow: InfoWindow(title: 'Your Live Location'),
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
               ),
               Marker(
-                markerId: MarkerId('driverlive'),
+                markerId: MarkerId('passangerdropoff'),
                 position: drop,
-                infoWindow: InfoWindow(title: 'Driver Location'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                infoWindow: InfoWindow(title: 'Your Drop Location'),
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
               ),
             },
             polylines: _polylines,
