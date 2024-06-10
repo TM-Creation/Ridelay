@@ -126,7 +126,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
   }
 
   void _updatePolyline() {
-    _getRoutePolylinePoints(driverlocation,LatLng(drop![0], drop![1]))
+    _getRoutePolylinePoints(driverlocation,LatLng(drop![1], drop![0]))
         .then((polylinePoints) {
       if(mounted){
         setState(() {

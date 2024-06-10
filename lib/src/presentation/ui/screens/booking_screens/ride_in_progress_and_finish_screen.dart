@@ -121,6 +121,7 @@ class _RideInProgressAndFinishedScreenState
   }
 
   void _updatePolyline() {
+    print("check polyline update $pick $drop");
     _getRoutePolylinePoints(pick,drop)
         .then((polylinePoints) {
       if(mounted){
