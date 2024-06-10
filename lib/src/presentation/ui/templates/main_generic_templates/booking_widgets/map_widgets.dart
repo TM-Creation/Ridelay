@@ -425,18 +425,19 @@ class _MapScreenState extends State<MapScreen> {
                                     widget.fieldOneController.text = '';
                                     List<Placemark> placemarks =
                                         await placemarkFromCoordinates(
-                                            userlocation!.latitude,
-                                            userlocation!.longitude);
+                                            userLiveLocation().userlivelocation!.latitude,
+                                            userLiveLocation().userlivelocation!.longitude);
+                                    print("usr live locatio is this");
                                     setState(() {
                                       widget.fieldOneController.text =
                                           '${placemarks.reversed.last.name}' +
-                                              '' +
+                                              ' ' +
                                               '${placemarks.reversed.last.street}' +
-                                              '' +
+                                              ' ' +
                                               '${placemarks.reversed.last.administrativeArea}' +
-                                              '' +
+                                              ' ' +
                                               '${placemarks.reversed.last.country}';
-                                      print('$placemarks');
+                                      print('$placemarks place mark');
                                       flag1 = false;
                                     });
                                   },
