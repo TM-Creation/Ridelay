@@ -62,7 +62,7 @@ class _DriverSoloRideRatingScreenState
         onTap: () {
           Navigator.of(context).pushNamedAndRemoveUntil(
               DriverRideSelectionScreen.routeName,
-              ModalRoute.withName(LoginNumberEnterScreen.routeName));
+              ModalRoute.withName(DriverRideSelectionScreen.routeName));
         },
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,

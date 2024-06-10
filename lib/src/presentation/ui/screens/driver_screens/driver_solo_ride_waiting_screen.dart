@@ -39,7 +39,7 @@ class _DriverSoloRideWaitingScreenState
   int currentIndex = -1;
   String image = "assets/images/LocationDistanceScreenMap.png";
   List namesList = ["Mini", "Go", "Comfort", "Mini"];
-  LatLng? driverlocation = userLiveLocation().userlivelocation;
+  LatLng? driverlocation = LatLng(0.0, 0.0);
   List<double>? pick = [];
   List<double>? drop = [];
   String? passangername = '';
@@ -73,6 +73,7 @@ class _DriverSoloRideWaitingScreenState
   }
   @override
   void initState() {
+    driverlocation=userLiveLocation().userlivelocation;
     super.initState();
   }
   IO.Socket socket=socketconnection().socket;
