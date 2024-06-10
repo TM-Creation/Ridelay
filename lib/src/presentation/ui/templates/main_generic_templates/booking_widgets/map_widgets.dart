@@ -77,7 +77,6 @@ class _MapScreenState extends State<MapScreen> {
   List<dynamic> placeList2 = [];
   bool flag1 = false;
   bool flag2 = true;
-  LatLng? userlocation = userLiveLocation().userlivelocation;
 
   @override
   void initState() {
@@ -161,7 +160,7 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _requestPermissionAndGetCurrentLocation() async {
     _mapController?.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
-        target: userlocation!,
+        target: userLiveLocation().userlivelocation!,
         zoom: 15.0,
       ),
     ));
