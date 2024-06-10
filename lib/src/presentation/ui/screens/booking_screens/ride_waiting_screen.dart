@@ -50,6 +50,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       });
     }
   }
+  late IO.Socket socket2;
   late GoogleMapController _controller;
   Set<Polyline> _polylines = {};
   List<double> driverlivelocation=[];
@@ -60,6 +61,9 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
   }
   initSocket(){
     IO.Socket socket=socketconnection().socket;
+    setState(() {
+      socket2=socket;
+    });
     socket.on('locationUpdate', (data){
       print("Driver Live Location Reached $data");
       driverlivelocation=(data['location'] as List<dynamic>)
@@ -74,7 +78,10 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
     socket.on('pickupRide', (data){
        print('on is run correctly');
        Navigator.of(context)
-           .pushNamed(RideInProgressAndFinishedScreen.routeName);
+           .pushNamed(RideInProgressAndFinishedScreen.routeName,arguments:{
+             'pickupcontroler':pickupEnterController.text,
+             'dropoffcontroler':dropoffEnterController.text
+       });
     });
   }
   Future<List<LatLng>> _getRoutePolylinePoints(LatLng origin, LatLng destination) async {
@@ -132,7 +139,13 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
     }
     return polylinePoints;
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    socket2.off('locationUpdate');
+    socket2.off('pickupRide');
+    super.dispose();
+  }
   void _updatePolyline() {
     print("roooola:  ${pickanddrop().pickloc} and ${LatLng(driverlivelocation[0], driverlivelocation[1])}");
     _getRoutePolylinePoints(pickanddrop().pickloc!, LatLng(driverlivelocation[0], driverlivelocation[1]))

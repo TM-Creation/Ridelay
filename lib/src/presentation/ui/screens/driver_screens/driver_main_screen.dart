@@ -49,6 +49,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   int rideRequestCount = 0;
   String distance = '';
   String phonenumber = '';
+  double raiting=0.0;
   late IO.Socket socket;
   @override
   void initState() {
@@ -103,7 +104,10 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
         'passangerphone': phonenumber,
         'fare': fare,
         'distance':distance,
-        'rideId':datarespose
+        'rideId':datarespose,
+        'name':passangerName,
+        'raiting':raiting,
+        'passangerphone':phonenumber
       });
     });
   }

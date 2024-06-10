@@ -11,8 +11,8 @@ Widget userDetailsContainer(String image, String firstText, String secondText,
     child: Row(
       children: [
         Container(
-          width: ScreenConfig.screenSizeWidth * 0.10,
-          height: ScreenConfig.screenSizeWidth * 0.10,
+          width: ScreenConfig.screenSizeWidth * 0.085,
+          height: ScreenConfig.screenSizeWidth * 0.085,
           decoration: BoxDecoration(
             image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
             borderRadius: const BorderRadius.all(Radius.circular(5)),

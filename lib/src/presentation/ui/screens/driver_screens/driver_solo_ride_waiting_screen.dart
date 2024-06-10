@@ -47,6 +47,7 @@ class _DriverSoloRideWaitingScreenState
   int? fare = 0;
   String? distance = '';
   String rideId='';
+  double raiting=0.0;
   late GoogleMapController _controller;
   Set<Polyline> _polylines = {};
   late LatLng _driverLocation;
@@ -61,10 +62,11 @@ class _DriverSoloRideWaitingScreenState
         drop = args['dropofflocation']!;
         distance = args['distance']!;
         fare = args['fare']!;
-        passangername = args['passangername']!;
+        passangername = args['name']!;
+        raiting=args['raiting'];
         passangerphone = args['passangerphone']!;
         rideId=args['rideId'];
-        print("data of eve 2: $pick $drop $passangername $passangerphone $fare $distance $rideId");
+        print("data of eve 2: $pick $drop $passangername $passangerphone $fare $distance $rideId $raiting");
       });
     }
     _initLocationService();
@@ -278,7 +280,7 @@ class _DriverSoloRideWaitingScreenState
                                         " "),
                                     spaceHeight(
                                         ScreenConfig.screenSizeHeight * 0.01),
-                                    Text('If you pick the Passanger click on Below Button',style: TextStyle(color: Colors.white,fontSize: ScreenConfig.screenSizeWidth*0.022),),
+                                    Text('If you pick the Passenger click on Below Button',style: TextStyle(color: Colors.white,fontSize: ScreenConfig.screenSizeWidth*0.022),),
                                     // userDetailsContainer("assets/images/UserCarImage.png",
                                     //     "Honda Civic", "LXV 5675", false, true, "2019")
                                     spaceHeight(
@@ -287,7 +289,7 @@ class _DriverSoloRideWaitingScreenState
                                       onTap: () {
                                         socket.emit('pickupRide',{'rideId':rideId});
                                         Navigator.of(context)
-                                            .pushNamed(DriverSoloRideInProgressAndFinishedScreen.routeName);
+                                            .pushNamed(DriverSoloRideInProgressAndFinishedScreen.routeName,arguments: {'dropofflocation':drop,'rideId':rideId});
                                       },
                                       child: Container(
                                         width: ScreenConfig.screenSizeWidth *
