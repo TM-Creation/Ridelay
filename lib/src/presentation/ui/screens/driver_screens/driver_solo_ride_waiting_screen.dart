@@ -66,7 +66,7 @@ class _DriverSoloRideWaitingScreenState
         //raiting=args['raiting'];
         passangerphone = args['passangerphone']!;
         rideId=args['rideId'];
-        print("data of eve 2: $pick $drop $passangername $passangerphone $fare $distance $rideId $raiting");
+        print("data of eve 2: $pick $drop $passangername $passangerphone $fare $distance $rideId");
       });
     }
     _initLocationService();
