@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/config/debug_helper.dart';
+import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_rating_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
@@ -179,7 +180,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
             } else {
               DebugHelper.printAll("IsCustomer");
               Navigator.of(context)
-                  .pushReplacementNamed(RideSelectionScreen.routeName);
+                  .pushReplacementNamed(RideRatingScreen.routeName);
             }
 
             // //TODO: FOR TEST VERSIONS ONLY FIX IN PRODUCTION
