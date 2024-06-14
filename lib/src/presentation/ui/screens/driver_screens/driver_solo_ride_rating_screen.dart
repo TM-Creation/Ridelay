@@ -3,7 +3,6 @@ import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
-
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';

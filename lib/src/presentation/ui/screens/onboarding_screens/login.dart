@@ -268,7 +268,7 @@ class _LoginState extends State<Login> {
           if(typeofuser=='driver'){
             print("Driver Done");
             socket =
-                IO.io('https://710b-39-45-48-186.ngrok-free.app', <String, dynamic>{
+                IO.io('https://09d1-103-177-240-122.ngrok-free.app', <String, dynamic>{
                   'transports': ['websocket'],
                   'extraHeaders': {
                     'authorization': PassId().token,
@@ -287,7 +287,7 @@ class _LoginState extends State<Login> {
           }else if(typeofuser=='passenger'){
             print("Passenger Done");
             socket =
-                IO.io('https://710b-39-45-48-186.ngrok-free.app', <String, dynamic>{
+                IO.io('https://09d1-103-177-240-122.ngrok-free.app', <String, dynamic>{
                   'transports': ['websocket'],
                   'extraHeaders': {
                     'authorization': PassId().token,

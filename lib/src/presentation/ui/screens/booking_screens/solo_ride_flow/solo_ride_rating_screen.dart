@@ -22,7 +22,6 @@ class _SoloRideRatingScreenState extends State<SoloRideRatingScreen> {
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
   String image = "assets/images/RideFinishedScreenMap.png";
-
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
