@@ -1,8 +1,8 @@
+import 'package:five_pointed_star/five_pointed_star.dart';
 import 'package:flutter/material.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
-import 'package:ridely/src/presentation/ui/templates/previous_rides_screens_widgets/ratings_container.dart';
 
 Widget userDetailsContainer(String image, String firstText, String secondText,
     bool isRating, bool haveCarYearMake, String carMake) {
@@ -100,7 +100,7 @@ Widget userDetailsMiniContainer(
             )
           ],
         ),
-        ratingsContainer(25, 5),
+        // RatiangStaric()
       ],
     ),
   );

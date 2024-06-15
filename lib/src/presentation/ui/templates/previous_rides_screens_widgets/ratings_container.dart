@@ -1,3 +1,4 @@
+import 'package:five_pointed_star/five_pointed_star.dart';
 import 'package:flutter/material.dart';
 
 Widget ratingsContainer(double size, int selectedIndex) {
@@ -7,3 +8,4 @@ Widget ratingsContainer(double size, int selectedIndex) {
     }),
   );
 }
+

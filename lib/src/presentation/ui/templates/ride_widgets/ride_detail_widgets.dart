@@ -1,3 +1,5 @@
+import 'package:five_pointed_star/five_pointed_star.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/solo_ride_waiting_screen.dart';
@@ -6,7 +8,39 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/previous_rides_screens_widgets/user_details_container.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_widget_buttons.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+import '../../../../models/base url.dart';
+import '../../../../models/passenger_rating_model/passenger_to_driver_rating.dart';
+String feedBack="";
+int mycount = 0;
+TextEditingController feedBackController = TextEditingController();
+class RatiangStaric extends StatefulWidget {
+  const RatiangStaric({key});
+
+  @override
+  State<RatiangStaric> createState() => _RatiangStaricState();
+}
+
+class _RatiangStaricState extends State<RatiangStaric> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Row(
+        children: [
+          FivePointedStar(
+            onChange: (count) {
+              setState(() {
+                mycount = count;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
 Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
   return Column(
     children: [
@@ -114,7 +148,7 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
                             Navigator.of(context)
                                 .pushNamed(SoloRideWaitingScreen.routeName);
                           }
-                          if (buttonType == "Cancel Ride") {
+                          if (buttonType == "Cancel Ride"){
                             Navigator.of(context).pop();
                           }
                         }),
@@ -193,7 +227,6 @@ Widget rideDetailsInProgressAndFinishedWidget(
     ],
   );
 }
-
 Widget rideRatingWidget(BuildContext context) {
   return Column(
     children: [
@@ -230,7 +263,7 @@ Widget rideRatingWidget(BuildContext context) {
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               displayText(
-                  "Please Rate Our Captain And Car",
+                  "Please Rate Our Captain And Give Feedback",
                   ScreenConfig.theme.textTheme.headline1?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.normal,
@@ -240,11 +273,43 @@ Widget rideRatingWidget(BuildContext context) {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  userDetailsMiniContainer(
-                      "assets/images/UserProfileImage.png", "Altaf"),
+                  Row(
+                    children: [
+                      userDetailsMiniContainer(
+                          "assets/images/UserProfileImage.png", "Altaf"),
+                      RatiangStaric()
+                    ],
+                  ),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  userDetailsMiniContainer(
-                      "assets/images/UserCarImage.png", "Honda. C"),
+                  Container(
+                    width: ScreenConfig.screenSizeWidth * 0.9,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.40),
+                            offset: const Offset(0.0, 1.2), //(x,y)
+                            blurRadius: 6.0,
+                          )
+                        ]),
+                    child: TextFormField(
+                      onChanged: (value) {
+                        feedBack = value;
+                      },
+                        textInputAction: TextInputAction.done,
+                        textAlign: TextAlign.start,
+                        keyboardType: TextInputType.text,
+                        controller: feedBackController,
+                        decoration: InputDecoration(
+                            hintText: "Enter FeedBack",
+                            hintStyle: ScreenConfig.theme.textTheme.headline5,
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(20)),
+                        style: ScreenConfig.theme.textTheme.headline5),
+                  ),
+                  // Add FeedBack Input Field
                 ],
               ),
             ],
@@ -254,6 +319,22 @@ Widget rideRatingWidget(BuildContext context) {
       spaceHeight(ScreenConfig.screenSizeHeight * 0.015),
     ],
   );
+}
+
+Future<void> submitReview(FeedbackModel feedbackModel) async {
+  print("Function Run");
+  baseulr burl = baseulr();
+  final String url = '${burl.burl}/api/v1/feedback';
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {'Content-Type': 'application/json'},
+    body: json.encode(feedbackModel.toJson()),
+  );
+  if (response.statusCode == 200) {
+    print('Review submitted successfully');
+  } else {
+    print('Failed to submit review: ${response.statusCode}');
+  }
 }
 
 Widget submitReviewPanelWidget(BuildContext context) {
@@ -287,14 +368,29 @@ Widget submitReviewPanelWidget(BuildContext context) {
                         "No", ScreenConfig.theme.textTheme.button),
                   )),
               const SizedBox(width: 5),
-              Container(
-                  height: 33,
-                  width: ScreenConfig.screenSizeWidth * 0.15,
-                  decoration: brownContainerTemplate(radius: 5),
-                  child: Center(
-                    child: displayNoSizedText(
-                        "Yes", ScreenConfig.theme.textTheme.button),
-                  )),
+              GestureDetector(
+                onTap: () async{
+                  print("feedBackTesting ${feedBack.toString()}");
+                  print("Staric print $mycount");
+              FeedbackModel feedbackModel = FeedbackModel(
+                      ride: "6654b7d112ced1729ae3e844",
+                      passenger: "664b0d180240574daabc8890",
+                      driver: "664ce51c2c319c631c9c66f0",
+                      rating: mycount,
+                      feedback: feedBack,
+                      );
+                      await submitReview(feedbackModel);
+
+                },
+                child: Container(
+                    height: 33,
+                    width: ScreenConfig.screenSizeWidth * 0.15,
+                    decoration: brownContainerTemplate(radius: 5),
+                    child: Center(
+                      child: displayNoSizedText(
+                          "Yes", ScreenConfig.theme.textTheme.button),
+                    )),
+              ),
             ],
           )
         ],
