@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/driver_registration.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';

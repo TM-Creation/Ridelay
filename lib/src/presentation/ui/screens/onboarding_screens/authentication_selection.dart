@@ -5,6 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/config/debug_helper.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/otp_verification_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
@@ -13,21 +14,51 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/phone_number_textfield.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
-class LoginNumberScreen extends StatefulWidget {
+class AuthenticationSelection extends StatefulWidget {
   static const routeName = '/loginNumberEnter-screen';
-  const LoginNumberScreen({Key? key}) : super(key: key);
+  const AuthenticationSelection({Key? key}) : super(key: key);
 
   @override
-  State<LoginNumberScreen> createState() => _LoginNumberScreenState();
+  State<AuthenticationSelection> createState() => _AuthenticationSelectionState();
 }
 
-class _LoginNumberScreenState extends State<LoginNumberScreen> {
+class _AuthenticationSelectionState extends State<AuthenticationSelection> {
   LatLng userlocation = LatLng(9.0, 7.9);
   @override
   void initState() {
-    errorValidatorShow = false;
+    errorValidatorShow = true;
     phoneNumberController = TextEditingController();
+    _requestPermissionAndGetCurrentLocation();
     super.initState();
+  }
+  Future<void> _requestPermissionAndGetCurrentLocation() async {
+    // Check if location permission is granted
+    var status = await Permission.location.request();
+    if (status.isGranted) {
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Update the map to show the user's current location
+      userlocation = LatLng(position.latitude, position.longitude);
+      setState(() {
+        userLiveLocation().userlivelocation=userlocation;
+      });
+    } else {
+      print('Location permission denied');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+              'Please Give You Live Location',style: TextStyle(fontSize: 15,color: Colors.white),),
+          ),
+          backgroundColor: Colors.black,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      _requestPermissionAndGetCurrentLocation();
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -61,27 +92,22 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  displayText(
-                    "Login",
-                    ScreenConfig.theme.textTheme.headline1
-                        ?.copyWith(color: Colors.black.withOpacity(0.5)),
-                  ),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  displayText(
-                      "Enter phone number with country extension. (e.g +921234567890)",
-                      ScreenConfig.theme.textTheme.headline3),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  const PhoneNumberTextField(),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
-                  Buttons.longWidthButton("Login", () {
-                    if (!errorValidatorShow) {
-                      DebugHelper.printAll("Initiate Print");
-
-                      Navigator.pushNamed(
-                          context, OTPVerificationScreen.routeName,
-                          arguments: {'number': phoneNumberController.text});
-                    }
+                  Buttons.longWidthButton("Sign-Up/Register", () {
+                    Navigator.of(context)
+                        .pushNamed(ChoiceCustomerDriverScreen.routeName);
                   }),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                  Buttons.longWidthButton("Login with Email", () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context)=>Login()));
+                  }),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                  Buttons.longWidthButton("Login with Phone Number", () {
+                    Navigator.of(context)
+                        .pushNamed(LoginNumberScreen.routeName);
+                  }),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
+
                 ],
               ),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.2),
@@ -92,4 +118,14 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
     );
   }
 }
+class userLiveLocation {
+  static final userLiveLocation _instance = userLiveLocation._internal();
 
+  factory userLiveLocation() {
+    return _instance;
+  }
+
+  userLiveLocation._internal();
+
+  LatLng? userlivelocation;
+}

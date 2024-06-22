@@ -10,7 +10,7 @@ import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/authmodels/driverregmodel.dart';
 import 'package:ridely/src/presentation/ui/config/compress_image.dart';
 import 'package:ridely/src/presentation/ui/config/validator.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/vahicle_registeration.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
