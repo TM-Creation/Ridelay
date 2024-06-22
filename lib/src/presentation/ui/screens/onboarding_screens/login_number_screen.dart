@@ -13,6 +13,8 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/phone_number_textfield.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
+import '../../templates/main_generic_templates/app_bars/app_bar.dart';
+
 class LoginNumberScreen extends StatefulWidget {
   static const routeName = '/loginNumberEnter-screen';
   const LoginNumberScreen({Key? key}) : super(key: key);
@@ -43,6 +45,7 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
+      appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: Center(
         child: SizedBox(
           height: ScreenConfig.screenSizeHeight * 1.2,
@@ -55,7 +58,6 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
                 children: [
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.15),
                   logoDisplay(),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.05),
                 ],
               ),
               Column(

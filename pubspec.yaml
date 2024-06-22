@@ -47,6 +47,7 @@ dependencies:
   googlemaps_flutter_webservices: ^1.0.2
   get:
   geocoding: ^3.0.0
+  device_preview:
   image_picker: ^0.8.5+3
   overlay_support: ^2.0.1
   shared_preferences: ^2.0.15

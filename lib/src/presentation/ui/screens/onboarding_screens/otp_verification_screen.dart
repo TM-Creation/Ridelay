@@ -180,7 +180,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
             } else {
               DebugHelper.printAll("IsCustomer");
               Navigator.of(context)
-                  .pushReplacementNamed(RideRatingScreen.routeName);
+                  .pushReplacementNamed(DriverRideSelectionScreen.routeName);
             }
 
             // //TODO: FOR TEST VERSIONS ONLY FIX IN PRODUCTION

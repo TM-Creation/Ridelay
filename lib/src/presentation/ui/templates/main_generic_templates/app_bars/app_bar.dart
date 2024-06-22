@@ -7,7 +7,7 @@ class GenericAppBars {
   static PreferredSizeWidget appBarWithBackButtonOnly(
           BuildContext context, bool isIconCross) =>
       AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         centerTitle: false,
         leading: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -17,7 +17,7 @@ class GenericAppBars {
   static PreferredSizeWidget appBarWithBackButtonAndTitle(
           String title, BuildContext context, bool isIconCross) =>
       AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         title: displayNoSizedText(
           title,
           ScreenConfig.theme.textTheme.headline4

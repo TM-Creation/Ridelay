@@ -64,7 +64,7 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
   Widget build(BuildContext context) {
     Widget logoDisplay() {
       return SizedBox(
-        height: 130,
+        height: ScreenConfig.screenSizeHeight *0.15,
         child: Image.asset(
           "assets/images/SplashScreenLogo.png",
           fit: BoxFit.contain,
@@ -74,44 +74,47 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: Center(
-        child: SizedBox(
-          height: ScreenConfig.screenSizeHeight * 1.2,
-          width: ScreenConfig.screenSizeWidth * 0.9,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.15),
-                  logoDisplay(),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.05),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Buttons.longWidthButton("Sign-Up/Register", () {
-                    Navigator.of(context)
-                        .pushNamed(ChoiceCustomerDriverScreen.routeName);
-                  }),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  Buttons.longWidthButton("Login with Email", () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context)=>Login()));
-                  }),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  Buttons.longWidthButton("Login with Phone Number", () {
-                    Navigator.of(context)
-                        .pushNamed(LoginNumberScreen.routeName);
-                  }),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
+      body: SingleChildScrollView(
+        child: Center(
+          child: SizedBox(
+            height: ScreenConfig.screenSizeHeight * 1.2,
+            width: ScreenConfig.screenSizeWidth * 0.9,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Column(
+                    children: [
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.25),
+                      logoDisplay(),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Buttons.longWidthButton("Sign-Up/Register", () {
+                      Navigator.of(context)
+                          .pushNamed(ChoiceCustomerDriverScreen.routeName);
+                    }),
+                    spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                    Buttons.longWidthButton("Login with Email", () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context)=>Login()));
+                    }),
+                    spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                    Buttons.longWidthButton("Login with Phone Number", () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context)=>LoginNumberScreen()));
+                    }),
+                    spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
 
-                ],
-              ),
-              spaceHeight(ScreenConfig.screenSizeHeight * 0.2),
-            ],
+                  ],
+                ),
+                spaceHeight(ScreenConfig.screenSizeHeight * 0.2),
+              ],
+            ),
           ),
         ),
       ),
