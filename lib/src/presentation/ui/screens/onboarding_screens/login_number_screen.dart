@@ -113,7 +113,7 @@ class _LoginNumberEnterScreenState extends State<LoginNumberEnterScreen> {
                     }
                   }),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  Buttons.splashScreenButton("Signup", () {
+                  Buttons.splashScreenButton("Signup/Register", () {
                     Navigator.of(context)
                         .pushNamed(ChoiceCustomerDriverScreen.routeName);
                   }),
