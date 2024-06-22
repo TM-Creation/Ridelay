@@ -9,7 +9,7 @@ import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_rating_s
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/solo_ride_rating_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_solo_ride_rating_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';

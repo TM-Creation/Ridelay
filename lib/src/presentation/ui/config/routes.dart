@@ -16,7 +16,7 @@ import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_sc
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_solo_ride_in_progress_and_finished_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_solo_ride_rating_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_solo_ride_waiting_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/onboarding_cards_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/otp_verification_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
@@ -29,7 +29,7 @@ import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_r
 final Map<String, Widget Function(BuildContext)> routes = {
   SplashScreen.routeName: (ctx) => const SplashScreen(),
   OnboardingCardsScreen.routeName: (ctx) => const OnboardingCardsScreen(),
-  LoginNumberEnterScreen.routeName: (ctx) => const LoginNumberEnterScreen(),
+  AuthenticationSelection.routeName: (ctx) => const AuthenticationSelection(),
   OTPVerificationScreen.routeName: (ctx) => const OTPVerificationScreen(),
   RegisterInfoScreen.routeName: (ctx) => const RegisterInfoScreen(),
   DriverRegistrationScreen.routeName: (ctx) =>

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login_number_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
@@ -31,7 +31,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
       setState(() {});
     }
     if (currentOnboardingImage == 3) {
-      Navigator.pushReplacementNamed(context, LoginNumberEnterScreen.routeName);
+      Navigator.pushReplacementNamed(context, AuthenticationSelection.routeName);
       // Navigator.pushNamed(context, RideSelectionScreen.routeName);
     }
   }
@@ -47,14 +47,14 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
     if (!firstTime) {
       // User has already seen the intro, navigate to login page
       Navigator.pushReplacementNamed(
-          context,LoginNumberEnterScreen.routeName);
+          context,AuthenticationSelection.routeName);
     }
   }
 
   void _nextPage() {
     _saveFirstTime();
     Navigator.pushReplacementNamed(
-        context,LoginNumberEnterScreen.routeName);
+        context,AuthenticationSelection.routeName);
   }
 
   void _saveFirstTime() async {
