@@ -18,26 +18,28 @@ class _PreviousRidesScreenState extends State<PreviousRidesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: Center(
-        child: SizedBox(
-          height: ScreenConfig.screenSizeHeight * 1.2,
-          width: ScreenConfig.screenSizeWidth,
-          child: SingleChildScrollView(
-              child: Column(
-            children: [
-              displayText(
-                "Previous Rides",
-                ScreenConfig.theme.textTheme.headline1,
-              ),
-              spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
-              Column(
-                children: List.generate(4, (index) {
-                  return const PreviousRideContainer();
-                }),
-              )
-            ],
-          )),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 70),
+          child: SizedBox(
+            height: ScreenConfig.screenSizeHeight * 1.2,
+            width: ScreenConfig.screenSizeWidth,
+            child: SingleChildScrollView(
+                child: Column(
+              children: [
+                displayText(
+                  "Previous Rides",
+                  ScreenConfig.theme.textTheme.headline1,
+                ),
+                spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                Column(
+                  children: List.generate(4, (index) {
+                    return const PreviousRideContainer();
+                  }),
+                )
+              ],
+            )),
+          ),
         ),
       ),
     );

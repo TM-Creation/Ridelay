@@ -117,10 +117,10 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       userDetailsContainer("assets/images/UserProfileImage.png",
-                          "Altaf Ahmed", "4.9", true, false, " "),
+                          "Altaf Ahmed", "4.9", true,),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       userDetailsContainer("assets/images/UserCarImage.png",
-                          "Honda Civic", "LXV 5675", false, true, "2019")
+                          "Honda Civic", "LXV 5675", false,)
                     ],
                   ),
                   SizedBox(
@@ -213,10 +213,10 @@ Widget rideDetailsInProgressAndFinishedWidget(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   userDetailsContainer("assets/images/UserProfileImage.png",
-                      "Altaf Ahmed", "4.9", true, false, " "),
+                      "Altaf Ahmed", "4.9", true,),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   userDetailsContainer("assets/images/UserCarImage.png",
-                      "Honda Civic", "LXV 5675", false, true, "")
+                      "Honda Civic", "LXV 5675", false,)
                 ],
               ),
             ],

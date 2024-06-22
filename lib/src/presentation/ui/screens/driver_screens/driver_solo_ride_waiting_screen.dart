@@ -276,9 +276,7 @@ class _DriverSoloRideWaitingScreenState
                                         "assets/images/UserProfileImage.png",
                                         "Altaf Ahmed",
                                         "4.9",
-                                        true,
-                                        false,
-                                        " "),
+                                        true,),
                                     spaceHeight(
                                         ScreenConfig.screenSizeHeight * 0.01),
                                     Text('If you pick the Passenger click on Below Button',style: TextStyle(color: Colors.white,fontSize: ScreenConfig.screenSizeWidth*0.022),),

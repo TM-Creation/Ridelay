@@ -37,7 +37,6 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [
@@ -124,7 +123,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
             ),
           ),
           Container(
-            height: ScreenConfig.screenSizeHeight * 0.37,
+            height: ScreenConfig.screenSizeHeight * 0.33,
             width: ScreenConfig.screenSizeWidth,
             decoration: bottomModalTemplate(),
             child: Padding(

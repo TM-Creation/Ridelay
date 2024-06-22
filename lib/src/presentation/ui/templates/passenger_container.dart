@@ -44,11 +44,9 @@ class _PassengerContainerState extends State<PassengerContainer> {
                             "assets/images/UserProfileImage.png",
                             "Altaf Ahmed",
                             "4.9",
-                            true,
-                            false,
-                            " "),
+                            true),
                         userDetailsContainer("assets/images/UserCarImage.png",
-                            "Honda Civic", "LXV 5675", false, true, "2019")
+                            "Honda Civic", "LXV 5675", false)
                       ],
                     ),
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.02),

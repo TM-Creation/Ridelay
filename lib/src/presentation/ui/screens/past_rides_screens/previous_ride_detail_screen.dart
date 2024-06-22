@@ -166,15 +166,12 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
                                     "Altaf Ahmed",
                                     "4.9",
                                     true,
-                                    false,
-                                    " "),
+                                   ),
                                 userDetailsContainer(
                                     "assets/images/UserCarImage.png",
                                     "Honda Civic",
                                     "LXV 5675",
-                                    false,
-                                    true,
-                                    "2019")
+                                    false,)
                               ],
                             ),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.03),

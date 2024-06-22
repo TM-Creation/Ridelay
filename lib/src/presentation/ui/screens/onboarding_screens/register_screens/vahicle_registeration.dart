@@ -75,6 +75,7 @@ baseulr burl=baseulr();
       vehicleType: "23a1",
       numberPlate: plateNumber.text,
       color: color.text,
+      name: 'Civic'
 
     );
     print('User data to be sent: ${jsonEncode(vehicle.toJson())}');
@@ -615,7 +616,7 @@ baseulr burl=baseulr();
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
-        Navigator.of(context).pushNamed(Login.routeName);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
       } else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');

@@ -85,7 +85,7 @@ Widget driverRideDetailsWidget(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       userDetailsContainer("assets/images/UserProfileImage.png",
-                          "Altaf Ahmed", "4.9", true, false, " "),
+                          "Altaf Ahmed", "4.9", true),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       // userDetailsContainer("assets/images/UserCarImage.png",
                       //     "Honda Civic", "LXV 5675", false, true, "2019")
@@ -181,7 +181,7 @@ Widget driverRideDetailsInProgressAndFinishedWidget(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   userDetailsContainer("assets/images/UserProfileImage.png",
-                      "Altaf Ahmed", "4.9", true, false, " "),
+                      "Altaf Ahmed", "4.9", true,),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   // userDetailsContainer("assets/images/UserCarImage.png",
                   //     "Honda Civic", "LXV 5675", false, true, "2019")
