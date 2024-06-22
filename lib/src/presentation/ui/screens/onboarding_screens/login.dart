@@ -105,7 +105,7 @@ class _LoginState extends State<Login> {
       padding:
       EdgeInsets.only(left: MediaQuery.sizeOf(context).width * 0.35),
       child: displayText(
-        "Sign-up",
+        "Login",
         ScreenConfig.theme.textTheme.headline1
             ?.copyWith(color: Colors.black.withOpacity(0.7)),
       ),
