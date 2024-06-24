@@ -50,27 +50,13 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   String distance = '';
   String phonenumber = '';
   double raiting=0.0;
-  late IO.Socket socket;
   @override
   void initState() {
     initSocket();
     super.initState();
   }
+  IO.Socket socket=socketconnection().socket;
   initSocket() {
-    socket =
-        IO.io('https://710b-39-45-48-186.ngrok-free.app', <String, dynamic>{
-          'transports': ['websocket'],
-          'extraHeaders': {
-            'authorization': PassId().token,
-            'usertype': PassId().type
-          },
-          'autoConnect': false,
-        });
-    socket.connect();
-    socket.onConnect((_) {
-      print("Server Connect with Socket");
-    });
-    socketconnection().socket=socket;
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideRequest', (data) {
       print("ridedata arrive $data");

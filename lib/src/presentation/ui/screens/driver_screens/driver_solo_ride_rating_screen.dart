@@ -56,7 +56,6 @@ class _DriverSoloRideRatingScreenState
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, true),
       body: GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamedAndRemoveUntil(
