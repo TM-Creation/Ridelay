@@ -183,8 +183,8 @@ class _DriverSoloRideWaitingScreenState
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.42,
-        width: ScreenConfig.screenSizeWidth,
+        height: ScreenConfig.screenSizeHeight * 0.45,
+        width: double.infinity,
         decoration: bottomModalTemplate(),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -194,23 +194,11 @@ class _DriverSoloRideWaitingScreenState
               children: [
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                Container(
-                  height: 35,
-                  width: 35,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/AppIcon.png"),
-                        fit: BoxFit.contain),
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
-                ),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 Column(
                   children: [
                     Container(
                       // height: ScreenConfig.screenSizeHeight * 0.26,
-                      width: ScreenConfig.screenSizeWidth * 0.9,
+                      width: ScreenConfig.screenSizeWidth*0.9,
                       decoration: blueContainerTemplate(),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
