@@ -413,7 +413,6 @@ class _DriverSoloRideWaitingScreenState
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [

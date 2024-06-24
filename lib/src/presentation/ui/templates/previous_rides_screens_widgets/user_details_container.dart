@@ -18,7 +18,7 @@ Widget userDetailsContainer(String image, String firstText, String secondText,
             borderRadius: const BorderRadius.all(Radius.circular(5)),
           ),
         ),
-        spaceWidth(ScreenConfig.screenSizeWidth * 0.03),
+        spaceWidth(ScreenConfig.screenSizeWidth * 0.02),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

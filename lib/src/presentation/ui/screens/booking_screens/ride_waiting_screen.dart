@@ -176,7 +176,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.42,
+        height: ScreenConfig.screenSizeHeight * 0.32,
         width: ScreenConfig.screenSizeWidth,
         decoration: bottomModalTemplate(),
         child: Padding(
@@ -186,18 +186,6 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
             child: Column(
               children: [
                 sliderBar(),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                Container(
-                  height: 35,
-                  width: 35,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/AppIcon.png"),
-                        fit: BoxFit.contain),
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
-                ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 rideDetailsWidget('vahicle', "Cancel Ride", context),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -212,7 +200,6 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [

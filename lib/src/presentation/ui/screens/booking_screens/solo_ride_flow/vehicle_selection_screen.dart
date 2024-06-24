@@ -23,16 +23,18 @@ class VehicleSelectionScreen extends StatefulWidget {
 
 class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
-  String vahicle='';
+  String vahicle = '';
   @override
-  List<Location> search=[];
-  void searchupdate()async{
-    final searchlocation=await locationFromAddress(locationEnterController.text);
+  List<Location> search = [];
+  void searchupdate() async {
+    final searchlocation =
+        await locationFromAddress(locationEnterController.text);
     setState(() {
-      search=searchlocation as List<Location>;
+      search = searchlocation as List<Location>;
       print('$search search a gya');
     });
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -40,142 +42,97 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
       body: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [
-          SizedBox(
-            height: ScreenConfig.screenSizeHeight * 1.2,
-            child: Column(
-              children: [
-                MapScreen(
-                  check: false,
-                    showAds: false,
-                    showTextFields: true,
-                    isFieldsReadOnly: false,
-                    isShowMyLocationIcon: true,
-                    isFullScreen: false,
-                    search: search,
-                    image: "assets/images/RideSelectionScreenMap.png",
-                    hintFieldOne: "Enter Location",
-                    fieldOneButtonFunction: () {},
-                    suffixIconFieldOne: SizedBox(
-                      height: 60,
-                      width: 50,
-                      child: Row(
-                        children: [
-                          Buttons.smallSquareButton(
-                              "assets/images/SearchIcon.png", () {
-                                searchupdate();
-                          }),
-                        ],
-                      ),
-                    ),
-                    fieldOneController: locationEnterController,
-                    isDisplayFieldTwo: false,
-                    hintFieldTwo: " ",
-                    fieldTwoButtonFunction: () {},
-                    suffixIconFieldTwo: SizedBox(
-                      height: 60,
-                      width: 50,
-                      child: Row(
-                        children: [
-                          Buttons.smallSquareButton(
-                              "assets/images/SearchIcon.png", () {
-                            searchupdate();
-                          }),
-                        ],
-                      ),
-                    ),
-                    fieldTwoController: TextEditingController()),
-
-                // mapWidget(
-                //     isShowMyLocationIcon: true,
-                //     isFullScreen: false,
-                //     image: "assets/images/RideSelectionScreenMap.png",
-                //     hintFieldOne: "Enter Location",
-                //     fieldOneButtonFunction: () {},
-                //     suffixIconFieldOne: SizedBox(
-                //       height: 60,
-                //       width: 50,
-                //       child: Row(
-                //         children: [
-                //           Buttons.smallSquareButton(
-                //               "assets/images/SearchIcon.png", () {}),
-                //         ],
-                //       ),
-                //     ),
-                //     fieldOneController: locationEnterController,
-                //     isDisplayFieldTwo: false,
-                //     hintFieldTwo: " ",
-                //     fieldTwoButtonFunction: () {},
-                //     suffixIconFieldTwo: SizedBox(
-                //       height: 60,
-                //       width: 50,
-                //       child: Row(
-                //         children: [
-                //           Buttons.smallSquareButton(
-                //               "assets/images/SearchIcon.png", () {}),
-                //         ],
-                //       ),
-                //     ),
-                //     fieldTwoController: TextEditingController()),
-                spaceHeight(
-                  ScreenConfig.screenSizeHeight * 0.2,
-                )
-              ],
-            ),
-          ),
+          MapScreen(
+              check: false,
+              showAds: false,
+              showTextFields: true,
+              isFieldsReadOnly: false,
+              isShowMyLocationIcon: true,
+              isFullScreen: false,
+              search: search,
+              image: "assets/images/RideSelectionScreenMap.png",
+              hintFieldOne: "Enter Location",
+              fieldOneButtonFunction: () {},
+              suffixIconFieldOne: SizedBox(
+                height: 60,
+                width: 50,
+                child: Row(
+                  children: [
+                    Buttons.smallSquareButton(
+                        "assets/images/SearchIcon.png", () {
+                      searchupdate();
+                    }),
+                  ],
+                ),
+              ),
+              fieldOneController: locationEnterController,
+              isDisplayFieldTwo: false,
+              hintFieldTwo: " ",
+              fieldTwoButtonFunction: () {},
+              suffixIconFieldTwo: SizedBox(
+                height: 60,
+                width: 50,
+                child: Row(
+                  children: [
+                    Buttons.smallSquareButton(
+                        "assets/images/SearchIcon.png", () {
+                      searchupdate();
+                    }),
+                  ],
+                ),
+              ),
+              fieldTwoController: TextEditingController()),
           Container(
             height: ScreenConfig.screenSizeHeight * 0.33,
             width: ScreenConfig.screenSizeWidth,
             decoration: bottomModalTemplate(),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: SizedBox(
-                width: ScreenConfig.screenSizeWidth * 0.9,
-                child: Column(
-                  children: [
-                    sliderBar(),
-                    spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
-                    displayText(
-                        "SELECT ACCORDING TO YOUR NEED",
-                        ScreenConfig.theme.textTheme.headline4
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                        width: 0.9),
-                    spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
-                    SizedBox(
-                      width: ScreenConfig.screenSizeWidth * 0.9,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Buttons.squareRideSelectionScreenButton(
-                              "assets/images/CarButtonIcon.png",
-                              "CAR",
-                              "Upto 3 persons", (){
-                             Navigator.of(context).pushNamed(
-                              LocationSelectionScreen.routeName, arguments: vahicle='car'
-                            );
-                          }),
-                          Buttons.squareRideSelectionScreenButton(
-                              "assets/images/rikshawbuttonicon.png",
-                              "Rickshaw",
-                              "Upto 1 Person Ride", () {
-                            Navigator.of(context).pushNamed(
-                              LocationSelectionScreen.routeName,arguments: vahicle='rickshaw'
-                            );
-                          }),
-                          Buttons.squareRideSelectionScreenButton(
-                              "assets/images/BikeButtonIcon.png",
-                              "BIKE",
-                              "One Person Ride", () {
-                            Navigator.of(context).pushNamed(
-                              LocationSelectionScreen.routeName,arguments: vahicle='bike'
-                            );
-                          }),
-                        ],
-                      ),
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Column(
+                children: [
+                  sliderBar(),
+                  SizedBox(height: 20,),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                  displayText(
+                      "SELECT ACCORDING TO YOUR NEED",
+                      ScreenConfig.theme.textTheme.headline4
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                      width: 0.9),
+                  spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
+                  SizedBox(
+                    width: ScreenConfig.screenSizeWidth * 0.9,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Buttons.squareRideSelectionScreenButton(
+                            "assets/images/CarButtonIcon.png",
+                            "CAR",
+                            "Upto 3 persons", () {
+                          Navigator.of(context).pushNamed(
+                              LocationSelectionScreen.routeName,
+                              arguments: vahicle = 'car');
+                        }),
+                        Buttons.squareRideSelectionScreenButton(
+                            "assets/images/rikshawbuttonicon.png",
+                            "Rickshaw",
+                            "Upto 1 Person Ride", () {
+                          Navigator.of(context).pushNamed(
+                              LocationSelectionScreen.routeName,
+                              arguments: vahicle = 'rickshaw');
+                        }),
+                        Buttons.squareRideSelectionScreenButton(
+                            "assets/images/BikeButtonIcon.png",
+                            "BIKE",
+                            "One Person Ride", () {
+                          Navigator.of(context).pushNamed(
+                              LocationSelectionScreen.routeName,
+                              arguments: vahicle = 'bike');
+                        }),
+                      ],
                     ),
-                    spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           )

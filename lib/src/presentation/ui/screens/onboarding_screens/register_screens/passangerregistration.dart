@@ -68,7 +68,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
       phone: phoneNumber.text,
       location: Location(
         type: "Point",
-        coordinates: [userLiveLocation().userlivelocation!.latitude, userLiveLocation().userlivelocation!.longitude], // Static example coordinates
+        coordinates: [userLiveLocation().userlivelocation!.longitude, userLiveLocation().userlivelocation!.latitude], // Static example coordinates
       ),
       preferences: Preferences(
         language: 'en',

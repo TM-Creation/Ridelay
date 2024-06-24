@@ -39,7 +39,7 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 rideRatingWidget(context),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                 submitReviewPanelWidget(context),
               ],
             ),
@@ -52,7 +52,6 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, true),
       body: GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -101,41 +100,6 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
                         ),
                       ),
                       fieldTwoController: dropoffEnterController),
-
-                  // mapWidget(
-                  //     showAds: true,
-                  //     showTextFields: false,
-                  //     isFieldsReadOnly: true,
-                  //     isFullScreen: false,
-                  //     isShowMyLocationIcon: false,
-                  //     image: image,
-                  //     hintFieldOne: "Pick-Up Location",
-                  //     fieldOneButtonFunction: () {},
-                  //     suffixIconFieldOne: SizedBox(
-                  //       height: 60,
-                  //       width: 50,
-                  //       child: Row(
-                  //         children: [
-                  //           Buttons.smallSquareButton(
-                  //               "assets/images/CircularIconButton.png", () {}),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     fieldOneController: pickupEnterController,
-                  //     isDisplayFieldTwo: true,
-                  //     hintFieldTwo: "Drop Off Location",
-                  //     fieldTwoButtonFunction: () {},
-                  //     suffixIconFieldTwo: SizedBox(
-                  //       height: 60,
-                  //       width: 50,
-                  //       child: Row(
-                  //         children: [
-                  //           Buttons.smallSquareButton(
-                  //               "assets/images/PinPointIcon.png", () {}),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     fieldTwoController: dropoffEnterController),
                   spaceHeight(
                     ScreenConfig.screenSizeHeight * 0.2,
                   )

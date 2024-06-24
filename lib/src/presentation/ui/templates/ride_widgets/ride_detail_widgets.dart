@@ -46,7 +46,7 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
     children: [
       Container(
         // height: ScreenConfig.screenSizeHeight * 0.26,
-        width: ScreenConfig.screenSizeWidth * 0.9,
+        width: ScreenConfig.screenSizeWidth * 0.85,
         decoration: blueContainerTemplate(),
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -172,7 +172,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
     children: [
       Container(
         // height: ScreenConfig.screenSizeHeight * 0.26,
-        width: ScreenConfig.screenSizeWidth * 0.9,
+        width: ScreenConfig.screenSizeWidth * 0.85,
         decoration: blueContainerTemplate(),
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -194,7 +194,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   children: [
                     displayText("Distance Remaining",
                         ScreenConfig.theme.textTheme.button,
-                        width: 0.5),
+                        width: 0.45),
                     displayText("5 km", ScreenConfig.theme.textTheme.button,
                         width: 0.3),
                   ]),
@@ -204,7 +204,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     displayText("ETA", ScreenConfig.theme.textTheme.button,
-                        width: 0.5),
+                        width: 0.45),
                     displayText("8 mins", ScreenConfig.theme.textTheme.button,
                         width: 0.3),
                   ]),
@@ -214,7 +214,6 @@ Widget rideDetailsInProgressAndFinishedWidget(
                 children: [
                   userDetailsContainer("assets/images/UserProfileImage.png",
                       "Altaf Ahmed", "4.9", true,),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   userDetailsContainer("assets/images/UserCarImage.png",
                       "Honda Civic", "LXV 5675", false,)
                 ],
@@ -232,7 +231,7 @@ Widget rideRatingWidget(BuildContext context) {
     children: [
       Container(
         // height: ScreenConfig.screenSizeHeight * 0.26,
-        width: ScreenConfig.screenSizeWidth * 0.9,
+        width: ScreenConfig.screenSizeWidth * 0.85,
         decoration: blueContainerTemplate(),
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -255,8 +254,11 @@ Widget rideRatingWidget(BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     displayText("Total Payed Amount",
-                        ScreenConfig.theme.textTheme.headline2,
-                        width: 0.5),
+                        ScreenConfig.theme.textTheme.headline1?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 15),
+                        width: 0.4),
                     displayText(
                         "Rs. 1290", ScreenConfig.theme.textTheme.headline2,
                         textAlign: TextAlign.end, width: 0.3),
@@ -340,7 +342,7 @@ Future<void> submitReview(FeedbackModel feedbackModel) async {
 Widget submitReviewPanelWidget(BuildContext context) {
   return Container(
     // height: ScreenConfig.screenSizeHeight * 0.26,
-    width: ScreenConfig.screenSizeWidth * 0.9,
+    width: ScreenConfig.screenSizeWidth * 0.85,
     decoration: blueContainerTemplate(),
     child: Padding(
       padding: EdgeInsets.symmetric(
