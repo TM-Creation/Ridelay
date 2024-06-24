@@ -25,6 +25,7 @@ class driverregmodel {
   final String password;
   final String phone;
   final Location location;
+  final String vehicle;
   final double rating;
   final String identityCardNumber;
   final String status;
@@ -37,6 +38,7 @@ class driverregmodel {
     required this.password,
     required this.phone,
     required this.location,
+    required this.vehicle,
     required this.rating,
     required this.identityCardNumber,
     required this.status,
@@ -51,6 +53,7 @@ class driverregmodel {
       'password': password,
       'phone': phone,
       'location': location.toJson(),
+      'vehicle' : vehicle,
       'rating': rating,
       'identityCardNumber': identityCardNumber,
       'status': status,
@@ -66,6 +69,7 @@ class driverregmodel {
       password: json['password'],
       phone: json['phone'],
       location: Location.fromJson(json['location']),
+      vehicle: json['vehicle'],
       rating: json['rating'],
       identityCardNumber: json['identityCardNumber'],
       status: json['status'],

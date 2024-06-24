@@ -72,13 +72,14 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       phone: driverphonenumber.text,
       location: Location(
         type: "Point",
-        coordinates: [userLiveLocation().userlivelocation!.latitude, userLiveLocation().userlivelocation!.longitude], // Static example coordinates
+        coordinates: [userLiveLocation().userlivelocation!.longitude, userLiveLocation().userlivelocation!.latitude], // Static example coordinates
       ),
+      vehicle: "609c78a1c25e6d6bfdb1b16b",
       rating: 4.8,
       identityCardNumber:idNumber.text,
       status: "available",
       wallet: "60d21b4667d0d8992e610c87",
-      driverImage: _imageFile!.path,
+      driverImage: "http://example.com/images/john_doe.jpg",
     );
     print('User data to be sent: ${jsonEncode(user.toJson())}');
     postUserData(user);
@@ -602,6 +603,10 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
+        setState(() {
+          driverId().driverid=jsonDecode(response.body)['data']['_id'];
+          print("Driver Id is: ${driverId().driverid}");
+        });
         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>VehicleRegistrationScreen()));
       } else {
         // Error occurred
@@ -613,4 +618,15 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       print('Error: $error');
     }
   }
+}
+class driverId {
+  static final driverId _instance = driverId._internal();
+
+  factory driverId() {
+    return _instance;
+  }
+
+  driverId._internal();
+
+  String? driverid;
 }

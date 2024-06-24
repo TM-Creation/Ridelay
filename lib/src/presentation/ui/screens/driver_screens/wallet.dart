@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:pinput/pinput.dart';
@@ -227,30 +229,37 @@ class _WalletState extends State<Wallet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Payment Methods', style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.073,color: ScreenConfig.theme.primaryColor)),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            flagJazzCash = true;
-                          });
-                          Navigator.of(context).pop(); // Close the bottom sheet
-                          _showJazzCashPaymentDialog(context);
-                        },
-                        child: Image.asset("assets/images/jazzcash.jpeg", height: 100, width: 100),
+                      SizedBox(
+                        height: ScreenConfig.screenSizeWidth*0.22,
+                        width: ScreenConfig.screenSizeWidth*0.22,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              flagJazzCash = true;
+                            });
+                            Navigator.of(context).pop(); // Close the bottom sheet
+                            _showJazzCashPaymentDialog(context);
+                          },
+                          child: Image.asset("assets/images/jazzcash.jpeg", height: 100, width: 100),
+                        ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            flagEasyPaisa = true;
-                          });
-                          Navigator.of(context).pop(); // Close the bottom sheet
-                          _showJazzCashPaymentDialog(context);
+                      SizedBox(
+                        height: ScreenConfig.screenSizeWidth*0.13,
+                        width: ScreenConfig.screenSizeWidth*0.13,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              flagEasyPaisa = true;
+                            });
+                            Navigator.of(context).pop(); // Close the bottom sheet
+                            _showJazzCashPaymentDialog(context);
 
-                        },
-                          child: Image.asset("assets/images/easypaisa.png", height: 50, width: 50)),
+                          },
+                            child: Image.asset("assets/images/easypaisa.png", height: 50, width: 50)),
+                      ),
                     ],
                   ),
                 ],
@@ -265,21 +274,21 @@ class _WalletState extends State<Wallet> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Terms and Conditions'),
+            title: Text('Terms and Conditions',style: TextStyle(fontWeight: FontWeight.bold)),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('1. Term 1: Description of term 1.'),
+                  Text('1. Term 1: Description of term 1.',style: TextStyle(color: Colors.black),),
                   SizedBox(height: 10),
-                  Text('2. Term 2: Description of term 2.'),
+                  Text('2. Term 1: Description of term 2.',style: TextStyle(color: Colors.black),),
                   SizedBox(height: 10),
-                  Text('3. Term 3: Description of term 3.'),
+                  Text('3. Term 1: Description of term 3.',style: TextStyle(color: Colors.black),),
                   SizedBox(height: 10),
-                  Text('4. Term 4: Description of term 4.'),
+                  Text('4. Term 1: Description of term 4.',style: TextStyle(color: Colors.black),),
                   SizedBox(height: 10),
-                  Text('5. Term 5: Description of term 5.'),
+                  Text('5. Term 1: Description of term 5.',style: TextStyle(color: Colors.black),),
                   SizedBox(height: 10),
-                  Text('6. Term 6: Description of term 6.'),
+                  Text('6. Term 1: Description of term 6.',style: TextStyle(color: Colors.black),),
                 ],
               ),
             ),

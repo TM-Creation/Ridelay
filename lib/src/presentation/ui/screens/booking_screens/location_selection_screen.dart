@@ -53,7 +53,6 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: SizedBox(
         height: ScreenConfig.screenSizeHeight * 1.0,
         child: GestureDetector(
@@ -125,7 +124,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                               Row(
                                 children: [
                                   displayText(
-                                    "Total Distance:",
+                                    "Distance:",
                                     ScreenConfig.theme.textTheme.headline5,
                                     width: 0.3,
                                   ),

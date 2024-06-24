@@ -5,7 +5,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
 Widget userDetailsContainer(String image, String firstText, String secondText,
-    bool isRating, bool haveCarYearMake, String carMake) {
+    bool isRating) {
   return Container(
     color: Colors.transparent,
     child: Row(
@@ -22,27 +22,14 @@ Widget userDetailsContainer(String image, String firstText, String secondText,
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            haveCarYearMake
-                ? Row(
+             Row(
                     children: [
                       displayText(
                         firstText,
                         ScreenConfig.theme.textTheme.bodyText2,
                         width: 0.16,
                       ),
-                      displayText(
-                        carMake,
-                        ScreenConfig.theme.textTheme.bodyText2
-                            ?.copyWith(fontSize: 7),
-                        textAlign: TextAlign.start,
-                        width: 0.13,
-                      ),
                     ],
-                  )
-                : displayText(
-                    firstText,
-                    ScreenConfig.theme.textTheme.bodyText2,
-                    width: 0.25,
                   ),
             isRating
                 ? Row(

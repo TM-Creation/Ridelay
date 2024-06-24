@@ -37,17 +37,18 @@ class _PreviousRideContainerState extends State<PreviousRideContainer> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        displayText(
-                          "Total Payed Amount",
-                          ScreenConfig.theme.textTheme.headline2,
-                          width: 0.4,
+                        Text(
+                          'Total Payed Amount',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: ScreenConfig.screenSizeWidth * 0.04),
                         ),
-                        displayText(
-                          "Rs. 290",
-                          ScreenConfig.theme.textTheme.headline2,
-                          textAlign: TextAlign.end,
-                          width: 0.3,
-                        )
+                        Text(
+                          'Rs. 290',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: ScreenConfig.screenSizeWidth * 0.04),
+                        ),
                       ],
                     ),
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -58,11 +59,9 @@ class _PreviousRideContainerState extends State<PreviousRideContainer> {
                             "assets/images/UserProfileImage.png",
                             "Altaf Ahmed",
                             "4.9",
-                            true,
-                            false,
-                            " "),
+                            true,),
                         userDetailsContainer("assets/images/UserCarImage.png",
-                            "Honda Civic", "LXV 5675", false, true, "2019")
+                            "Honda Civic", "LXV 5675", false)
                       ],
                     ),
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
@@ -75,13 +74,13 @@ class _PreviousRideContainerState extends State<PreviousRideContainer> {
                             ScreenConfig.theme.textTheme.bodyText1,
                             width: 0.2,
                           ),
-                          ratingsContainer(25, 3)
+                          ratingsContainer(ScreenConfig.screenSizeWidth*0.07, 3)
                         ],
                       ),
                     ),
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                     Container(
-                        height: 40,
+                        height: ScreenConfig.screenSizeHeight*0.05,
                         width: ScreenConfig.screenSizeWidth * 0.8,
                         decoration: squareButtonTemplate(),
                         child: Padding(
@@ -93,9 +92,9 @@ class _PreviousRideContainerState extends State<PreviousRideContainer> {
                               Row(
                                 children: [
                                   displayText(
-                                    "Total Distance:",
+                                    "Distance:",
                                     ScreenConfig.theme.textTheme.headline4,
-                                    width: 0.3,
+                                    width: 0.25,
                                   ),
                                   displayText(
                                     "275 km",

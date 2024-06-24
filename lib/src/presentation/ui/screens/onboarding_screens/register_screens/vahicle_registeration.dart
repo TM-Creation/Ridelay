@@ -14,6 +14,7 @@ import 'package:ridely/src/presentation/ui/config/validator.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/driver_registration.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/snack_bars/custom_snack_bar.dart';
@@ -67,13 +68,14 @@ baseulr burl=baseulr();
 
   void navigate() {
     Vehicle vehicle = Vehicle(
-      driver: "60d4e2e7d1e3a81234567892",
+      driver: driverId().driverid!,
       model: vehiclemodel.text,
       type: vehicleType.text,
       year: year.text,
       vehicleType: "23a1",
       numberPlate: plateNumber.text,
       color: color.text,
+      name: 'Civic'
 
     );
     print('User data to be sent: ${jsonEncode(vehicle.toJson())}');
@@ -614,7 +616,7 @@ baseulr burl=baseulr();
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
-        Navigator.of(context).pushNamed(Login.routeName);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
       } else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');

@@ -45,12 +45,11 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: [
           SizedBox(
-            height: ScreenConfig.screenSizeHeight * 1.2,
+            height: ScreenConfig.screenSizeHeight * 12,
             child: Column(
               children: [
                 MapScreen(
@@ -101,7 +100,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
             ),
           ),
           Container(
-            height: ScreenConfig.screenSizeHeight * 0.37,
+            height: ScreenConfig.screenSizeHeight * 0.35,
             width: ScreenConfig.screenSizeWidth,
             decoration: bottomModalTemplate(),
             child: Padding(
@@ -134,7 +133,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                         ],
                       ),
                     ),
-                    spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
+                    spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(
