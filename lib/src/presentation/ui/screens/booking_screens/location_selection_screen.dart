@@ -53,168 +53,155 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      body: SizedBox(
-        height: ScreenConfig.screenSizeHeight * 1.0,
-        child: GestureDetector(
-          onTap: () {
-            setState(() {
-              pickupEnterController.text = "Gulberg Phase II";
-              dropoffEnterController.text = "Bahria Town";
-              image = "assets/images/LocationDistanceScreenMap.png";
-              isShowbottomButton = true;
-            });
-          },
-          child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              MapScreen(
-                search: [],
-                  isFieldsReadOnly: false,
-                  showAds: false,
-                  showTextFields: true,
-                  check: false,
-                  isFullScreen: true,
-                  isShowMyLocationIcon: false,
-                  autoupdatepolyline: false,
-                  image: image,
-                  hintFieldOne: "Pick-Up Location",
-                  fieldButtonFunction: update,
-                  fieldOneButtonFunction: (){},
-                  suffixIconFieldOne: SizedBox(
-                    height: 60,
-                    width: 50,
-                    child: Row(
-                      children: [
-                        Buttons.smallSquareButton(
-                            "assets/images/CircularIconButton.png", () {
-                        }),
-                      ],
-                    ),
-                  ),
-                  fieldOneController: pickupEnterController,
-                  isDisplayFieldTwo: true,
-                  hintFieldTwo: "Drop Off Location",
-                  fieldTwoButtonFunction: () {},
-                  suffixIconFieldTwo: SizedBox(
-                    height: 60,
-                    width: 50,
-                    child: Row(
-                      children: [
-                        Buttons.smallSquareButton(
-                            "assets/images/PinPointIcon.png", () {}),
-                      ],
-                    ),
-                  ),
-                  fieldTwoController: dropoffEnterController),
-
-              if (true)
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+      body: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          MapScreen(
+            search: [],
+              isFieldsReadOnly: false,
+              showAds: false,
+              showTextFields: true,
+              check: false,
+              isFullScreen: true,
+              isShowMyLocationIcon: false,
+              autoupdatepolyline: false,
+              image: image,
+              hintFieldOne: "Pick-Up Location",
+              fieldButtonFunction: update,
+              fieldOneButtonFunction: (){},
+              suffixIconFieldOne: SizedBox(
+                height: 60,
+                width: 50,
+                child: Row(
                   children: [
-                    Container(
-                        height: 40,
-                        width: ScreenConfig.screenSizeWidth * 0.9,
-                        decoration: squareButtonTemplate(),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  displayText(
-                                    "Distance:",
-                                    ScreenConfig.theme.textTheme.headline5,
-                                    width: 0.3,
-                                  ),
-                                  displayText(
-                                    "${distance?.totalDistance ?? ""}",
-                                    ScreenConfig.theme.textTheme.headline4,
-                                    width: 0.2,
-                                  ),
-                                ],
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  if (pickupEnterController.text != '' &&
-                                      dropoffEnterController.text != '') {
-                                    if( double.tryParse(distance!.totalDistance.replaceAll(RegExp(r'[^0-9.]'), ''))!<60){
-                                      print("${distance!.totalDuration} duration");
-                                      Navigator.of(context).pushNamed(
-                                        RideShownScreen.routeName,
-                                        arguments: {
-                                          'pickupLocation':
-                                          pickupEnterController.text,
-                                          'dropoffLocation':
-                                          dropoffEnterController.text,
-                                          'vah':argument,
-                                          'distance':distance!.totalDistance,
-                                          'duration':distance!.totalDuration
-                                        },
-                                      );
-                                    }
-                                    else{
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Center(
-                                            child: Text(
-                                              'Please Select Below 60KM Distance',style: TextStyle(fontSize: 15,color: Colors.white),),
-                                          ),
-                                          backgroundColor: Colors.black,
-                                          behavior: SnackBarBehavior.floating,
-                                        ),
-                                      );
-                                    }
-
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Center(
-                                          child: Text(
-                                            'Please Select Pick-Up & Drop Off Location',style: TextStyle(fontSize: 15,color: Colors.white),),
-                                        ),
-                                        backgroundColor: Colors.black,
-                                        behavior: SnackBarBehavior.floating,
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: Container(
-                                  height: 30,
-                                  width: ScreenConfig.screenSizeWidth * 0.25,
-                                  decoration: blueContainerTemplate(radius: 5),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        displayNoSizedText(
-                                          "Let's Go",
-                                          ScreenConfig.theme.textTheme.button,
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                          child: Image.asset(
-                                              "assets/images/GetMyCurrentLocationIconWhite.png",
-                                              fit: BoxFit.contain),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        )),
-                    SizedBox(height: ScreenConfig.screenSizeHeight * 0.03)
+                    Buttons.smallSquareButton(
+                        "assets/images/CircularIconButton.png", () {
+                    }),
                   ],
                 ),
-            ],
-          ),
-        ),
+              ),
+              fieldOneController: pickupEnterController,
+              isDisplayFieldTwo: true,
+              hintFieldTwo: "Drop Off Location",
+              fieldTwoButtonFunction: () {},
+              suffixIconFieldTwo: SizedBox(
+                height: 60,
+                width: 50,
+                child: Row(
+                  children: [
+                    Buttons.smallSquareButton(
+                        "assets/images/PinPointIcon.png", () {}),
+                  ],
+                ),
+              ),
+              fieldTwoController: dropoffEnterController),
+
+          if (true)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                    height: 40,
+                    width: ScreenConfig.screenSizeWidth * 0.9,
+                    decoration: squareButtonTemplate(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              displayText(
+                                "Distance:",
+                                ScreenConfig.theme.textTheme.headline5,
+                                width: 0.3,
+                              ),
+                              displayText(
+                                "${distance?.totalDistance ?? ""}",
+                                ScreenConfig.theme.textTheme.headline4,
+                                width: 0.2,
+                              ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (pickupEnterController.text != '' &&
+                                  dropoffEnterController.text != '') {
+                                if( double.tryParse(distance!.totalDistance.replaceAll(RegExp(r'[^0-9.]'), ''))!<60){
+                                  print("${distance!.totalDuration} duration");
+                                  Navigator.of(context).pushNamed(
+                                    RideShownScreen.routeName,
+                                    arguments: {
+                                      'pickupLocation':
+                                      pickupEnterController.text,
+                                      'dropoffLocation':
+                                      dropoffEnterController.text,
+                                      'vah':argument,
+                                      'distance':distance!.totalDistance,
+                                      'duration':distance!.totalDuration
+                                    },
+                                  );
+                                }
+                                else{
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Center(
+                                        child: Text(
+                                          'Please Select Below 60KM Distance',style: TextStyle(fontSize: 15,color: Colors.white),),
+                                      ),
+                                      backgroundColor: Colors.black,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                }
+
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Center(
+                                      child: Text(
+                                        'Please Select Pick-Up & Drop Off Location',style: TextStyle(fontSize: 15,color: Colors.white),),
+                                    ),
+                                    backgroundColor: Colors.black,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            },
+                            child: Container(
+                              height: 30,
+                              width: ScreenConfig.screenSizeWidth * 0.25,
+                              decoration: blueContainerTemplate(radius: 5),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 4.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    displayNoSizedText(
+                                      "Let's Go",
+                                      ScreenConfig.theme.textTheme.button,
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                      child: Image.asset(
+                                          "assets/images/GetMyCurrentLocationIconWhite.png",
+                                          fit: BoxFit.contain),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
+                SizedBox(height: ScreenConfig.screenSizeHeight * 0.03)
+              ],
+            ),
+        ],
       ),
     );
   }
