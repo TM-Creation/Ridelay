@@ -4,6 +4,8 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -24,6 +26,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
 import '../../../../../models/authmodels/vehicleregmodel.dart';
+import '../../../config/theme.dart';
 import '../../driver_screens/driver_main_screen.dart';
 
 class VehicleRegistrationScreen extends StatefulWidget {
@@ -49,9 +52,8 @@ class _VehicleRegistrationScreenState extends State<VehicleRegistrationScreen> {
   final TextEditingController image = TextEditingController();
   String valueCity = '';
   String valueCountry = '';
-
+  bool progres=false;
   final _formKey = GlobalKey<FormState>();
-
   String userNumber = "";
 
   @override
@@ -157,13 +159,13 @@ baseulr burl=baseulr();
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             displayText(
-              "Driver Information",
+              "Vehicle Information",
               ScreenConfig.theme.textTheme.headline1
                   ?.copyWith(color: Colors.black.withOpacity(0.5)),
             ),
             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
             displayText(
-              'Add Driver and Vehicle Photo',
+              'Add Vehicle Photo',
               ScreenConfig.theme.textTheme.headline6
                   ?.copyWith(fontWeight: FontWeight.w500),
             ),
@@ -212,7 +214,11 @@ baseulr burl=baseulr();
                         child: Column(
                           children: [
                             Buttons.longWidthButton(
-                              'Capture From Camera',
+                              Text(
+                                'Capture From Camera',
+                                style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                                    color: Colors.white, fontWeight: FontWeight.w300),
+                              ),
                               () async {
                                 final isImageSelectedCorrectSize =
                                     await pickImage(ImageSource.camera);
@@ -226,7 +232,11 @@ baseulr burl=baseulr();
                               height: ScreenConfig.screenSizeHeight * 0.02,
                             ),
                             Buttons.longWidthButton(
-                              'Pick From Gallery',
+                               Text(
+                                'Pick From Gallery',
+                                style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                                    color: Colors.white, fontWeight: FontWeight.w300),
+                              ),
                               () async {
                                 final isImageSelectedCorrectSize =
                                     await pickImage(ImageSource.gallery);
@@ -293,7 +303,7 @@ baseulr burl=baseulr();
                   height: 10,
                 ),
                 Text(
-                  'Driver Image',
+                  'Vehicle Image',
                   style: ScreenConfig.theme.textTheme.headline6
                       ?.copyWith(fontWeight: FontWeight.w500),
                 ),
@@ -529,7 +539,16 @@ baseulr burl=baseulr();
         height: 60,
         color: Colors.white,
         child: Center(
-          child: Buttons.longWidthButton("Continue", () {
+          child: Buttons.longWidthButton(progres
+              ? Container(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(color: Colors.white,))
+              : Text(
+            'Continue',
+            style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                color: Colors.white, fontWeight: FontWeight.w300),
+          ), () {
             // navigate();
             FocusScope.of(context).unfocus();
             if (vehiclemodel.text.isEmpty || vehiclemodel.text.length < 2) {
@@ -593,6 +612,9 @@ baseulr burl=baseulr();
                 yearerror == false &&
                 colorerror == false) {
               print("Accepted");
+              setState(() {
+                progres=true;
+              });
               navigate();
             }
           }),
@@ -612,12 +634,38 @@ baseulr burl=baseulr();
 
     try {
       final response = await http.post(url, headers: headers, body: body);
-
+      setState(() {
+        progres=true;
+      });
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
+        Get.snackbar(
+          'Vehicle Register Successfully',
+          '',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
-      } else {
+      }
+      else if(response.statusCode == 400){
+        final responseData = jsonDecode(response.body);
+        final message=responseData['message'];
+        print("object $message");
+        Get.snackbar(
+          'Error',
+          '$message',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
+      }
+      else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');
         print('Response body: ${response.body}');

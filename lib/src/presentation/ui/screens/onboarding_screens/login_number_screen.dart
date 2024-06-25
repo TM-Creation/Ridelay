@@ -25,6 +25,7 @@ class LoginNumberScreen extends StatefulWidget {
 
 class _LoginNumberScreenState extends State<LoginNumberScreen> {
   LatLng userlocation = LatLng(9.0, 7.9);
+  bool progres=false;
   @override
   void initState() {
     errorValidatorShow = false;
@@ -75,10 +76,18 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   const PhoneNumberTextField(),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
-                  Buttons.longWidthButton("Login", () {
+                  Buttons.longWidthButton(progres
+                      ? Container(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(color: Colors.white,))
+                      : Text(
+                    'Login',
+                    style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.w300),
+                  ),() {
                     if (!errorValidatorShow) {
                       DebugHelper.printAll("Initiate Print");
-
                       Navigator.pushNamed(
                           context, OTPVerificationScreen.routeName,
                           arguments: {'number': phoneNumberController.text});

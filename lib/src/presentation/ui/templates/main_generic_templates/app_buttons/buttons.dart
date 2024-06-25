@@ -230,7 +230,7 @@ class Buttons {
               ],
             ),
           ));
-  static Widget longWidthButton(String text, void Function() func) =>
+  static Widget longWidthButton(Widget text, void Function() func) =>
       GestureDetector(
         onTap: func,
         child: Container(
@@ -243,11 +243,7 @@ class Buttons {
               ]),
               borderRadius: BorderRadius.circular(19.0)),
           child: Center(
-              child: Text(
-            text,
-            style: ScreenConfig.theme.textTheme.headline6
-                ?.copyWith(color: Colors.white, fontWeight: FontWeight.w300),
-          )),
+              child: text),
         ),
       );
   static Widget fullWidthButton(

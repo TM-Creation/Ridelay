@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:ridely/src/presentation/bloc/user/user_bloc.dart';
 import 'package:ridely/src/presentation/ui/config/routes.dart';
@@ -19,7 +20,7 @@ class App extends StatelessWidget {
         ),
       ],
       child: OverlaySupport(
-        child: MaterialApp(
+        child: GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: apptheme,
           routes: routes,

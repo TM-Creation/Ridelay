@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 
@@ -25,6 +27,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
 
 import '../../../../../models/authmodels/passengerregmodel.dart';
+import '../../../config/theme.dart';
 
 class RegisterInfoScreen extends StatefulWidget {
   const RegisterInfoScreen({Key? key}) : super(key: key);
@@ -42,7 +45,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
   final TextEditingController phoneNumber = TextEditingController();
 
   final TextEditingController password = TextEditingController();
-
+  bool progres=false;
   final TextEditingController conpassword = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -302,7 +305,16 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
         height: 60,
         color: Colors.white,
         child: Center(
-          child: Buttons.longWidthButton("Continue", () {
+          child: Buttons.longWidthButton(progres
+              ? Container(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(color: Colors.white,))
+              : Text(
+            'Continue',
+            style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                color: Colors.white, fontWeight: FontWeight.w300),
+          ), () {
             FocusScope.of(context).unfocus();
             if (!validatePhoneNumber(phoneNumber.text) ||
                 phoneNumber.text.length != 13) {
@@ -338,6 +350,9 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                 pasd == false &&
                 conpsd == false && password.text==conpassword.text) {
               print("Accepted");
+              setState(() {
+                progres=true;
+              });
               navigate();
             }else {
               print("snakbar");
@@ -372,14 +387,40 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
 
     try {
       final response = await http.post(url, headers: headers, body: body);
-
+      setState(() {
+        progres=false;
+      });
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
         final responseData = jsonDecode(response.body);
         print('responce$responseData');
-        Navigator.of(context).pushNamed(Login.routeName);
-      } else {
+        Get.snackbar(
+          'Register Successfully',
+          "Now You're Ridely User!",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login(),));
+      }
+      else if(response.statusCode == 400){
+        final responseData = jsonDecode(response.body);
+        final message=responseData['message'];
+        print("object $message");
+        Get.snackbar(
+          'Error',
+          '$message',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
+      }
+      else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');
         print('Response body: ${response.body}');

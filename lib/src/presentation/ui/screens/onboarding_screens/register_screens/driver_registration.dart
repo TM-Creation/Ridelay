@@ -3,6 +3,8 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +24,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
 import '../../../../../models/base url.dart';
+import '../../../config/theme.dart';
 import '../../driver_screens/driver_main_screen.dart';
 
 class DriverRegistrationScreen extends StatefulWidget {
@@ -37,7 +40,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   final ImagePicker _picker = ImagePicker();
 
   PickedFile? _imageFile;
-
+  bool progres=false;
   final TextEditingController email = TextEditingController();
   final TextEditingController drivername = TextEditingController();
   final TextEditingController driverphonenumber = TextEditingController();
@@ -163,7 +166,18 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
               ScreenConfig.theme.textTheme.headline1
                   ?.copyWith(color: Colors.black.withOpacity(0.5)),
             ),
+            spaceHeight(ScreenConfig.screenSizeHeight * 0.06),
+            Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            displayText(
+            "Driver Information",
+            ScreenConfig.theme.textTheme.headline1
+                ?.copyWith(color: Colors.black.withOpacity(0.5)),
+            ),
             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+            ],
+            ),
             displayText(
               'Add Driver Photo',
               ScreenConfig.theme.textTheme.headline6
@@ -214,7 +228,11 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                         child: Column(
                           children: [
                             Buttons.longWidthButton(
-                              'Capture From Camera',
+                              Text(
+                                'Capture From Camera',
+                                style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                                    color: Colors.white, fontWeight: FontWeight.w300),
+                              ),
                               () async {
                                 final isImageSelectedCorrectSize =
                                     await pickImage(ImageSource.camera);
@@ -228,7 +246,11 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                               height: ScreenConfig.screenSizeHeight * 0.02,
                             ),
                             Buttons.longWidthButton(
-                              'Pick From Gallery',
+                              Text(
+                                'Pick From Gallery',
+                                style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                                    color: Colors.white, fontWeight: FontWeight.w300),
+                              ),
                               () async {
                                 final isImageSelectedCorrectSize =
                                     await pickImage(ImageSource.gallery);
@@ -502,15 +524,24 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: _displayBody(),
       floatingActionButton: Container(
         width: ScreenConfig.screenSizeWidth,
         height: 60,
         color: Colors.white,
         child: Center(
-          child: Buttons.longWidthButton("Continue", () {
+          child: Buttons.longWidthButton(progres
+              ? Container(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(color: Colors.white,))
+              : Text(
+            'Continue',
+            style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                color: Colors.white, fontWeight: FontWeight.w300),
+          ), () {
             // navigate();
+
             FocusScope.of(context).unfocus();
             if (idNumber.text.isEmpty || idNumber.text.length != 13) {
               setState(() {
@@ -566,6 +597,9 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 nameerror == false &&
                 password.text == conpassword.text) {
               print("Accepted");
+              setState(() {
+                progres=true;
+              });
               navigate();
             }else {
               print("snakbar");
@@ -599,7 +633,9 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
 
     try {
       final response = await http.post(url, headers: headers, body: body);
-
+      setState(() {
+        progres=false;
+      });
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
@@ -607,8 +643,32 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           driverId().driverid=jsonDecode(response.body)['data']['_id'];
           print("Driver Id is: ${driverId().driverid}");
         });
+        Get.snackbar(
+          'Register Successfully',
+          "Now You're Ridely User!",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>VehicleRegistrationScreen()));
-      } else {
+      }
+      else if(response.statusCode == 400){
+        final responseData = jsonDecode(response.body);
+        final message=responseData['message'];
+        print("object $message");
+        Get.snackbar(
+          'Error',
+          '$message',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
+      }
+      else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');
         print('Response body: ${response.body}');

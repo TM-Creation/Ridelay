@@ -94,17 +94,29 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Buttons.longWidthButton("Sign-Up/Register", () {
+                    Buttons.longWidthButton( Text(
+                      'Sign-Up/Register',
+                      style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w300),
+                    ), () {
                       Navigator.of(context)
                           .pushNamed(ChoiceCustomerDriverScreen.routeName);
                     }),
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                    Buttons.longWidthButton("Login with Email", () {
+                    Buttons.longWidthButton(Text(
+                      'Login with Email',
+                      style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w300),
+                    ), () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context)=>Login()));
                     }),
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                    Buttons.longWidthButton("Login with Phone Number", () {
+                    Buttons.longWidthButton(Text(
+                      'Login with Phone Number',
+                      style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w300),
+                    ), () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context)=>LoginNumberScreen()));
                     }),

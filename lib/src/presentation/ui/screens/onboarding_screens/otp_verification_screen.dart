@@ -26,6 +26,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   bool resendOption = false;
   late TextEditingController otpController;
   String number = '';
+  bool progres=false;
   final _formKey = GlobalKey<FormState>();
   bool error = false;
 
@@ -168,7 +169,16 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
     Widget _displayButton() => SizedBox(
         width: ScreenConfig.screenSizeWidth * 0.9,
-        child: Buttons.longWidthButton('Continue', () {
+        child: Buttons.longWidthButton(progres
+            ? Container(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(color: Colors.white,))
+            : Text(
+          'Continue',
+          style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+              color: Colors.white, fontWeight: FontWeight.w300),
+        ), () {
           if (otpController.text.length == 6 && otpController.text.isNotEmpty) {
             setState(() {
               error == false;
