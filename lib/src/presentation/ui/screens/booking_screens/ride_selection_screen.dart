@@ -90,7 +90,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
             fieldTwoController: TextEditingController(),
           ),
           Container(
-            height: ScreenConfig.screenSizeHeight * 0.32,
+            height: ScreenConfig.screenSizeHeight * 0.34,
             width: ScreenConfig.screenSizeWidth,
             decoration: bottomModalTemplate(),
             child: Padding(
