@@ -164,7 +164,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.32,
+        height: ScreenConfig.screenSizeHeight * 0.33,
         width: ScreenConfig.screenSizeWidth,
         decoration: bottomModalTemplate(),
         child: Padding(

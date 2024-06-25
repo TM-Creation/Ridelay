@@ -183,7 +183,7 @@ class _DriverSoloRideWaitingScreenState
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.34,
+        height: ScreenConfig.screenSizeHeight * 0.36,
         width: double.infinity,
         decoration: bottomModalTemplate(),
         child: Padding(
