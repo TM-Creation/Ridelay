@@ -672,6 +672,15 @@ baseulr burl=baseulr();
       }
     } catch (error) {
       // Handle network error
+      Get.snackbar(
+        'Error',
+        'Server Not Found',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
+      );
       print('Error: $error');
     }
   }

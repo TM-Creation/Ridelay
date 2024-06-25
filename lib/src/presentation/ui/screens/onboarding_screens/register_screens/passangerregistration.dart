@@ -420,6 +420,20 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
           duration: Duration(seconds: 3),
         );
       }
+      else if(response.statusCode == 404){
+        final responseData = jsonDecode(response.body);
+        final message=responseData['message'];
+        print("object $message");
+        Get.snackbar(
+          'Error',
+          '$message',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
+      }
       else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');
@@ -427,6 +441,15 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
       }
     } catch (error) {
       // Handle network error
+      Get.snackbar(
+        'Error',
+        'Server Not Found',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
+      );
       print('Error: $error');
     }
   }

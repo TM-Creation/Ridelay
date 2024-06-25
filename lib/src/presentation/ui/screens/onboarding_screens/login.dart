@@ -380,7 +380,7 @@ class _LoginState extends State<Login> {
       print('Error: $error');
       Get.snackbar(
         'Error',
-        '$error',
+        'Server Not Found',
         snackPosition: SnackPosition.TOP,
         backgroundColor: themeColor,
         colorText: Colors.white,

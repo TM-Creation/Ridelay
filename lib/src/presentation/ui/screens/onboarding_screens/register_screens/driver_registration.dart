@@ -161,22 +161,11 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
     Widget _displayBodyText() => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            spaceHeight(ScreenConfig.screenSizeHeight * 0.06),
             displayText(
               "Driver Information",
               ScreenConfig.theme.textTheme.headline1
                   ?.copyWith(color: Colors.black.withOpacity(0.5)),
-            ),
-            spaceHeight(ScreenConfig.screenSizeHeight * 0.06),
-            Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            displayText(
-            "Driver Information",
-            ScreenConfig.theme.textTheme.headline1
-                ?.copyWith(color: Colors.black.withOpacity(0.5)),
-            ),
-            spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
-            ],
             ),
             displayText(
               'Add Driver Photo',
@@ -675,6 +664,15 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       }
     } catch (error) {
       // Handle network error
+      Get.snackbar(
+        'Error',
+        'Server Not Found',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
+      );
       print('Error: $error');
     }
   }
