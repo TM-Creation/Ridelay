@@ -94,14 +94,14 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   ],
                 ),
               ),
-              fieldTwoController: dropoffEnterController
-          ),
+              fieldTwoController: dropoffEnterController),
+
           if (true)
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                    height: ScreenConfig.screenSizeHeight*0.05,
+                    height: 40,
                     width: ScreenConfig.screenSizeWidth * 0.9,
                     decoration: squareButtonTemplate(),
                     child: Padding(

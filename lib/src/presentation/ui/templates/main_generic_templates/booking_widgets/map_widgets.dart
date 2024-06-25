@@ -366,7 +366,7 @@ class _MapScreenState extends State<MapScreen> {
         ),
         Column(
           children: [
-            spaceHeight(ScreenConfig.screenSizeHeight * 0.1),
+            spaceHeight(ScreenConfig.screenSizeHeight * 0.12),
             if (widget.showAds!)
               Container(
                 width: ScreenConfig.screenSizeWidth * 0.9,
@@ -389,8 +389,8 @@ class _MapScreenState extends State<MapScreen> {
               ),
             if (widget.showTextFields!)
               SizedBox(
-                height: ScreenConfig.screenSizeHeight * 0.5 ,
-                width: ScreenConfig.screenSizeWidth * 0.85,
+                height: ScreenConfig.screenSizeHeight * 0.5,
+                width: ScreenConfig.screenSizeWidth * 0.9,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

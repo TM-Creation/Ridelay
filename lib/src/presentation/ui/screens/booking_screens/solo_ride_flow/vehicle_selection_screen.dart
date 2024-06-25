@@ -83,7 +83,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
               ),
               fieldTwoController: TextEditingController()),
           Container(
-            height: ScreenConfig.screenSizeHeight * 0.33,
+            height: ScreenConfig.screenSizeHeight * 0.31,
             width: ScreenConfig.screenSizeWidth,
             decoration: bottomModalTemplate(),
             child: Padding(

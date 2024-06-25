@@ -178,7 +178,7 @@ class Buttons {
       GestureDetector(
         onTap: func,
         child: Container(
-          width: ScreenConfig.screenSizeWidth * 0.28,
+          width: ScreenConfig.screenSizeWidth * 0.25,
           decoration: squareButtonTemplate(),
           child: Column(
             children: [
