@@ -31,7 +31,7 @@ class _DriverSoloRideRatingScreenState
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.50,
+        height: ScreenConfig.screenSizeHeight * 0.34,
         width: ScreenConfig.screenSizeWidth,
         decoration: bottomModalTemplate(),
         child: Padding(
@@ -43,8 +43,6 @@ class _DriverSoloRideRatingScreenState
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 driverRideRatingWidget(context),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                submitReviewPanelWidget(context),
               ],
             ),
           ),

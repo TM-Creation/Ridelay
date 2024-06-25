@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/solo_ride_waiting_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_solo_ride_waiting_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
@@ -225,28 +227,67 @@ Widget driverRideRatingWidget(BuildContext context) {
                   children: [
                     displayText("Total Payed Amount",
                         ScreenConfig.theme.textTheme.headline2,
-                        width: 0.5),
+                        width: 0.4),
                     displayText(
                         "Rs. 1290", ScreenConfig.theme.textTheme.headline2,
                         textAlign: TextAlign.end, width: 0.3),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               displayText(
-                  "Please Rate Our Rider",
+                  "Your Ride is Completed Successfully!",
                   ScreenConfig.theme.textTheme.headline1?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.normal,
                       fontSize: 17),
                   width: 0.8),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  userDetailsMiniContainer(
-                      "assets/images/UserProfileImage.png", "Altaf"),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  // userDetailsMiniContainer(
-                  //     "assets/images/UserCarImage.png", "Honda. C"),
+                  displayText(
+                      "Go for Next Ride:",
+                      ScreenConfig.theme.textTheme.headline1?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 17),
+                      width: 0.3),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DriverRideSelectionScreen()));
+                    },
+                    child: Container(
+                      width: ScreenConfig.screenSizeWidth *
+                          0.25,
+                      decoration: BoxDecoration(
+                          color: thirdColor,
+                          borderRadius:
+                          const BorderRadius.all(
+                              Radius.circular(5)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey
+                                  .withOpacity(0.40),
+                              offset: const Offset(
+                                  0.0, 1.2), //(x,y)
+                              blurRadius: 6.0,
+                            )
+                          ]),
+                      child: Padding(
+                          padding:
+                          const EdgeInsets.all(5.0),
+                          child: displayNoSizedText(
+                              'Next Ride',
+                              ScreenConfig
+                                  .theme.textTheme.caption
+                                  ?.copyWith(
+                                  color: ScreenConfig
+                                      .theme
+                                      .primaryColor,
+                                  fontWeight:
+                                  FontWeight.bold),
+                              textAlign: TextAlign.center)),
+                    ),
+                  )
                 ],
               ),
             ],

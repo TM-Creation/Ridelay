@@ -183,7 +183,7 @@ class _DriverSoloRideWaitingScreenState
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.45,
+        height: ScreenConfig.screenSizeHeight * 0.34,
         width: double.infinity,
         decoration: bottomModalTemplate(),
         child: Padding(
@@ -267,7 +267,7 @@ class _DriverSoloRideWaitingScreenState
                                         true,),
                                     spaceHeight(
                                         ScreenConfig.screenSizeHeight * 0.01),
-                                    Text('If you pick the Passenger click on Below Button',style: TextStyle(color: Colors.white,fontSize: ScreenConfig.screenSizeWidth*0.022),),
+                                    Text('If you pick the Passenger\nclick on Below Button',style: TextStyle(color: Colors.white,fontSize: ScreenConfig.screenSizeWidth*0.025),),
                                     // userDetailsContainer("assets/images/UserCarImage.png",
                                     //     "Honda Civic", "LXV 5675", false, true, "2019")
                                     spaceHeight(
@@ -314,7 +314,7 @@ class _DriverSoloRideWaitingScreenState
                                   ],
                                 ),
                                 SizedBox(
-                                  width: ScreenConfig.screenSizeWidth * 0.22,
+                                  width: ScreenConfig.screenSizeWidth * 0.20,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -333,7 +333,7 @@ class _DriverSoloRideWaitingScreenState
                                         ],
                                       ),
                                       spaceHeight(
-                                          ScreenConfig.screenSizeHeight * 0.017),
+                                          ScreenConfig.screenSizeHeight * 0.02),
                                       displayText(
                                           "15km Remaining",
                                           ScreenConfig
@@ -341,7 +341,7 @@ class _DriverSoloRideWaitingScreenState
                                           textAlign: TextAlign.center,
                                           width: 0.22),
                                       spaceHeight(
-                                          ScreenConfig.screenSizeHeight * 0.01),
+                                          ScreenConfig.screenSizeHeight * 0.023),
                                       GestureDetector(
                                         onTap: () {},
                                         child: Container(

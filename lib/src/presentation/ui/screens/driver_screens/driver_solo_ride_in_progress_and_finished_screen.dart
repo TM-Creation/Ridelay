@@ -164,7 +164,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.40,
+        height: ScreenConfig.screenSizeHeight * 0.32,
         width: ScreenConfig.screenSizeWidth,
         decoration: bottomModalTemplate(),
         child: Padding(
@@ -201,9 +201,9 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 children: [
                                   displayText("Distance Remaining",
                                       ScreenConfig.theme.textTheme.button,
-                                      width: 0.5),
+                                      width: 0.4),
                                   displayText("5 km", ScreenConfig.theme.textTheme.button,
-                                      width: 0.3),
+                                      width: 0.2),
                                 ]),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                             Row(
@@ -211,9 +211,9 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   displayText("ETA", ScreenConfig.theme.textTheme.button,
-                                      width: 0.5),
+                                      width: 0.4),
                                   displayText("8 mins", ScreenConfig.theme.textTheme.button,
-                                      width: 0.3),
+                                      width: 0.2),
                                 ]),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                             Row(
