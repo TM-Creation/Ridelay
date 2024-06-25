@@ -282,7 +282,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.39,
+        height: ScreenConfig.screenSizeHeight * 0.34,
         width: ScreenConfig.screenSizeWidth,
         decoration: bottomModalTemplate(),
         child: Padding(
@@ -292,22 +292,10 @@ class _RideShownScreenState extends State<RideShownScreen> {
             child: Column(
               children: [
                 sliderBar(),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                Container(
-                  height: 35,
-                  width: 35,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/AppIcon.png"),
-                        fit: BoxFit.contain),
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
-                ),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                 SizedBox(
                   height: ScreenConfig.screenSizeHeight * 0.24,
-                  width: ScreenConfig.screenSizeWidth * 0.9,
+                  width: ScreenConfig.screenSizeWidth * 0.8,
                   child: vahicle == "car"
                       ? SingleChildScrollView(
                           physics: const ClampingScrollPhysics(),
@@ -409,7 +397,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                   FontWeight
                                                                       .bold),
                                                   textAlign: TextAlign.end,
-                                                  width: 0.3),
+                                                  width: 0.2),
                                             ),
                                           ],
                                         ),
@@ -516,7 +504,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                   FontWeight
                                                                       .bold),
                                                   textAlign: TextAlign.end,
-                                                  width: 0.3),
+                                                  width: 0.2),
                                             ),
                                           ],
                                         ),
@@ -623,7 +611,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                   FontWeight
                                                                       .bold),
                                                   textAlign: TextAlign.end,
-                                                  width: 0.3),
+                                                  width: 0.2),
                                             ),
                                           ],
                                         ),
@@ -725,7 +713,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                 FontWeight
                                                                     .bold),
                                                 textAlign: TextAlign.end,
-                                                width: 0.3),
+                                                width: 0.2),
                                           ),
                                         ],
                                       ),
@@ -829,7 +817,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                     FontWeight
                                                                         .bold),
                                                     textAlign: TextAlign.end,
-                                                    width: 0.3),
+                                                    width: 0.2),
                                               ),
                                             ],
                                           ),
@@ -855,9 +843,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor:
           requestshow ? ScreenConfig.theme.primaryColor : Colors.white,
-      appBar: isdriveraccept || requestshow
-          ? null
-          : GenericAppBars.appBarWithBackButtonOnly(context, false),
       body: isdriveraccept
           ? Center(
               child: Column(
@@ -890,7 +875,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                               children: [
                                 Container(
                                   height: ScreenConfig.screenSizeHeight * 0.2,
-                                  width: ScreenConfig.screenSizeWidth * 0.85,
+                                  width: ScreenConfig.screenSizeWidth * 0.83,
                                   decoration: blueContainerTemplate(),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -898,7 +883,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                     child: Center(
                                       child: SizedBox(
                                         width:
-                                            ScreenConfig.screenSizeWidth * 0.8,
+                                            ScreenConfig.screenSizeWidth * 0.75,
                                         child: Column(
                                           children: [
                                             spaceHeight(

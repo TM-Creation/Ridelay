@@ -27,7 +27,7 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.50,
+        height: ScreenConfig.screenSizeHeight * 0.48,
         width: ScreenConfig.screenSizeWidth,
         decoration: bottomModalTemplate(),
         child: Padding(
@@ -39,7 +39,6 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 rideRatingWidget(context),
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                 submitReviewPanelWidget(context),
               ],
             ),

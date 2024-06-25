@@ -95,7 +95,7 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
                           ScreenConfig.theme.textTheme.headline5
                               ?.copyWith(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.end,
-                          width: 0.3),
+                          width: 0.2),
                     ),
                 ],
               ),
@@ -194,9 +194,9 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   children: [
                     displayText("Distance Remaining",
                         ScreenConfig.theme.textTheme.button,
-                        width: 0.45),
+                        width: 0.4),
                     displayText("5 km", ScreenConfig.theme.textTheme.button,
-                        width: 0.3),
+                        width: 0.2),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
               Row(
@@ -204,9 +204,9 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     displayText("ETA", ScreenConfig.theme.textTheme.button,
-                        width: 0.45),
+                        width: 0.4),
                     displayText("8 mins", ScreenConfig.theme.textTheme.button,
-                        width: 0.3),
+                        width: 0.2),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
               Row(
@@ -358,7 +358,7 @@ Widget submitReviewPanelWidget(BuildContext context) {
                   color: Colors.white,
                   fontWeight: FontWeight.normal,
                   fontSize: 17),
-              width: 0.4),
+              width: 0.3),
           Row(
             children: [
               Container(

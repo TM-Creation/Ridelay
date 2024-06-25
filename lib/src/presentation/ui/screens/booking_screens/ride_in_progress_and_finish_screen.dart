@@ -41,8 +41,6 @@ class _RideInProgressAndFinishedScreenState
   late IO.Socket socket2;
   @override
   void initState() {
-    pickupEnterController.text = "Gulberg Phase II";
-    dropoffEnterController.text = "Bahria Town";
     pick=pickanddrop().pickloc!;
     drop=pickanddrop().droploc!;
     _initLocationService();
@@ -166,7 +164,7 @@ class _RideInProgressAndFinishedScreenState
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.31,
+        height: ScreenConfig.screenSizeHeight * 0.32,
         width: ScreenConfig.screenSizeWidth,
         decoration: bottomModalTemplate(),
         child: Padding(
