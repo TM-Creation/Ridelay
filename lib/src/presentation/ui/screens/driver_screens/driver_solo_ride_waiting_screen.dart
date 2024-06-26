@@ -171,7 +171,7 @@ class _DriverSoloRideWaitingScreenState
         .then((polylinePoints) {
       if(mounted){
         setState(() {
-          distance = calculateDistance(_driverLocation.latitude,_driverLocation.longitude, drop![1], drop![0]);
+          distance = calculateDistance(_driverLocation.latitude,_driverLocation.longitude, pick![1], pick![0]);
           _polylines = {
             Polyline(
               polylineId: PolylineId('route'),
