@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,18 +6,12 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
-
-import 'package:image_picker/image_picker.dart';
-
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/authmodels/passangerloginmodel.dart';
 import 'package:ridely/src/models/base%20url.dart';
-import 'package:ridely/src/presentation/ui/config/compress_image.dart';
 import 'package:ridely/src/presentation/ui/config/validator.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/otp_verification_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
@@ -370,7 +363,8 @@ class _LoginState extends State<Login> {
         } else {
           print('Error: Something null in response');
         }
-      } else if (response.statusCode == 404) {
+      }
+      else if (response.statusCode == 404) {
         final responseData = jsonDecode(response.body);
         final message = responseData['message'];
         print("object $message");
@@ -396,12 +390,16 @@ class _LoginState extends State<Login> {
           margin: EdgeInsets.all(10),
           duration: Duration(seconds: 3),
         );
-      } else {
+      }
+      else {
         // Error occurred
         print('Failed to Login: ${response.statusCode}');
         print('Response body: ${response.body}');
       }
     } catch (error) {
+      setState(() {
+        progres=false;
+      });
       // Handle network error
       print('Error: $error');
       Get.snackbar(
