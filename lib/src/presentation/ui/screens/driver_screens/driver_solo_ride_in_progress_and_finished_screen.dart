@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -40,7 +42,14 @@ class _DriverSoloRideInProgressAndFinishedScreenState
   String image = "assets/images/LocationDistanceScreenMap.png";
   List namesList = ["Mini", "Go", "Comfort", "Mini"];
   List<double>? drop = [];
+  List<double>? pick = [];
+  String? passangername = '';
+  String? passangerphone = '';
+  int? fare = 0;
+  String? distance = '';
   String rideId='';
+  String ETA='';
+
   late GoogleMapController _controller;
   Set<Polyline> _polylines = {};
   void didChangeDependencies() {
@@ -49,9 +58,14 @@ class _DriverSoloRideInProgressAndFinishedScreenState
     final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null) {
       setState(() {
+        pick = args['pickuplocation']!;
         drop = args['dropofflocation']!;
+        fare = args['fare']!;
+        passangername = args['passangername']!;
+        //raiting=args['raiting'];
+        passangerphone = args['passangerphone']!;
         rideId=args['rideId'];
-        print("data of eve 2: $drop");
+        print("data of eve 22: $pick $drop $passangername $passangerphone $fare $distance $rideId");
       });
     }
     _initLocationService();
@@ -63,6 +77,47 @@ class _DriverSoloRideInProgressAndFinishedScreenState
     dropoffEnterController.text = "Bahria Town";
     driverlocation=userLiveLocation().userlivelocation!;
     super.initState();
+  }
+  Future<String> getTravelTime(double startLat, double startLng, double endLat, double endLng) async {
+    final apiKey = 'AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
+    final url = 'https://maps.googleapis.com/maps/api/directions/json'
+        '?origin=$startLat,$startLng'
+        '&destination=$endLat,$endLng'
+        '&key=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final travelTime = data['routes'][0]['legs'][0]['duration']['text'];
+      return travelTime;
+    } else {
+      throw Exception('Failed to get travel time: ${response.statusCode}');
+    }
+  }
+  String calculateDistance(double pickupLat, double pickupLon,
+      double dropoffLat, double dropoffLon) {
+    const double earthRadiusKm = 6371; // Earth's radius in kilometers
+
+    double degreeToRadian(double degree) {
+      return degree * pi / 180;
+    }
+
+    final double lat1Rad = degreeToRadian(pickupLat);
+    final double lon1Rad = degreeToRadian(pickupLon);
+    final double lat2Rad = degreeToRadian(dropoffLat);
+    final double lon2Rad = degreeToRadian(dropoffLon);
+
+    final double dLat = lat2Rad - lat1Rad;
+    final double dLon = lon2Rad - lon1Rad;
+
+    final double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1Rad) * cos(lat2Rad) * sin(dLon / 2) * sin(dLon / 2);
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    double distanceKm = earthRadiusKm * c;
+    distanceKm = distanceKm * 1.58500;
+    return '${distanceKm.toStringAsFixed(2)} km';
   }
   Future<void> _initLocationService() async {
     _updatePolyline();
@@ -129,7 +184,11 @@ class _DriverSoloRideInProgressAndFinishedScreenState
     _getRoutePolylinePoints(driverlocation,LatLng(drop![1], drop![0]))
         .then((polylinePoints) {
       if(mounted){
-        setState(() {
+        setState(()async{
+          distance = calculateDistance(driverlocation.latitude,driverlocation.longitude, drop![1], drop![0]);
+         ETA=await getTravelTime(driverlocation.latitude, driverlocation.longitude, drop![1], drop![0]);
+         print("ETA is: $ETA");
+         print("Polyline updates every time");
           _polylines = {
             Polyline(
               polylineId: PolylineId('route'),
@@ -202,7 +261,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                   displayText("Distance Remaining",
                                       ScreenConfig.theme.textTheme.button,
                                       width: 0.4),
-                                  displayText("5 km", ScreenConfig.theme.textTheme.button,
+                                  displayText("$distance", ScreenConfig.theme.textTheme.button,
                                       width: 0.2),
                                 ]),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
@@ -212,7 +271,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 children: [
                                   displayText("ETA", ScreenConfig.theme.textTheme.button,
                                       width: 0.4),
-                                  displayText("8 mins", ScreenConfig.theme.textTheme.button,
+                                  displayText("$ETA", ScreenConfig.theme.textTheme.button,
                                       width: 0.2),
                                 ]),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
@@ -222,8 +281,41 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    userDetailsContainer("assets/images/UserProfileImage.png",
-                                        "Altaf Ahmed", "4.9", true,),
+                                    Container(
+                                      color: Colors.transparent,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: ScreenConfig.screenSizeWidth * 0.085,
+                                            height: ScreenConfig.screenSizeWidth * 0.085,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(image: AssetImage('assets/images/UserProfileImage.png'), fit: BoxFit.cover),
+                                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                            ),
+                                          ),
+                                          spaceWidth(ScreenConfig.screenSizeWidth * 0.02),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  displayText(
+                                                    passangername!,
+                                                    ScreenConfig.theme.textTheme.bodyText2,
+                                                    width: 0.2,
+                                                  ),
+                                                ],
+                                              ),
+                                              displayText(
+                                                "Fare:  $fare",
+                                                ScreenConfig.theme.textTheme.bodyText2,
+                                                width: 0.22,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                     spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                                     // userDetailsContainer("assets/images/UserCarImage.png",
                                     //     "Honda Civic", "LXV 5675", false, true, "2019")
@@ -233,7 +325,10 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                   onTap: () {
                                     socket.emit('completeRide',{'rideId':rideId});
                                     Navigator.of(context)
-                                        .pushNamed(DriverSoloRideRatingScreen.routeName);
+                                        .pushNamed(DriverSoloRideRatingScreen.routeName, arguments: {
+                                      'fare': fare,
+                                      'rideId':rideId,
+                                    });
                                   },
                                   child: Container(
                                     width: ScreenConfig.screenSizeWidth *
