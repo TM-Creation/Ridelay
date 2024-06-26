@@ -198,7 +198,7 @@ Widget driverRideDetailsInProgressAndFinishedWidget(
   );
 }
 
-Widget driverRideRatingWidget(BuildContext context) {
+Widget driverRideRatingWidget(BuildContext context,int fare,String rideID) {
   return Column(
     children: [
       Container(
@@ -229,7 +229,7 @@ Widget driverRideRatingWidget(BuildContext context) {
                         ScreenConfig.theme.textTheme.headline2,
                         width: 0.4),
                     displayText(
-                        "Rs. 1290", ScreenConfig.theme.textTheme.headline2,
+                        "Rs. $fare", ScreenConfig.theme.textTheme.headline2,
                         textAlign: TextAlign.end, width: 0.3),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),

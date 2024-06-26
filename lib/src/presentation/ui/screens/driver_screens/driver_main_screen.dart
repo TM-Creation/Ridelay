@@ -89,7 +89,6 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
         'passangername': passangerName,
         'passangerphone': phonenumber,
         'fare': fare,
-        'distance':distance,
         'rideId':datarespose,
         'name':passangerName,
         //'raiting':raiting,

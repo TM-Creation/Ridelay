@@ -25,8 +25,21 @@ class _DriverSoloRideRatingScreenState
     extends State<DriverSoloRideRatingScreen> {
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
+  int fare=0;
+  String rideId='';
   String image = "assets/images/RideFinishedScreenMap.png";
-
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Retrieve pickup and drop-off locations from arguments after dependencies change
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      setState(() {
+        fare = args['fare']!;
+        rideId=args['rideId'];
+        print("data of eve 222:  $fare $rideId");
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -42,7 +55,7 @@ class _DriverSoloRideRatingScreenState
               children: [
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                driverRideRatingWidget(context),
+                driverRideRatingWidget(context,fare,rideId),
               ],
             ),
           ),
