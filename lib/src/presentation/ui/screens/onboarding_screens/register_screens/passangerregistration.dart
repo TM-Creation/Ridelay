@@ -235,7 +235,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                             // }
                             return null;
                           },
-                          hint: 'Please enter email (e.g email@mail.com)',
+                          hint: 'Enter Your Email',
                           controller: email),
                       if (emailError) displayRegistrationValidation("email"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),

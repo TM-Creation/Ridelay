@@ -99,7 +99,7 @@ class _LoginState extends State<Login> {
           padding:
               EdgeInsets.only(left: MediaQuery.sizeOf(context).width * 0.35),
           child: displayText(
-            "Log-in",
+            "Login",
             ScreenConfig.theme.textTheme.headline1
                 ?.copyWith(color: Colors.black.withOpacity(0.7)),
           ),
@@ -147,7 +147,7 @@ class _LoginState extends State<Login> {
                             // }
                             return null;
                           },
-                          hint: 'Please enter email (e.g email@mail.com)',
+                          hint: 'Enter Your Email',
                           controller: email),
                       if (emailError) displayRegistrationValidation("email"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
