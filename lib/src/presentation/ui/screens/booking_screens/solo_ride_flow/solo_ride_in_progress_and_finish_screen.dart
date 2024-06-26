@@ -64,11 +64,11 @@ class _SoloRideInProgressAndFinishedScreenState
                   ),
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                inProgress
+               /* inProgress
                     ? rideDetailsInProgressAndFinishedWidget(
                         "Your Ride Is In Progress", context)
                     : rideDetailsInProgressAndFinishedWidget(
-                        "Your Ride Is Finished", context),
+                        "Your Ride Is Finished", context),*/
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               ],
             ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -39,6 +40,29 @@ class _RideInProgressAndFinishedScreenState
   LatLng pick=LatLng(0.0, 0.0);
   LatLng drop=LatLng(0.0, 0.0);
   late IO.Socket socket2;
+  String distance='',ETA='';
+  String
+      numberplate = '',
+      drivername = '',
+      vahiclename = '';
+  double fare=0.0,driverraiting=0.0;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Retrieve pickup and drop-off locations from arguments after dependencies change
+    final args =
+    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      setState(() {
+        pickupEnterController.text = args['pickupLocation']!;
+        dropoffEnterController.text = args['dropoffLocation']!;
+        drivername = args['driverName']!;
+        driverraiting = args['driverRaiting']!;
+        vahiclename = args['vahicleName']!;
+        numberplate = args['vahicleNumberplate']!;
+        fare = args['fare']!;
+      });
+    }
+  }
   @override
   void initState() {
     pick=pickanddrop().pickloc!;
@@ -55,12 +79,57 @@ class _RideInProgressAndFinishedScreenState
     socket.on('completeRide', (data){
       print('on of is run correctly');
       Navigator.of(context)
-          .pushNamed(RideRatingScreen.routeName);
+          .pushNamed(RideRatingScreen.routeName,arguments: {
+      "pickupLocation":pickupEnterController.text,
+      "dropoffLocation": dropoffEnterController.text,
+      "fare":fare
+      });
     });
   }
   Future<void> _initLocationService() async {
     _updatePolyline();
     _trackDriverLocation();
+  }
+  String calculateDistance(double pickupLat, double pickupLon,
+      double dropoffLat, double dropoffLon) {
+    const double earthRadiusKm = 6371; // Earth's radius in kilometers
+
+    double degreeToRadian(double degree) {
+      return degree * pi / 180;
+    }
+
+    final double lat1Rad = degreeToRadian(pickupLat);
+    final double lon1Rad = degreeToRadian(pickupLon);
+    final double lat2Rad = degreeToRadian(dropoffLat);
+    final double lon2Rad = degreeToRadian(dropoffLon);
+
+    final double dLat = lat2Rad - lat1Rad;
+    final double dLon = lon2Rad - lon1Rad;
+
+    final double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1Rad) * cos(lat2Rad) * sin(dLon / 2) * sin(dLon / 2);
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    double distanceKm = earthRadiusKm * c;
+    distanceKm = distanceKm * 1.58500;
+    return '${distanceKm.toStringAsFixed(2)} km';
+  }
+  Future<String> getTravelTime(double startLat, double startLng, double endLat, double endLng) async {
+    final apiKey = 'AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
+    final url = 'https://maps.googleapis.com/maps/api/directions/json'
+        '?origin=$startLat,$startLng'
+        '&destination=$endLat,$endLng'
+        '&key=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final travelTime = data['routes'][0]['legs'][0]['duration']['text'];
+      return travelTime;
+    } else {
+      throw Exception('Failed to get travel time: ${response.statusCode}');
+    }
   }
   Future<List<LatLng>> _getRoutePolylinePoints(LatLng origin, LatLng destination) async {
     String apiUrl = 'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
@@ -123,7 +192,9 @@ class _RideInProgressAndFinishedScreenState
     _getRoutePolylinePoints(pick,drop)
         .then((polylinePoints) {
       if(mounted){
-        setState(() {
+        setState(() async{
+          distance = calculateDistance(pick.latitude,pick.longitude,drop.latitude,drop.longitude);
+          ETA=await getTravelTime(pick.latitude,pick.longitude,drop.latitude,drop.longitude);
           _polylines = {
             Polyline(
               polylineId: PolylineId('route'),
@@ -176,7 +247,7 @@ class _RideInProgressAndFinishedScreenState
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 rideDetailsInProgressAndFinishedWidget(
-                        "Your Ride Is In Progress", context),
+                        "Your Ride Is In Progress", context,distance,ETA,drivername,driverraiting,vahiclename,numberplate),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               ],
             ),

@@ -93,8 +93,13 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       print('on is run correctly');
       Navigator.of(context)
           .pushNamed(RideInProgressAndFinishedScreen.routeName, arguments: {
-        'pickupcontroler': pickupEnterController.text,
-        'dropoffcontroler': dropoffEnterController.text
+        "pickupLocation":pickupEnterController.text,
+        "dropoffLocation": dropoffEnterController.text,
+        "driverName":drivername,
+        "driverRaiting":driverraiting,
+        "vahicleName":vahiclename,
+        "vahicleNumberplate":numberplate,
+        "fare":fare
       });
     });
   }

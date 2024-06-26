@@ -22,7 +22,20 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
   String image = "assets/images/RideFinishedScreenMap.png";
-
+  double fare=0.0;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Retrieve pickup and drop-off locations from arguments after dependencies change
+    final args =
+    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      setState(() {
+        pickupEnterController.text = args['pickupLocation']!;
+        dropoffEnterController.text = args['dropoffLocation']!;
+        fare = args['fare']!;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -38,7 +51,7 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
               children: [
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                rideRatingWidget(context),
+                rideRatingWidget(context,fare),
                 submitReviewPanelWidget(context),
               ],
             ),

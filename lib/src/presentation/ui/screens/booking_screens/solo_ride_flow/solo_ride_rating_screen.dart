@@ -36,7 +36,7 @@ class _SoloRideRatingScreenState extends State<SoloRideRatingScreen> {
               children: [
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                rideRatingWidget(context),
+                /*rideRatingWidget(context),*/
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 submitReviewPanelWidget(context),
               ],
