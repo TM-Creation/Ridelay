@@ -167,7 +167,7 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
 }
 
 Widget rideDetailsInProgressAndFinishedWidget(
-    String name, BuildContext context) {
+    String name, BuildContext context,String distance,String ETA,String drivername,double driverraiting,String vahiclename,String numberplate) {
   return Column(
     children: [
       Container(
@@ -195,7 +195,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
                     displayText("Distance Remaining",
                         ScreenConfig.theme.textTheme.button,
                         width: 0.4),
-                    displayText("5 km", ScreenConfig.theme.textTheme.button,
+                    displayText("$distance", ScreenConfig.theme.textTheme.button,
                         width: 0.2),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
@@ -205,7 +205,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   children: [
                     displayText("ETA", ScreenConfig.theme.textTheme.button,
                         width: 0.4),
-                    displayText("8 mins", ScreenConfig.theme.textTheme.button,
+                    displayText("$ETA", ScreenConfig.theme.textTheme.button,
                         width: 0.2),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
@@ -213,9 +213,9 @@ Widget rideDetailsInProgressAndFinishedWidget(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   userDetailsContainer("assets/images/UserProfileImage.png",
-                      "Altaf Ahmed", "4.9", true,),
+                      "$drivername", "$driverraiting", true,),
                   userDetailsContainer("assets/images/UserCarImage.png",
-                      "Honda Civic", "LXV 5675", false,)
+                      "$vahiclename", "$numberplate", false,)
                 ],
               ),
             ],
@@ -226,7 +226,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
     ],
   );
 }
-Widget rideRatingWidget(BuildContext context) {
+Widget rideRatingWidget(BuildContext context,double fare) {
   return Column(
     children: [
       Container(
@@ -260,7 +260,7 @@ Widget rideRatingWidget(BuildContext context) {
                             fontSize: 15),
                         width: 0.4),
                     displayText(
-                        "Rs. 1290", ScreenConfig.theme.textTheme.headline2,
+                        "Rs. $fare", ScreenConfig.theme.textTheme.headline2,
                         textAlign: TextAlign.end, width: 0.3),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
