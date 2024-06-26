@@ -265,6 +265,7 @@ class _LoginState extends State<Login> {
       setState(() {
         progres=false;
       });
+      print("check try: ${response.statusCode}");
       if (response.statusCode == 200) {
         // Successful POST request
         print('User Login Successfully: ${response.body}');
@@ -293,6 +294,19 @@ class _LoginState extends State<Login> {
               },
               'autoConnect': false,
             });
+            if(socket.connected){
+              Get.snackbar(
+                'Login',
+                'Successfully',
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: themeColor,
+                colorText: Colors.white,
+                margin: EdgeInsets.all(10),
+                duration: Duration(seconds: 3),
+              );
+              Navigator.of(context)
+                  .pushNamed(DriverRideSelectionScreen.routeName);
+            }
             socket.connect();
             socket.onConnect((_) {
               print("Server Connect with Socket");
@@ -321,6 +335,18 @@ class _LoginState extends State<Login> {
               },
               'autoConnect': false,
             });
+            if(socket.connected){
+              Get.snackbar(
+                'Login',
+                'Successfully',
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: themeColor,
+                colorText: Colors.white,
+                margin: EdgeInsets.all(10),
+                duration: Duration(seconds: 3),
+              );
+              Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
+            }
             socket.connect();
             socket.onConnect((_) {
               print("Server Connect with Socket");
