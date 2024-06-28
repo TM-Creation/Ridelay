@@ -286,7 +286,7 @@ class _LoginState extends State<Login> {
               margin: EdgeInsets.all(10),
               duration: Duration(seconds: 3),
             );
-            Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
+            Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
           } else if (typeofuser == 'passenger') {
             print("Passenger Done");
             Get.snackbar(
