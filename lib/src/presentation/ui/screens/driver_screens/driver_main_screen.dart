@@ -22,6 +22,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/driver_ride_detail_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../../templates/ride_widgets/ride_widget_buttons.dart';
@@ -145,6 +146,10 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   void acceptrides() {
     final payload = {'rideId': datarespose, 'driverId': PassId().id};
     socket.emit('acceptRide', payload);
+  }
+  void _launchCaller(String phoneNumber) async {
+    final Uri url = Uri(scheme: 'tel', path: phoneNumber);
+      await launchUrl(url);
   }
 
   @override
@@ -439,7 +444,9 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                     children: [
                                                       smallSquareButton(
                                                           "assets/images/PhoneIcon.png",
-                                                          () {}),
+                                                          () {
+                                                            _launchCaller(phonenumber);
+                                                          }),
                                                       smallSquareButton(
                                                           "assets/images/EmailIcon.png",
                                                           () {}),

@@ -20,6 +20,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/driver_ride_detail_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../templates/main_generic_templates/text_templates/display_text.dart';
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
@@ -52,6 +53,7 @@ class _DriverSoloRideWaitingScreenState
   late GoogleMapController _controller;
   Set<Polyline> _polylines = {};
   late LatLng _driverLocation;
+  String ETA='';
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -164,14 +166,31 @@ class _DriverSoloRideWaitingScreenState
     }
     return polylinePoints;
   }
+  Future<String> getTravelTime(double startLat, double startLng, double endLat, double endLng) async {
+    final apiKey = 'AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
+    final url = 'https://maps.googleapis.com/maps/api/directions/json'
+        '?origin=$startLat,$startLng'
+        '&destination=$endLat,$endLng'
+        '&key=$apiKey';
 
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final travelTime = data['routes'][0]['legs'][0]['duration']['text'];
+      return travelTime;
+    } else {
+      throw Exception('Failed to get travel time: ${response.statusCode}');
+    }
+  }
   void _updatePolyline() {
     print("roooola: $_driverLocation and ${LatLng(pick![1], pick![0])}");
     _getRoutePolylinePoints(_driverLocation, LatLng(pick![1], pick![0]))
         .then((polylinePoints){
       if(mounted){
-        setState(() {
+        setState(() async{
           distance = calculateDistance(_driverLocation.latitude,_driverLocation.longitude, pick![1], pick![0]);
+          ETA=await getTravelTime(driverlocation!.latitude, driverlocation!.longitude, pick![1], pick![0]);
           _polylines = {
             Polyline(
               polylineId: PolylineId('route'),
@@ -197,12 +216,22 @@ class _DriverSoloRideWaitingScreenState
       if(mounted){
         setState(() {
           _driverLocation = LatLng(position.latitude, position.longitude);
-          socket.emit('updatedLocation',{'location':_driverLocation});
+          if(stopemit==false){
+            socket.emit('updatedLocation',{'location':_driverLocation});
+          }
+          else{
+            print("Emit Stoped");
+          }
           _updatePolyline();
         });
       }
     });
   }
+  void _launchCaller(String phoneNumber) async {
+    final Uri url = Uri(scheme: 'tel', path: phoneNumber);
+    await launchUrl(url);
+  }
+  bool stopemit=false;
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -260,7 +289,7 @@ class _DriverSoloRideWaitingScreenState
                                             ScreenConfig.theme.textTheme.button,
                                             width: 0.3),
                                         displayText(
-                                            "1-8 mins",
+                                            "$ETA",
                                             ScreenConfig.theme.textTheme.button
                                                 ?.copyWith(fontSize: 9),
                                             width: 0.3),
@@ -333,6 +362,9 @@ class _DriverSoloRideWaitingScreenState
                                         ScreenConfig.screenSizeHeight * 0.01),
                                     GestureDetector(
                                       onTap: () {
+                                        setState(() {
+                                          stopemit=true;
+                                        });
                                         socket.emit('pickupRide',{'rideId':rideId});
                                         Navigator.of(context)
                                             .pushNamed(DriverSoloRideInProgressAndFinishedScreen.routeName, arguments: {
@@ -392,7 +424,9 @@ class _DriverSoloRideWaitingScreenState
                                         children: [
                                           smallSquareButton(
                                               "assets/images/PhoneIcon.png",
-                                              () {}),
+                                              () {
+                                                _launchCaller(passangerphone!);
+                                              }),
                                           smallSquareButton(
                                               "assets/images/EmailIcon.png",
                                               () {}),

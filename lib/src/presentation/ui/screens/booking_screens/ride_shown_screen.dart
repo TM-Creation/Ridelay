@@ -16,7 +16,6 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/othe
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../onboarding_screens/register_screens/passangerregistration.dart';
 
@@ -45,7 +44,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
       rickshawfare = 0,
       bykefare = 0;
   double fare = 454;
-
+  String ETA='';
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -95,7 +94,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   String vahiclename='';
   String numberplate='';
   @override
-  void initState() {
+  void initState(){
     initSocket();
     print("initState call");
     super.initState();
@@ -142,7 +141,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
       });
     });
   }
-
   void sendridereq() {
     // Create payload
     final payload = {

@@ -16,6 +16,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import '../../config/theme.dart';
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../../templates/ride_widgets/ride_widget_buttons.dart';
@@ -238,7 +239,10 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       print('Error fetching route: $e');
     });
   }
-
+  void _launchCaller(String phoneNumber) async {
+    final Uri url = Uri(scheme: 'tel', path: phoneNumber);
+    await launchUrl(url);
+  }
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -341,7 +345,9 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           smallSquareButton(
-                                              "assets/images/PhoneIcon.png", () {}),
+                                              "assets/images/PhoneIcon.png", () {
+                                                _launchCaller('+923030252618');
+                                          }),
                                           smallSquareButton(
                                               "assets/images/EmailIcon.png", () {}),
                                         ],

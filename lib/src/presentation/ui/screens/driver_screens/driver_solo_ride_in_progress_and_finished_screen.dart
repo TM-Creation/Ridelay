@@ -187,7 +187,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
         setState(()async{
           distance = calculateDistance(driverlocation.latitude,driverlocation.longitude, drop![1], drop![0]);
          ETA=await getTravelTime(driverlocation.latitude, driverlocation.longitude, drop![1], drop![0]);
-         print("ETA is: $ETA");
+         print("Estimated Time is $ETA");
          print("Polyline updates every time");
           _polylines = {
             Polyline(
@@ -269,7 +269,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  displayText("ETA", ScreenConfig.theme.textTheme.button,
+                                  displayText("Estimated Time", ScreenConfig.theme.textTheme.button,
                                       width: 0.4),
                                   displayText("$ETA", ScreenConfig.theme.textTheme.button,
                                       width: 0.2),

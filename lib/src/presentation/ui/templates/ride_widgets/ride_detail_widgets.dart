@@ -203,7 +203,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    displayText("ETA", ScreenConfig.theme.textTheme.button,
+                    displayText("Estimated Time", ScreenConfig.theme.textTheme.button,
                         width: 0.4),
                     displayText("$ETA", ScreenConfig.theme.textTheme.button,
                         width: 0.2),
