@@ -148,14 +148,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
 //6654523062cc5411c069d411
   @override
-  void dispose() {
-    socket.off('rideAccepted');
-    socket.disconnect();
-    socket.onDisconnect((_) {
-      print("Server Disconnect with Socket");
-    });
-    super.dispose();
-  }
 
   String typeofvahicle = '';
   void acceptstatus() {
