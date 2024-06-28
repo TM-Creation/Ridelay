@@ -432,7 +432,7 @@ class _MapScreenState extends State<MapScreen> {
                                               ' ' +
                                               '${placemarks.reversed.last.street}' +
                                               ' ' +
-                                              '${placemarks.reversed.last.administrativeArea}' +
+                                              '${placemarks.reversed.last.locality}' +
                                               ' ' +
                                               '${placemarks.reversed.last.country}';
                                       print('$placemarks place mark');
