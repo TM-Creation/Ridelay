@@ -100,13 +100,28 @@ class _RideShownScreenState extends State<RideShownScreen> {
     print("initState call");
     super.initState();
   }
-  IO.Socket socket=socketconnection().socket;
+  late IO.Socket socket;
   final String? id = PassId().id;
   var reqrideid = '';
   var driverid='';
   final LatLng? pickuplocation = pickanddrop().pickloc,
       dropofflocation = pickanddrop().droploc;
   initSocket() {
+    socket = IO.io(baseulr().burl, <String, dynamic>{
+      'transports': ['websocket'],
+      'extraHeaders': {
+        'authorization': PassId().token,
+        'usertype': PassId().type
+      },
+      'autoConnect': false,
+    });
+    socket.connect();
+    socket.onConnect((_) {
+      print("Server Connect with Socket");
+      setState(() {
+        socketconnection().socket = socket;
+      });
+    });
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideAccepted', (data) {
       print("$data ride is accept ");

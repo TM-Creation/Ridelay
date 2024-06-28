@@ -20,7 +20,6 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../config/theme.dart';
 
@@ -252,7 +251,6 @@ class _LoginState extends State<Login> {
     final headers = {
       HttpHeaders.contentTypeHeader: 'application/json',
     };
-    late IO.Socket socket;
     try {
       final response = await http.post(url, headers: headers, body: body);
       setState(() {
@@ -279,84 +277,28 @@ class _LoginState extends State<Login> {
             typeofuser != null) {
           if (typeofuser == 'driver') {
             print("Driver Done");
-            socket = IO.io(baseulr().burl, <String, dynamic>{
-              'transports': ['websocket'],
-              'extraHeaders': {
-                'authorization': PassId().token,
-                'usertype': PassId().type
-              },
-              'autoConnect': false,
-            });
-            if(socket.connected){
-              Get.snackbar(
-                'Login',
-                'Successfully',
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: themeColor,
-                colorText: Colors.white,
-                margin: EdgeInsets.all(10),
-                duration: Duration(seconds: 3),
-              );
-              Navigator.of(context)
-                  .pushNamed(DriverRideSelectionScreen.routeName);
-            }
-            socket.connect();
-            socket.onConnect((_) {
-              print("Server Connect with Socket");
-              setState(() {
-                socketconnection().socket = socket;
-              });
-              Get.snackbar(
-                'Login',
-                'Successfully',
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: themeColor,
-                colorText: Colors.white,
-                margin: EdgeInsets.all(10),
-                duration: Duration(seconds: 3),
-              );
-              Navigator.of(context)
-                  .pushNamed(DriverRideSelectionScreen.routeName);
-            });
+            Get.snackbar(
+              'Login',
+              'Successfully',
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: themeColor,
+              colorText: Colors.white,
+              margin: EdgeInsets.all(10),
+              duration: Duration(seconds: 3),
+            );
+            Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
           } else if (typeofuser == 'passenger') {
             print("Passenger Done");
-            socket = IO.io(baseulr().burl, <String, dynamic>{
-              'transports': ['websocket'],
-              'extraHeaders': {
-                'authorization': PassId().token,
-                'usertype': PassId().type
-              },
-              'autoConnect': false,
-            });
-            if(socket.connected){
-              Get.snackbar(
-                'Login',
-                'Successfully',
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: themeColor,
-                colorText: Colors.white,
-                margin: EdgeInsets.all(10),
-                duration: Duration(seconds: 3),
-              );
-              Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
-            }
-            socket.connect();
-            socket.onConnect((_) {
-              print("Server Connect with Socket");
-              setState(() {
-                socketconnection().socket = socket;
-              });
-              Get.snackbar(
-                'Login',
-                'Successfully',
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: themeColor,
-                colorText: Colors.white,
-                margin: EdgeInsets.all(10),
-                duration: Duration(seconds: 3),
-              );
-              Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
-            });
+            Get.snackbar(
+              'Login',
+              'Successfully',
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: themeColor,
+              colorText: Colors.white,
+              margin: EdgeInsets.all(10),
+              duration: Duration(seconds: 3),
+            );
+            Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
           } else {
             print("Nothing Done");
           }

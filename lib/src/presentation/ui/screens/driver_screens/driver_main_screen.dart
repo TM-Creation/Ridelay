@@ -55,8 +55,23 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     initSocket();
     super.initState();
   }
-  IO.Socket socket=socketconnection().socket;
+  late IO.Socket socket;
   initSocket() {
+    socket = IO.io(baseulr().burl, <String, dynamic>{
+      'transports': ['websocket'],
+      'extraHeaders': {
+        'authorization': PassId().token,
+        'usertype': PassId().type
+      },
+      'autoConnect': false,
+    });
+    socket.connect();
+    socket.onConnect((_) {
+      print("Server Connect with Socket");
+      setState(() {
+        socketconnection().socket = socket;
+      });
+    });
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideRequest', (data) {
       print("ridedata arrive $data");
@@ -503,7 +518,6 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
             )));
   }
 }
-
 class socketconnection{
   static final socketconnection _instance = socketconnection._internal();
 
