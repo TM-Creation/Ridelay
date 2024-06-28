@@ -168,7 +168,7 @@ class _DriverSoloRideWaitingScreenState
   void _updatePolyline() {
     print("roooola: $_driverLocation and ${LatLng(pick![1], pick![0])}");
     _getRoutePolylinePoints(_driverLocation, LatLng(pick![1], pick![0]))
-        .then((polylinePoints) {
+        .then((polylinePoints){
       if(mounted){
         setState(() {
           distance = calculateDistance(_driverLocation.latitude,_driverLocation.longitude, pick![1], pick![0]);
