@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -48,17 +49,19 @@ class _DriverSoloRideWaitingScreenState
   String? passangerphone = '';
   int? fare = 0;
   String? distance = '';
-  String rideId='';
-  double raiting=0.0;
+  String rideId = '';
+  double raiting = 0.0;
   late GoogleMapController _controller;
   Set<Polyline> _polylines = {};
   late LatLng _driverLocation;
-  String ETA='';
+  String ETA = '';
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null) {
       setState(() {
         pick = args['pickuplocation']!;
@@ -67,12 +70,14 @@ class _DriverSoloRideWaitingScreenState
         passangername = args['name']!;
         //raiting=args['raiting'];
         passangerphone = args['passangerphone']!;
-        rideId=args['rideId'];
-        print("data of eve 2: $pick $drop $passangername $passangerphone $fare $distance $rideId");
+        rideId = args['rideId'];
+        print(
+            "data of eve 2: $pick $drop $passangername $passangerphone $fare $distance $rideId");
       });
     }
     _initLocationService();
   }
+
   String calculateDistance(double pickupLat, double pickupLon,
       double dropoffLat, double dropoffLon) {
     const double earthRadiusKm = 6371; // Earth's radius in kilometers
@@ -97,22 +102,28 @@ class _DriverSoloRideWaitingScreenState
     distanceKm = distanceKm * 1.58500;
     return '${distanceKm.toStringAsFixed(2)} km';
   }
+
   @override
   void initState() {
-    driverlocation=userLiveLocation().userlivelocation;
+    driverlocation = userLiveLocation().userlivelocation;
     super.initState();
   }
-  IO.Socket socket=socketconnection().socket;
+
+  IO.Socket socket = socketconnection().socket;
+
   Future<void> _initLocationService() async {
     setState(() {
       _driverLocation = driverlocation!;
     });
-    socket.emit('locationUpdate',{'location':_driverLocation});
+    socket.emit('locationUpdate', {'location': _driverLocation});
     _updatePolyline();
     _trackDriverLocation();
   }
-  Future<List<LatLng>> _getRoutePolylinePoints(LatLng origin, LatLng destination) async {
-    String apiUrl = 'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
+
+  Future<List<LatLng>> _getRoutePolylinePoints(
+      LatLng origin, LatLng destination) async {
+    String apiUrl =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -124,8 +135,7 @@ class _DriverSoloRideWaitingScreenState
       List steps = decoded['routes'][0]['legs'][0]['steps'];
       steps.forEach((step) {
         String points = step['polyline']['points'];
-        List<LatLng> decodedPolylinePoints =
-        decodeEncodedPolyline(points);
+        List<LatLng> decodedPolylinePoints = decodeEncodedPolyline(points);
         polylinePoints.addAll(decodedPolylinePoints);
       });
 
@@ -166,7 +176,9 @@ class _DriverSoloRideWaitingScreenState
     }
     return polylinePoints;
   }
-  Future<String> getTravelTime(double startLat, double startLng, double endLat, double endLng) async {
+
+  Future<String> getTravelTime(
+      double startLat, double startLng, double endLat, double endLng) async {
     final apiKey = 'AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
     final url = 'https://maps.googleapis.com/maps/api/directions/json'
         '?origin=$startLat,$startLng'
@@ -183,14 +195,17 @@ class _DriverSoloRideWaitingScreenState
       throw Exception('Failed to get travel time: ${response.statusCode}');
     }
   }
+
   void _updatePolyline() {
     print("roooola: $_driverLocation and ${LatLng(pick![1], pick![0])}");
     _getRoutePolylinePoints(_driverLocation, LatLng(pick![1], pick![0]))
-        .then((polylinePoints){
-      if(mounted){
-        setState(() async{
-          distance = calculateDistance(_driverLocation.latitude,_driverLocation.longitude, pick![1], pick![0]);
-          ETA=await getTravelTime(driverlocation!.latitude, driverlocation!.longitude, pick![1], pick![0]);
+        .then((polylinePoints) {
+      if (mounted) {
+        setState(() async {
+          distance = calculateDistance(_driverLocation.latitude,
+              _driverLocation.longitude, pick![1], pick![0]);
+          ETA = await getTravelTime(driverlocation!.latitude,
+              driverlocation!.longitude, pick![1], pick![0]);
           _polylines = {
             Polyline(
               polylineId: PolylineId('route'),
@@ -211,27 +226,37 @@ class _DriverSoloRideWaitingScreenState
       print('Error fetching route: $e');
     });
   }
-  void _trackDriverLocation(){
-    Geolocator.getPositionStream().listen((Position position) {
-      if(mounted){
-        setState(() {
-          _driverLocation = LatLng(position.latitude, position.longitude);
-          if(stopemit==false){
-            socket.emit('updatedLocation',{'location':_driverLocation});
-          }
-          else{
-            print("Emit Stoped");
-          }
-          _updatePolyline();
-        });
-      }
-    });
+  StreamSubscription<Position>? _positionStreamSubscription;
+  void _trackDriverLocation() {
+    if (stopemit==false) {
+      _positionStreamSubscription = Geolocator.getPositionStream().listen((Position position) {
+        if (mounted) {
+          setState(() {
+            print("Location Emited Continue");
+            _driverLocation = LatLng(position.latitude, position.longitude);
+            socket.emit('updatedLocation', {'location': _driverLocation});
+            _updatePolyline();
+          });
+        }
+      });
+    }
+    else{
+      print("Emit Stoped");
+    }
+  }
+ @override
+  void dispose() {
+    // TODO: implement dispose
+   _positionStreamSubscription?.cancel();
+    super.dispose();
   }
   void _launchCaller(String phoneNumber) async {
     final Uri url = Uri(scheme: 'tel', path: phoneNumber);
     await launchUrl(url);
   }
-  bool stopemit=false;
+
+  bool stopemit = false;
+
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -251,7 +276,7 @@ class _DriverSoloRideWaitingScreenState
                   children: [
                     Container(
                       // height: ScreenConfig.screenSizeHeight * 0.26,
-                      width: ScreenConfig.screenSizeWidth*0.9,
+                      width: ScreenConfig.screenSizeWidth * 0.9,
                       decoration: blueContainerTemplate(),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -323,29 +348,43 @@ class _DriverSoloRideWaitingScreenState
                                       child: Row(
                                         children: [
                                           Container(
-                                            width: ScreenConfig.screenSizeWidth * 0.085,
-                                            height: ScreenConfig.screenSizeWidth * 0.085,
+                                            width:
+                                                ScreenConfig.screenSizeWidth *
+                                                    0.085,
+                                            height:
+                                                ScreenConfig.screenSizeWidth *
+                                                    0.085,
                                             decoration: BoxDecoration(
-                                              image: DecorationImage(image: AssetImage('assets/images/UserProfileImage.png'), fit: BoxFit.cover),
-                                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                              image: DecorationImage(
+                                                  image: AssetImage(
+                                                      'assets/images/UserProfileImage.png'),
+                                                  fit: BoxFit.cover),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5)),
                                             ),
                                           ),
-                                          spaceWidth(ScreenConfig.screenSizeWidth * 0.02),
+                                          spaceWidth(
+                                              ScreenConfig.screenSizeWidth *
+                                                  0.02),
                                           Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Row(
                                                 children: [
                                                   displayText(
                                                     passangername!,
-                                                    ScreenConfig.theme.textTheme.bodyText2,
+                                                    ScreenConfig.theme.textTheme
+                                                        .bodyText2,
                                                     width: 0.2,
                                                   ),
                                                 ],
                                               ),
-                                               displayText(
+                                              displayText(
                                                 "Fare:  $fare",
-                                                ScreenConfig.theme.textTheme.bodyText2,
+                                                ScreenConfig
+                                                    .theme.textTheme.bodyText2,
                                                 width: 0.22,
                                               ),
                                             ],
@@ -355,7 +394,14 @@ class _DriverSoloRideWaitingScreenState
                                     ),
                                     spaceHeight(
                                         ScreenConfig.screenSizeHeight * 0.01),
-                                    Text('If you pick the Passenger\nclick on Below Button',style: TextStyle(color: Colors.white,fontSize: ScreenConfig.screenSizeWidth*0.025),),
+                                    Text(
+                                      'If you pick the Passenger\nclick on Below Button',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              ScreenConfig.screenSizeWidth *
+                                                  0.025),
+                                    ),
                                     // userDetailsContainer("assets/images/UserCarImage.png",
                                     //     "Honda Civic", "LXV 5675", false, true, "2019")
                                     spaceHeight(
@@ -363,27 +409,31 @@ class _DriverSoloRideWaitingScreenState
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          stopemit=true;
+                                          stopemit = true;
                                         });
-                                        socket.emit('pickupRide',{'rideId':rideId});
-                                        Navigator.of(context)
-                                            .pushNamed(DriverSoloRideInProgressAndFinishedScreen.routeName, arguments: {
-                                        'pickuplocation': pick,
-                                        'dropofflocation': drop,
-                                        'passangername': passangername,
-                                        'passangerphone': passangerphone,
-                                        'fare': fare,
-                                        'rideId':rideId,
-                                        });
+                                        _positionStreamSubscription?.cancel();
+                                        socket.emit(
+                                            'pickupRide', {'rideId': rideId});
+                                        Navigator.of(context).pushNamed(
+                                            DriverSoloRideInProgressAndFinishedScreen
+                                                .routeName,
+                                            arguments: {
+                                              'pickuplocation': pick,
+                                              'dropofflocation': drop,
+                                              'passangername': passangername,
+                                              'passangerphone': passangerphone,
+                                              'fare': fare,
+                                              'rideId': rideId,
+                                            });
                                       },
                                       child: Container(
-                                        width: ScreenConfig.screenSizeWidth *
-                                            0.25,
+                                        width:
+                                            ScreenConfig.screenSizeWidth * 0.25,
                                         decoration: BoxDecoration(
                                             color: thirdColor,
                                             borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(5)),
+                                                const BorderRadius.all(
+                                                    Radius.circular(5)),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey
@@ -394,18 +444,16 @@ class _DriverSoloRideWaitingScreenState
                                               )
                                             ]),
                                         child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(5.0),
+                                            padding: const EdgeInsets.all(5.0),
                                             child: displayNoSizedText(
                                                 'Passanger Picked',
                                                 ScreenConfig
                                                     .theme.textTheme.caption
                                                     ?.copyWith(
-                                                    color: ScreenConfig
-                                                        .theme
-                                                        .primaryColor,
-                                                    fontWeight:
-                                                    FontWeight.bold),
+                                                        color: ScreenConfig
+                                                            .theme.primaryColor,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                 textAlign: TextAlign.center)),
                                       ),
                                     )
@@ -425,8 +473,8 @@ class _DriverSoloRideWaitingScreenState
                                           smallSquareButton(
                                               "assets/images/PhoneIcon.png",
                                               () {
-                                                _launchCaller(passangerphone!);
-                                              }),
+                                            _launchCaller(passangerphone!);
+                                          }),
                                           smallSquareButton(
                                               "assets/images/EmailIcon.png",
                                               () {}),
@@ -441,7 +489,8 @@ class _DriverSoloRideWaitingScreenState
                                           textAlign: TextAlign.center,
                                           width: 0.22),
                                       spaceHeight(
-                                          ScreenConfig.screenSizeHeight * 0.023),
+                                          ScreenConfig.screenSizeHeight *
+                                              0.023),
                                       GestureDetector(
                                         onTap: () {},
                                         child: Container(
@@ -514,13 +563,15 @@ class _DriverSoloRideWaitingScreenState
                 markerId: MarkerId('driver'),
                 position: _driverLocation,
                 infoWindow: InfoWindow(title: 'Yoyr Live Location'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
               ),
               Marker(
                 markerId: MarkerId('passngerpick'),
                 position: LatLng(pick![1], pick![0]),
                 infoWindow: InfoWindow(title: 'Passanger Pickup'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueRed),
               ),
             },
             polylines: _polylines,
