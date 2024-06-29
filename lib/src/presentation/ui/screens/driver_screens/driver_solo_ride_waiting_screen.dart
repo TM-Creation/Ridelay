@@ -414,7 +414,7 @@ class _DriverSoloRideWaitingScreenState
                                         _positionStreamSubscription?.cancel();
                                         socket.emit(
                                             'pickupRide', {'rideId': rideId});
-                                        Navigator.of(context).pushNamed(
+                                        Navigator.of(context).pushReplacementNamed(
                                             DriverSoloRideInProgressAndFinishedScreen
                                                 .routeName,
                                             arguments: {

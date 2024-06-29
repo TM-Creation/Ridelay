@@ -99,7 +99,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       print(">>>>>$data");
       print("data of eve: $pick $drop $passangerName $phonenumber $fare $distance");
       Navigator.of(context)
-          .pushNamed(DriverSoloRideWaitingScreen.routeName, arguments: {
+          .pushReplacementNamed(DriverSoloRideWaitingScreen.routeName, arguments: {
         'pickuplocation': pick,
         'dropofflocation': drop,
         'passangername': passangerName,

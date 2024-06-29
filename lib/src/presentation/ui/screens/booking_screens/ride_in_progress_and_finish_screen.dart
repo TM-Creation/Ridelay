@@ -81,7 +81,7 @@ class _RideInProgressAndFinishedScreenState
     });
     socket.on('completeRide', (data) {
       print('on of is run correctly');
-      Navigator.of(context).pushNamed(RideRatingScreen.routeName, arguments: {
+      Navigator.of(context).pushReplacementNamed(RideRatingScreen.routeName, arguments: {
         "pickupLocation": pickupEnterController.text,
         "dropoffLocation": dropoffEnterController.text,
         "fare": fare,

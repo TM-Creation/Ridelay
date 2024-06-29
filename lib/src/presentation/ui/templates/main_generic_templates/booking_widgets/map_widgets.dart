@@ -428,6 +428,8 @@ class _MapScreenState extends State<MapScreen> {
                                     print("usr live locatio is this");
                                     setState(() {
                                       widget.fieldOneController.text =
+                                          '${placemarks.reversed.last.name}' +
+                                              ' ' +
                                           '${placemarks.reversed.last.street}' +
                                               ' ' +
                                               '${placemarks.reversed.last.subLocality}' +
@@ -435,7 +437,7 @@ class _MapScreenState extends State<MapScreen> {
                                               '${placemarks.reversed.last.locality}' +
                                               ' ' +
                                               '${placemarks.reversed.last.country}';
-                                      print('$placemarks place mark');
+                                      print('place mark $placemarks');
                                       flag1 = false;
                                     });
                                   },

@@ -168,7 +168,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
     'driverId':driverid};
     socket.emit('confirmRide', payload);
     print('Driver Accepted');
-    Navigator.pushNamed(context, RideWaitingScreen.routeName,arguments: {
+    Navigator.pushReplacementNamed(context, RideWaitingScreen.routeName,arguments: {
       "pickupLocation":pickupEnterController.text,
       "dropoffLocation": dropoffEnterController.text,
       "driverName":drivername,

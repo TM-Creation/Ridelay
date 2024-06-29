@@ -73,7 +73,7 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
       body: GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamedAndRemoveUntil(
-              RideSelectionScreen.routeName, ModalRoute.withName("/"));
+              RideSelectionScreen.routeName,(Route<dynamic> route) => false,);
         },
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,

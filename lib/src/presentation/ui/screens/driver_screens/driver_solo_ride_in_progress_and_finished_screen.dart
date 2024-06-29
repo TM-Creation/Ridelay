@@ -325,7 +325,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                   onTap: () {
                                     socket.emit('completeRide',{'rideId':rideId});
                                     Navigator.of(context)
-                                        .pushNamed(DriverSoloRideRatingScreen.routeName, arguments: {
+                                        .pushReplacementNamed(DriverSoloRideRatingScreen.routeName, arguments: {
                                       'fare': fare,
                                       'rideId':rideId,
                                     });

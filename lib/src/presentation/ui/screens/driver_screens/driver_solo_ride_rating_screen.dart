@@ -70,8 +70,7 @@ class _DriverSoloRideRatingScreenState
       body: GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamedAndRemoveUntil(
-              DriverRideSelectionScreen.routeName,
-              ModalRoute.withName(DriverRideSelectionScreen.routeName));
+              DriverRideSelectionScreen.routeName,(Route<dynamic> route) => false,);
         },
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,

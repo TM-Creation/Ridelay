@@ -96,7 +96,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
     socket.on('pickupRide', (data) {
       print('on is run correctly');
       Navigator.of(context)
-          .pushNamed(RideInProgressAndFinishedScreen.routeName, arguments: {
+          .pushReplacementNamed(RideInProgressAndFinishedScreen.routeName, arguments: {
         "pickupLocation":pickupEnterController.text,
         "dropoffLocation": dropoffEnterController.text,
         "driverName":drivername,
