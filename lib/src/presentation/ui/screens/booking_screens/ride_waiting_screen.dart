@@ -44,6 +44,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       vahiclename = '';
   double fare = 0;
   double driverraiting = 0.0;
+  String rideid='',driverid='';
   String ETA='';
 
   void didChangeDependencies() {
@@ -60,6 +61,8 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
         vahiclename = args['vahicleName']!;
         numberplate = args['vahicleNumberplate']!;
         fare = args['fare']!;
+        rideid = args['rideid']!;
+        driverid = args['driverID']!;
       });
     }
   }
@@ -100,7 +103,9 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
         "driverRaiting":driverraiting,
         "vahicleName":vahiclename,
         "vahicleNumberplate":numberplate,
-        "fare":fare
+        "fare":fare,
+        "rideid":rideid,
+        "driverID":driverid
       });
     });
   }

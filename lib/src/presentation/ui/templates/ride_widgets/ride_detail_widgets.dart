@@ -13,9 +13,11 @@ import 'dart:convert';
 
 import '../../../../models/base url.dart';
 import '../../../../models/passenger_rating_model/passenger_to_driver_rating.dart';
-String feedBack="";
+
+String feedBack = "";
 int mycount = 0;
 TextEditingController feedBackController = TextEditingController();
+
 class RatiangStaric extends StatefulWidget {
   const RatiangStaric({key});
 
@@ -41,6 +43,7 @@ class _RatiangStaricState extends State<RatiangStaric> {
     );
   }
 }
+
 Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
   return Column(
     children: [
@@ -116,11 +119,19 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      userDetailsContainer("assets/images/UserProfileImage.png",
-                          "Altaf Ahmed", "4.9", true,),
+                      userDetailsContainer(
+                        "assets/images/UserProfileImage.png",
+                        "Altaf Ahmed",
+                        "4.9",
+                        true,
+                      ),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                      userDetailsContainer("assets/images/UserCarImage.png",
-                          "Honda Civic", "LXV 5675", false,)
+                      userDetailsContainer(
+                        "assets/images/UserCarImage.png",
+                        "Honda Civic",
+                        "LXV 5675",
+                        false,
+                      )
                     ],
                   ),
                   SizedBox(
@@ -148,7 +159,7 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
                             Navigator.of(context)
                                 .pushNamed(SoloRideWaitingScreen.routeName);
                           }
-                          if (buttonType == "Cancel Ride"){
+                          if (buttonType == "Cancel Ride") {
                             Navigator.of(context).pop();
                           }
                         }),
@@ -167,7 +178,14 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
 }
 
 Widget rideDetailsInProgressAndFinishedWidget(
-    String name, BuildContext context,String distance,String ETA,String drivername,double driverraiting,String vahiclename,String numberplate) {
+    String name,
+    BuildContext context,
+    String distance,
+    String ETA,
+    String drivername,
+    double driverraiting,
+    String vahiclename,
+    String numberplate) {
   return Column(
     children: [
       Container(
@@ -195,7 +213,8 @@ Widget rideDetailsInProgressAndFinishedWidget(
                     displayText("Distance Remaining",
                         ScreenConfig.theme.textTheme.button,
                         width: 0.4),
-                    displayText("$distance", ScreenConfig.theme.textTheme.button,
+                    displayText(
+                        "$distance", ScreenConfig.theme.textTheme.button,
                         width: 0.2),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
@@ -203,7 +222,8 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    displayText("Estimated Time", ScreenConfig.theme.textTheme.button,
+                    displayText(
+                        "Estimated Time", ScreenConfig.theme.textTheme.button,
                         width: 0.4),
                     displayText("$ETA", ScreenConfig.theme.textTheme.button,
                         width: 0.2),
@@ -212,10 +232,18 @@ Widget rideDetailsInProgressAndFinishedWidget(
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  userDetailsContainer("assets/images/UserProfileImage.png",
-                      "$drivername", "$driverraiting", true,),
-                  userDetailsContainer("assets/images/UserCarImage.png",
-                      "$vahiclename", "$numberplate", false,)
+                  userDetailsContainer(
+                    "assets/images/UserProfileImage.png",
+                    "$drivername",
+                    "$driverraiting",
+                    true,
+                  ),
+                  userDetailsContainer(
+                    "assets/images/UserCarImage.png",
+                    "$vahiclename",
+                    "$numberplate",
+                    false,
+                  )
                 ],
               ),
             ],
@@ -226,7 +254,8 @@ Widget rideDetailsInProgressAndFinishedWidget(
     ],
   );
 }
-Widget rideRatingWidget(BuildContext context,double fare) {
+
+Widget rideRatingWidget(BuildContext context, double fare) {
   return Column(
     children: [
       Container(
@@ -253,7 +282,8 @@ Widget rideRatingWidget(BuildContext context,double fare) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    displayText("Total Payed Amount",
+                    displayText(
+                        "Total Payed Amount",
                         ScreenConfig.theme.textTheme.headline1?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.normal,
@@ -297,9 +327,9 @@ Widget rideRatingWidget(BuildContext context,double fare) {
                           )
                         ]),
                     child: TextFormField(
-                      onChanged: (value) {
-                        feedBack = value;
-                      },
+                        onChanged: (value) {
+                          feedBack = value;
+                        },
                         textInputAction: TextInputAction.done,
                         textAlign: TextAlign.start,
                         keyboardType: TextInputType.text,
@@ -371,18 +401,17 @@ Widget submitReviewPanelWidget(BuildContext context) {
                   )),
               const SizedBox(width: 5),
               GestureDetector(
-                onTap: () async{
+                onTap: () async {
                   print("feedBackTesting ${feedBack.toString()}");
                   print("Staric print $mycount");
-              FeedbackModel feedbackModel = FeedbackModel(
-                      ride: "6654b7d112ced1729ae3e844",
-                      passenger: "664b0d180240574daabc8890",
-                      driver: "664ce51c2c319c631c9c66f0",
-                      rating: mycount,
-                      feedback: feedBack,
-                      );
-                      await submitReview(feedbackModel);
-
+                  FeedbackModel feedbackModel = FeedbackModel(
+                    ride: "6654b7d112ced1729ae3e844",
+                    passenger: "664b0d180240574daabc8890",
+                    driver: "664ce51c2c319c631c9c66f0",
+                    rating: mycount,
+                    feedback: feedBack,
+                  );
+                  await submitReview(feedbackModel);
                 },
                 child: Container(
                     height: 33,

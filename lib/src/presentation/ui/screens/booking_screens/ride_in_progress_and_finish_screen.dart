@@ -45,6 +45,7 @@ class _RideInProgressAndFinishedScreenState
       numberplate = '',
       drivername = '',
       vahiclename = '';
+  String rideid='',driverid='';
   double fare=0.0,driverraiting=0.0;
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -60,6 +61,8 @@ class _RideInProgressAndFinishedScreenState
         vahiclename = args['vahicleName']!;
         numberplate = args['vahicleNumberplate']!;
         fare = args['fare']!;
+        rideid = args['rideid']!;
+        driverid = args['driverID']!;
       });
     }
   }

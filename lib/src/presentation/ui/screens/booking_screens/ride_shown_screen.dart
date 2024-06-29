@@ -175,7 +175,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
       "driverRaiting":driverraiting,
       "vahicleName":vahiclename,
       "vahicleNumberplate":numberplate,
-      "fare":fare
+      "fare":fare,
+      "rideid":reqrideid,
+      "driverID":driverid
     });
   }
 
