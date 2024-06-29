@@ -43,7 +43,8 @@ class _RideInProgressAndFinishedScreenState
   String distance = '', ETA = '';
   String numberplate = '', drivername = '', vahiclename = '';
   String rideid = '', driverid = '';
-  double fare = 0.0, driverraiting = 0.0;
+  double  driverraiting = 0.0;
+  int fare=0;
 
   void didChangeDependencies() {
     super.didChangeDependencies();

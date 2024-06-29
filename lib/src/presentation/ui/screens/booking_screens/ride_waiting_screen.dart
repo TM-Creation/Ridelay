@@ -42,7 +42,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       numberplate = '',
       drivername = '',
       vahiclename = '';
-  double fare = 0;
+  int fare = 0;
   double driverraiting = 0.0;
   String rideid='',driverid='';
   String ETA='';

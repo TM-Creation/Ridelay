@@ -22,7 +22,7 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
   String image = "assets/images/RideFinishedScreenMap.png";
-  double fare=0.0;
+  int fare=0;
   String rideid = '', driverid = '';
   String drivername='';
   void didChangeDependencies() {

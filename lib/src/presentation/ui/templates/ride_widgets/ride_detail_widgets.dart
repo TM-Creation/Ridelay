@@ -259,7 +259,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
   );
 }
 
-Widget rideRatingWidget(BuildContext context, double fare,String drivername) {
+Widget rideRatingWidget(BuildContext context, int fare,String drivername) {
   return Column(
     children: [
       Container(
