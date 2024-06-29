@@ -37,21 +37,19 @@ class _RideInProgressAndFinishedScreenState
   List namesList = ["Mini", "Go", "Comfort", "Mini"];
   Set<Polyline> _polylines = {};
   late GoogleMapController _controller;
-  LatLng pick=LatLng(0.0, 0.0);
-  LatLng drop=LatLng(0.0, 0.0);
+  LatLng pick = LatLng(0.0, 0.0);
+  LatLng drop = LatLng(0.0, 0.0);
   late IO.Socket socket2;
-  String distance='',ETA='';
-  String
-      numberplate = '',
-      drivername = '',
-      vahiclename = '';
-  String rideid='',driverid='';
-  double fare=0.0,driverraiting=0.0;
+  String distance = '', ETA = '';
+  String numberplate = '', drivername = '', vahiclename = '';
+  String rideid = '', driverid = '';
+  double fare = 0.0, driverraiting = 0.0;
+
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
     final args =
-    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null) {
       setState(() {
         pickupEnterController.text = args['pickupLocation']!;
@@ -66,33 +64,39 @@ class _RideInProgressAndFinishedScreenState
       });
     }
   }
+
   @override
   void initState() {
-    pick=pickanddrop().pickloc!;
-    drop=pickanddrop().droploc!;
+    pick = pickanddrop().pickloc!;
+    drop = pickanddrop().droploc!;
     _initLocationService();
     initSocket();
     super.initState();
   }
-  initSocket(){
-    IO.Socket socket=socketconnection().socket;
+
+  initSocket() {
+    IO.Socket socket = socketconnection().socket;
     setState(() {
-      socket2=socket;
+      socket2 = socket;
     });
-    socket.on('completeRide', (data){
+    socket.on('completeRide', (data) {
       print('on of is run correctly');
-      Navigator.of(context)
-          .pushNamed(RideRatingScreen.routeName,arguments: {
-      "pickupLocation":pickupEnterController.text,
-      "dropoffLocation": dropoffEnterController.text,
-      "fare":fare
+      Navigator.of(context).pushNamed(RideRatingScreen.routeName, arguments: {
+        "pickupLocation": pickupEnterController.text,
+        "dropoffLocation": dropoffEnterController.text,
+        "fare": fare,
+        "rideid": rideid,
+        "driverID": driverid,
+        "drivername":drivername
       });
     });
   }
+
   Future<void> _initLocationService() async {
     _updatePolyline();
     _trackDriverLocation();
   }
+
   String calculateDistance(double pickupLat, double pickupLon,
       double dropoffLat, double dropoffLon) {
     const double earthRadiusKm = 6371; // Earth's radius in kilometers
@@ -117,7 +121,9 @@ class _RideInProgressAndFinishedScreenState
     distanceKm = distanceKm * 1.58500;
     return '${distanceKm.toStringAsFixed(2)} km';
   }
-  Future<String> getTravelTime(double startLat, double startLng, double endLat, double endLng) async {
+
+  Future<String> getTravelTime(
+      double startLat, double startLng, double endLat, double endLng) async {
     final apiKey = 'AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
     final url = 'https://maps.googleapis.com/maps/api/directions/json'
         '?origin=$startLat,$startLng'
@@ -134,8 +140,11 @@ class _RideInProgressAndFinishedScreenState
       throw Exception('Failed to get travel time: ${response.statusCode}');
     }
   }
-  Future<List<LatLng>> _getRoutePolylinePoints(LatLng origin, LatLng destination) async {
-    String apiUrl = 'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
+
+  Future<List<LatLng>> _getRoutePolylinePoints(
+      LatLng origin, LatLng destination) async {
+    String apiUrl =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -147,8 +156,7 @@ class _RideInProgressAndFinishedScreenState
       List steps = decoded['routes'][0]['legs'][0]['steps'];
       steps.forEach((step) {
         String points = step['polyline']['points'];
-        List<LatLng> decodedPolylinePoints =
-        decodeEncodedPolyline(points);
+        List<LatLng> decodedPolylinePoints = decodeEncodedPolyline(points);
         polylinePoints.addAll(decodedPolylinePoints);
       });
 
@@ -192,12 +200,13 @@ class _RideInProgressAndFinishedScreenState
 
   void _updatePolyline() {
     print("check polyline update $pick $drop");
-    _getRoutePolylinePoints(pick,drop)
-        .then((polylinePoints) {
-      if(mounted){
-        setState(() async{
-          distance = calculateDistance(pick.latitude,pick.longitude,drop.latitude,drop.longitude);
-          ETA=await getTravelTime(pick.latitude,pick.longitude,drop.latitude,drop.longitude);
+    _getRoutePolylinePoints(pick, drop).then((polylinePoints) {
+      if (mounted) {
+        setState(() async {
+          distance = calculateDistance(
+              pick.latitude, pick.longitude, drop.latitude, drop.longitude);
+          ETA = await getTravelTime(
+              pick.latitude, pick.longitude, drop.latitude, drop.longitude);
           _polylines = {
             Polyline(
               polylineId: PolylineId('route'),
@@ -218,9 +227,10 @@ class _RideInProgressAndFinishedScreenState
       print('Error fetching route: $e');
     });
   }
-  void _trackDriverLocation(){
+
+  void _trackDriverLocation() {
     Geolocator.getPositionStream().listen((Position position) {
-      if(mounted){
+      if (mounted) {
         setState(() {
           pick = LatLng(position.latitude, position.longitude);
           _updatePolyline();
@@ -228,12 +238,14 @@ class _RideInProgressAndFinishedScreenState
       }
     });
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
     socket2.off('completeRide');
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -250,7 +262,14 @@ class _RideInProgressAndFinishedScreenState
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 rideDetailsInProgressAndFinishedWidget(
-                        "Your Ride Is In Progress", context,distance,ETA,drivername,driverraiting,vahiclename,numberplate),
+                    "Your Ride Is In Progress",
+                    context,
+                    distance,
+                    ETA,
+                    drivername,
+                    driverraiting,
+                    vahiclename,
+                    numberplate),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               ],
             ),
@@ -276,13 +295,15 @@ class _RideInProgressAndFinishedScreenState
                 markerId: MarkerId('passengerlivelocation'),
                 position: pick,
                 infoWindow: InfoWindow(title: 'Your Live Location'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueBlue),
               ),
               Marker(
                 markerId: MarkerId('passangerdropoff'),
                 position: drop,
                 infoWindow: InfoWindow(title: 'Your Drop Location'),
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueRed),
               ),
             },
             polylines: _polylines,

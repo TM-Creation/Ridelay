@@ -38,7 +38,7 @@ class _SoloRideRatingScreenState extends State<SoloRideRatingScreen> {
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 /*rideRatingWidget(context),*/
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                submitReviewPanelWidget(context),
+                /*submitReviewPanelWidget(context),*/
               ],
             ),
           ),

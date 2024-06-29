@@ -1,8 +1,12 @@
 import 'package:five_pointed_star/five_pointed_star.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/solo_ride_waiting_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
@@ -13,7 +17,7 @@ import 'dart:convert';
 
 import '../../../../models/base url.dart';
 import '../../../../models/passenger_rating_model/passenger_to_driver_rating.dart';
-
+import '../../config/theme.dart';
 String feedBack = "";
 int mycount = 0;
 TextEditingController feedBackController = TextEditingController();
@@ -255,7 +259,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
   );
 }
 
-Widget rideRatingWidget(BuildContext context, double fare) {
+Widget rideRatingWidget(BuildContext context, double fare,String drivername) {
   return Column(
     children: [
       Container(
@@ -308,7 +312,7 @@ Widget rideRatingWidget(BuildContext context, double fare) {
                   Row(
                     children: [
                       userDetailsMiniContainer(
-                          "assets/images/UserProfileImage.png", "Altaf"),
+                          "assets/images/UserProfileImage.png", "$drivername"),
                       RatiangStaric()
                     ],
                   ),
@@ -353,23 +357,33 @@ Widget rideRatingWidget(BuildContext context, double fare) {
   );
 }
 
-Future<void> submitReview(FeedbackModel feedbackModel) async {
-  print("Function Run");
-  baseulr burl = baseulr();
-  final String url = '${burl.burl}/api/v1/feedback';
-  final response = await http.post(
-    Uri.parse(url),
-    headers: {'Content-Type': 'application/json'},
-    body: json.encode(feedbackModel.toJson()),
-  );
-  if (response.statusCode == 200) {
-    print('Review submitted successfully');
-  } else {
-    print('Failed to submit review: ${response.statusCode}');
-  }
-}
 
-Widget submitReviewPanelWidget(BuildContext context) {
+Widget submitReviewPanelWidget(BuildContext context,String rideid,String driverid) {
+  Future<void> submitReview(FeedbackModel feedbackModel) async {
+    print("Function Run");
+    baseulr burl = baseulr();
+    final String url = '${burl.burl}/api/v1/feedback';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(feedbackModel.toJson()),
+    );
+    if (response.statusCode == 201) {
+      print('Review submitted successfully');
+      Get.snackbar(
+        'Thanks for Ride with Ridelay',
+        'Your Review Submitted Successfully',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
+      );
+      Navigator.of(context).pushReplacementNamed(RideSelectionScreen.routeName);
+    } else {
+      print('Failed to submit review: ${response.statusCode}');
+    }
+  }
   return Container(
     // height: ScreenConfig.screenSizeHeight * 0.26,
     width: ScreenConfig.screenSizeWidth * 0.85,
@@ -391,23 +405,28 @@ Widget submitReviewPanelWidget(BuildContext context) {
               width: 0.3),
           Row(
             children: [
-              Container(
-                  height: 33,
-                  width: ScreenConfig.screenSizeWidth * 0.15,
-                  decoration: redContainerTemplate(radius: 5),
-                  child: Center(
-                    child: displayNoSizedText(
-                        "No", ScreenConfig.theme.textTheme.button),
-                  )),
+              GestureDetector(
+                onTap: (){
+                  Navigator.of(context).pushReplacementNamed(RideSelectionScreen.routeName);
+                },
+                child: Container(
+                    height: 33,
+                    width: ScreenConfig.screenSizeWidth * 0.15,
+                    decoration: redContainerTemplate(radius: 5),
+                    child: Center(
+                      child: displayNoSizedText(
+                          "No", ScreenConfig.theme.textTheme.button),
+                    )),
+              ),
               const SizedBox(width: 5),
               GestureDetector(
                 onTap: () async {
                   print("feedBackTesting ${feedBack.toString()}");
                   print("Staric print $mycount");
                   FeedbackModel feedbackModel = FeedbackModel(
-                    ride: "6654b7d112ced1729ae3e844",
-                    passenger: "664b0d180240574daabc8890",
-                    driver: "664ce51c2c319c631c9c66f0",
+                    ride: rideid,
+                    passenger: PassId().id!,
+                    driver: driverid,
                     rating: mycount,
                     feedback: feedBack,
                   );

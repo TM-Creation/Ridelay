@@ -253,7 +253,7 @@ Widget driverRideRatingWidget(BuildContext context,int fare,String rideID) {
                       width: 0.3),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DriverRideSelectionScreen()));
+                      Navigator.of(context).pushReplacementNamed(DriverRideSelectionScreen.routeName);
                     },
                     child: Container(
                       width: ScreenConfig.screenSizeWidth *

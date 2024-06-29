@@ -23,6 +23,8 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
   TextEditingController dropoffEnterController = TextEditingController();
   String image = "assets/images/RideFinishedScreenMap.png";
   double fare=0.0;
+  String rideid = '', driverid = '';
+  String drivername='';
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve pickup and drop-off locations from arguments after dependencies change
@@ -33,6 +35,10 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
         pickupEnterController.text = args['pickupLocation']!;
         dropoffEnterController.text = args['dropoffLocation']!;
         fare = args['fare']!;
+        rideid = args['rideid']!;
+        driverid = args['driverID']!;
+        drivername=args["drivername"];
+        print("Data for Raiting: $fare $driverid $drivername $rideid");
       });
     }
   }
@@ -51,8 +57,8 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
               children: [
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                rideRatingWidget(context,fare),
-                submitReviewPanelWidget(context),
+                rideRatingWidget(context,fare,drivername),
+                submitReviewPanelWidget(context,rideid,driverid,),
               ],
             ),
           ),
