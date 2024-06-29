@@ -38,12 +38,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
   String distance = '', duration = '';
   double? totaldistance;
   int counter=0;
-  double minifare = 0,
+  int minifare = 0,
       gofare = 0,
       comfortfare = 0,
       rickshawfare = 0,
       bykefare = 0;
-  double fare = 454;
+  int fare = 454;
   String ETA='';
   @override
   void didChangeDependencies() {
@@ -60,11 +60,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
         duration = args['duration']!;
         totaldistance =
             double.tryParse(distance.replaceAll(RegExp(r'[^0-9.]'), ''));
-        minifare = 60 * totaldistance!;
-        gofare = 70 * totaldistance!;
-        comfortfare = 80 * totaldistance!;
-        rickshawfare = 45 * totaldistance!;
-        bykefare = 35 * totaldistance!;
+        minifare = (60 * totaldistance!).toInt();
+        gofare = (70 * totaldistance!).toInt();
+        comfortfare = (80 * totaldistance!).toInt();
+        rickshawfare = (45 * totaldistance!).toInt();
+        bykefare = (35 * totaldistance!).toInt();
       });
     }
   }
@@ -81,7 +81,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
     } else if (bik) {
       fare = bykefare;
     } else {
-      fare = 0.0; // Default fare if no condition is true
+      fare = 0; // Default fare if no condition is true
     }
     setState(() {});
   }
