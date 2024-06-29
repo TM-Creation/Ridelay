@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/config/theme.dart';
@@ -55,7 +56,8 @@ class _DriverSoloRideWaitingScreenState
   Set<Polyline> _polylines = {};
   late LatLng _driverLocation;
   String ETA = '';
-
+  String numericPart='';
+  int distanceValue=0;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -206,6 +208,8 @@ class _DriverSoloRideWaitingScreenState
               _driverLocation.longitude, pick![1], pick![0]);
           ETA = await getTravelTime(driverlocation!.latitude,
               driverlocation!.longitude, pick![1], pick![0]);
+          numericPart = distance!.replaceAll(RegExp(r'[^0-9]'), '');
+          distanceValue = int.tryParse(numericPart) ?? 0;
           _polylines = {
             Polyline(
               polylineId: PolylineId('route'),
@@ -409,23 +413,36 @@ class _DriverSoloRideWaitingScreenState
                                         ScreenConfig.screenSizeHeight * 0.01),
                                     GestureDetector(
                                       onTap: () {
-                                        setState(() {
-                                          stopemit = true;
-                                        });
-                                        _positionStreamSubscription?.cancel();
-                                        socket.emit(
-                                            'pickupRide', {'rideId': rideId});
-                                        Navigator.of(context).pushReplacementNamed(
-                                            DriverSoloRideInProgressAndFinishedScreen
-                                                .routeName,
-                                            arguments: {
-                                              'pickuplocation': pick,
-                                              'dropofflocation': drop,
-                                              'passangername': passangername,
-                                              'passangerphone': passangerphone,
-                                              'fare': fare,
-                                              'rideId': rideId,
-                                            });
+                                        if(distanceValue<=0.05){
+                                          setState(() {
+                                            stopemit = true;
+                                          });
+                                          _positionStreamSubscription?.cancel();
+                                          socket.emit(
+                                              'pickupRide', {'rideId': rideId});
+                                          Navigator.of(context).pushReplacementNamed(
+                                              DriverSoloRideInProgressAndFinishedScreen
+                                                  .routeName,
+                                              arguments: {
+                                                'pickuplocation': pick,
+                                                'dropofflocation': drop,
+                                                'passangername': passangername,
+                                                'passangerphone': passangerphone,
+                                                'fare': fare,
+                                                'rideId': rideId,
+                                              });
+                                        }
+                                        else{
+                                          Get.snackbar(
+                                            'Warning!',
+                                            'Your are not on Passenger Pickup Location',
+                                            snackPosition: SnackPosition.TOP,
+                                            backgroundColor: themeColor,
+                                            colorText: Colors.white,
+                                            margin: EdgeInsets.all(10),
+                                            duration: Duration(seconds: 3),
+                                          );
+                                        }
                                       },
                                       child: Container(
                                         width:
