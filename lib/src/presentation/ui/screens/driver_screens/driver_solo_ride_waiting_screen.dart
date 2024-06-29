@@ -413,7 +413,7 @@ class _DriverSoloRideWaitingScreenState
                                         ScreenConfig.screenSizeHeight * 0.01),
                                     GestureDetector(
                                       onTap: () {
-                                        if(distanceValue<=0.05){
+                                        if(distanceValue<=0.1){
                                           setState(() {
                                             stopemit = true;
                                           });

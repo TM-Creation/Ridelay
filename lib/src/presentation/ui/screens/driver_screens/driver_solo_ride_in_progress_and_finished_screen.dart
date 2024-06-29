@@ -327,7 +327,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    if(distanceValue<=0.05){
+                                    if(distanceValue<=0.1){
                                       socket.emit('completeRide',{'rideId':rideId});
                                       Navigator.of(context)
                                           .pushReplacementNamed(DriverSoloRideRatingScreen.routeName, arguments: {
