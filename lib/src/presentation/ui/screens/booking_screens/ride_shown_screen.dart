@@ -184,7 +184,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
       "driverID":driverid
     });
   }
-
+@override
+  void dispose() {
+    socket.off('rideAccepted');
+    // TODO: implement dispose
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     print("Counting $counter");

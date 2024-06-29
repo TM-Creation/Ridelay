@@ -116,7 +116,13 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       });
     });
   }
-
+@override
+  void dispose() {
+    // TODO: implement dispose
+  socket.off('rideRequest');
+  socket.off('rideCompleted');
+    super.dispose();
+  }
   String calculateDistance(double pickupLat, double pickupLon,
       double dropoffLat, double dropoffLon) {
     const double earthRadiusKm = 6371; // Earth's radius in kilometers
@@ -142,11 +148,6 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     return '${distanceKm.toStringAsFixed(2)} km';
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void acceptrides() {
     final payload = {'rideId': datarespose, 'driverId': PassId().id};
     socket.emit('acceptRide', payload);
@@ -155,7 +156,6 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     final Uri url = Uri(scheme: 'tel', path: phoneNumber);
       await launchUrl(url);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

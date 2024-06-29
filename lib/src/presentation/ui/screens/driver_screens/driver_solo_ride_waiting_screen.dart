@@ -247,6 +247,7 @@ class _DriverSoloRideWaitingScreenState
  @override
   void dispose() {
     // TODO: implement dispose
+
    _positionStreamSubscription?.cancel();
     super.dispose();
   }
