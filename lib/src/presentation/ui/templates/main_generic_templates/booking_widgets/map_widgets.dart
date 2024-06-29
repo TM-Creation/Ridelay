@@ -428,9 +428,9 @@ class _MapScreenState extends State<MapScreen> {
                                     print("usr live locatio is this");
                                     setState(() {
                                       widget.fieldOneController.text =
-                                          '${placemarks.reversed.last.name}' +
+                                          '${placemarks.reversed.last.street}' +
                                               ' ' +
-                                              '${placemarks.reversed.last.street}' +
+                                              '${placemarks.reversed.last.subLocality}' +
                                               ' ' +
                                               '${placemarks.reversed.last.locality}' +
                                               ' ' +
