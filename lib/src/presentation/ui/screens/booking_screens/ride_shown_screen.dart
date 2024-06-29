@@ -114,13 +114,17 @@ class _RideShownScreenState extends State<RideShownScreen> {
       },
       'autoConnect': false,
     });
-    socket.connect();
-    socket.onConnect((_) {
-      print("Server Connect with Socket");
-      setState(() {
-        socketconnection().socket = socket;
+    if(socket.connected){
+      print('Socket Already Connected');
+    }else{
+      socket.connect();
+      socket.onConnect((_) {
+        print("Server Connect with Socket");
+        setState(() {
+          socketconnection().socket = socket;
+        });
       });
-    });
+    }
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideAccepted', (data) {
       print("$data ride is accept ");

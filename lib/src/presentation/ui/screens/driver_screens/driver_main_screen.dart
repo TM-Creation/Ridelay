@@ -66,13 +66,17 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       },
       'autoConnect': false,
     });
-    socket.connect();
-    socket.onConnect((_) {
-      print("Server Connect with Socket");
-      setState(() {
-        socketconnection().socket = socket;
+    if(socket.connected){
+      print("Socket Already Connected");
+    }else{
+      socket.connect();
+      socket.onConnect((_) {
+        print("Server Connect with Socket");
+        setState(() {
+          socketconnection().socket = socket;
+        });
       });
-    });
+    }
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideRequest', (data) {
       print("ridedata arrive $data");
