@@ -56,7 +56,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
         if(typeofuser=='passenger'){
           Navigator.pushReplacementNamed(
               context,RideSelectionScreen.routeName);
-        }else if(typeofuser=='passenger'){
+        }else if(typeofuser=='driver'){
           Navigator.pushReplacementNamed(
               context,DriverRideSelectionScreen.routeName);
         }
