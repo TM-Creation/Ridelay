@@ -77,7 +77,8 @@ class _MapScreenState extends State<MapScreen> {
   List<dynamic> placeList2 = [];
   bool flag1 = false;
   bool flag2 = true;
-  bool liveselect=false;
+  bool liveselect = false;
+
   @override
   void initState() {
     _loadMarkerIcons();
@@ -113,7 +114,7 @@ class _MapScreenState extends State<MapScreen> {
         var data = jsonDecode(response.body);
         print("data: $data");
         if (data['status'] == 'OK') {
-          if(mounted){
+          if (mounted) {
             setState(() {
               placeList1 = data['predictions'];
             });
@@ -142,9 +143,11 @@ class _MapScreenState extends State<MapScreen> {
         var data = jsonDecode(response.body);
         print("data: $data");
         if (data['status'] == 'OK') {
-          if(mounted){setState(() {
-            placeList2 = data['predictions'];
-          });}
+          if (mounted) {
+            setState(() {
+              placeList2 = data['predictions'];
+            });
+          }
         } else {
           throw Exception('Failed to get suggestions: ${data['status']}');
         }
@@ -211,7 +214,9 @@ class _MapScreenState extends State<MapScreen> {
           widget.fieldButtonFunction!();
         }
         _adjustCameraToBounds();
-        if(mounted){setState(() {});}
+        if (mounted) {
+          setState(() {});
+        }
       }
     } else {
       print("direction null");
@@ -290,9 +295,9 @@ class _MapScreenState extends State<MapScreen> {
               ? ScreenConfig.screenSizeHeight * 1.2
               : ScreenConfig.screenSizeHeight * 0.8,
           width: ScreenConfig.screenSizeWidth,
-          child:
-          GoogleMap(
-            initialCameraPosition: CameraPosition(target: LatLng(31.4625, 74.2465),zoom: 12),
+          child: GoogleMap(
+            initialCameraPosition:
+                CameraPosition(target: LatLng(31.4625, 74.2465), zoom: 12),
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
             mapType: MapType.normal,
@@ -396,7 +401,8 @@ class _MapScreenState extends State<MapScreen> {
                       widget.fieldOneController,
                       (value) {
                         setState(() {
-                         flag1 = !value.isEmpty;
+                          liveselect = false;
+                          flag1 = !value.isEmpty;
                         });
                         getSuggestion1(widget.fieldOneController.text);
                       },
@@ -417,7 +423,8 @@ class _MapScreenState extends State<MapScreen> {
                                 GestureDetector(
                                   onTap: () async {
                                     /*print("Check User Live Location: ${userLiveLocation().userlivelocation}");*/
-                                    widget.fieldOneController.text = 'Your Live Location';
+                                    widget.fieldOneController.text =
+                                        'Your Live Location';
                                     /*print("User Live Location in Map Widget: ${userLiveLocation().userlivelocation}");
                                     List<Placemark> placemarks =
                                         await placemarkFromCoordinates(
@@ -436,7 +443,7 @@ class _MapScreenState extends State<MapScreen> {
                                               ' ' +
                                               '${placemarks.reversed.last.country}';
                                       print('place mark $placemarks');*/
-                                      liveselect=true;
+                                      liveselect = true;
                                       flag1 = false;
                                     });
                                   },
@@ -598,11 +605,17 @@ class _MapScreenState extends State<MapScreen> {
                 onPressed: () async {
                   if (widget.fieldOneController.text.isNotEmpty &&
                       widget.fieldTwoController.text.isNotEmpty) {
-                    if(liveselect==true){
+                    print('HEEEEEEEEEEEEELO');
+                    if (liveselect == true) {
                       setState(() {
-                        pick[0]=Location(latitude: userLiveLocation().userlivelocation!.latitude, longitude: userLiveLocation().userlivelocation!.longitude, timestamp: DateTime(2024));
+                        pick = [Location(
+                        latitude:
+                        userLiveLocation().userlivelocation!.latitude,
+                        longitude:
+                        userLiveLocation().userlivelocation!.longitude,
+                        timestamp: DateTime.timestamp())];
                       });
-                    }else{
+                    } else {
                       pick = await locationFromAddress(
                           widget.fieldOneController.text);
                     }
@@ -610,8 +623,10 @@ class _MapScreenState extends State<MapScreen> {
                         widget.fieldTwoController.text);
                     print("hahahahahhahahahaha:$pick");
                     setState(() {
-                      pickanddrop().pickloc=LatLng(pick[0].latitude, pick[0].longitude);
-                      pickanddrop().droploc=LatLng(drop[0].latitude, drop[0].longitude);
+                      pickanddrop().pickloc =
+                          LatLng(pick[0].latitude, pick[0].longitude);
+                      pickanddrop().droploc =
+                          LatLng(drop[0].latitude, drop[0].longitude);
                       print("${pickanddrop().pickloc} pickloc a gya");
                     });
 

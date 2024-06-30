@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
@@ -161,10 +162,19 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     });
 
     // Simulating a 3-second delay
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 5), () {
       setState(() {
         isLoading = false;
       });
+      Get.snackbar(
+        'Oops!',
+        'Passenger Not Accept Your Request',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
+      );
     });
   }
 @override
@@ -382,12 +392,16 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
             ),
           ),
         ),
-        body: isLoading ? Column(
-          children: [
-            CircularProgressIndicator(color: themeColor,),
-            SizedBox(height: 20),
-            Text("Wait for Passange's Responce"),
-          ],
+        body: isLoading ? Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(color: themeColor,),
+              SizedBox(height: 20),
+              Text("Wait for Passange's Responce"),
+            ],
+          ),
         ) :SizedBox(
             width: ScreenConfig.screenSizeWidth,
             child: Center(
