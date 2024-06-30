@@ -28,21 +28,18 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
   late Future<List<Ride>> futureRides;
   Future<List<Ride>> fetchRides() async {
     final response = await http.get(Uri.parse('${baseulr().burl}/api/v1/feedback/66532d5b49a53711e9096838'));
-
     if (response.statusCode == 200) {
       List jsonResponse = jsonDecode(response.body);
-      List<Ride> rides = jsonResponse.map((ride) => Ride.fromJson(ride)).toList();
-
-      print("All Previous Rides : $rides");
-      // Count occurrences
-
-      for (var ride in jsonResponse) {
-        count++;
+      try {
+        print("heeeeeeeeeeeeeelo");
+        List<Ride> rides = jsonResponse.map((ride) => Ride.fromJson(ride)).toList();
+        print("heeeeeeeeeeeeeelo123");
+        print("All Previous Rides : $rides");
+        return rides;
+      } catch (e) {
+        print("Error parsing rides: $e");
+        throw Exception('Failed to parse rides');
       }
-
-      print("Occurrences: $count");
-
-      return rides;
     } else {
       throw Exception('Failed to load rides');
     }

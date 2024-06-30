@@ -139,6 +139,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       });
     });
     socket.on('rideCompleted', (data) {
+      isLoading==false;
       print(">>>>>$data");
       print("data of eve: $pick $drop $passangerName $phonenumber $fare $distance");
       Navigator.of(context)
@@ -162,19 +163,21 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     });
 
     // Simulating a 3-second delay
-    Future.delayed(Duration(seconds: 5), () {
-      setState(() {
-        isLoading = false;
-      });
-      Get.snackbar(
-        'Oops!',
-        'Passenger Not Accept Your Request',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: themeColor,
-        colorText: Colors.white,
-        margin: EdgeInsets.all(10),
-        duration: Duration(seconds: 3),
-      );
+    Future.delayed(Duration(seconds: 10), () {
+      if(isLoading==true){
+        setState(() {
+          isLoading = false;
+        });
+        Get.snackbar(
+          'Oops!',
+          'Passenger Not Accept Your Request',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
+      }
     });
   }
 @override
