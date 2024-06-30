@@ -82,8 +82,6 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
             height: ScreenConfig.screenSizeHeight * 1.2,
             width: ScreenConfig.screenSizeWidth * 0.9,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
                   child: Column(
@@ -93,6 +91,7 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
                     ],
                   ),
                 ),
+                spaceHeight(ScreenConfig.screenSizeHeight * 0.1),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
