@@ -420,6 +420,7 @@ class _MapScreenState extends State<MapScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () async {
+                                    print("Check User Live Location: ${userLiveLocation().userlivelocation}");
                                     widget.fieldOneController.text = '';
                                     List<Placemark> placemarks =
                                         await placemarkFromCoordinates(
