@@ -421,6 +421,7 @@ class _MapScreenState extends State<MapScreen> {
                                 GestureDetector(
                                   onTap: () async {
                                     widget.fieldOneController.text = '';
+                                    print("User Live Location in Map Widget: ${userLiveLocation().userlivelocation}");
                                     List<Placemark> placemarks =
                                         await placemarkFromCoordinates(
                                             userLiveLocation().userlivelocation!.latitude,
