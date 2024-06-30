@@ -11,7 +11,6 @@ import 'package:ridely/src/presentation/ui/screens/booking_screens/location_sele
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/vehicle_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/transactionhistory.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/wallet.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
@@ -314,9 +313,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: ()async{
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      prefs.setBool('isLoggedIn', false);
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthenticationSelection()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
                     },
                     child: const Text("Logout"),
                     style: ElevatedButton.styleFrom(
