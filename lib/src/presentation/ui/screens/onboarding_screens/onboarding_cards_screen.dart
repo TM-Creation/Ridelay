@@ -49,10 +49,6 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
           context,AuthenticationSelection.routeName);
     }
   }
-  Future<bool> _checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
-  }
   void _nextPage() async{
     _saveFirstTime();
     Navigator.pushReplacementNamed(
