@@ -40,7 +40,6 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
     super.initState();
     _checkFirstTime();
   }
-
   void _checkFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool firstTime = prefs.getBool('first_time') ?? true;
@@ -50,18 +49,27 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
           context,AuthenticationSelection.routeName);
     }
   }
-
-  void _nextPage() {
+  Future<bool> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
+  void _nextPage() async{
     _saveFirstTime();
-    Navigator.pushReplacementNamed(
-        context,AuthenticationSelection.routeName);
+    bool cheklogin=await _checkLoginStatus();
+    if(cheklogin==true){
+      Navigator.pushReplacementNamed(
+          context,RideSelectionScreen.routeName);
+    }
+    else{
+      Navigator.pushReplacementNamed(
+          context,AuthenticationSelection.routeName);
+    }
   }
 
   void _saveFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('first_time', false);
   }
-
   @override
   Widget build(BuildContext context) {
     Widget logoDisplay() {

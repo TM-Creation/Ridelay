@@ -20,6 +20,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/theme.dart';
 
@@ -286,6 +287,8 @@ class _LoginState extends State<Login> {
               margin: EdgeInsets.all(10),
               duration: Duration(seconds: 3),
             );
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('isLoggedIn', true);
             Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
           } else if (typeofuser == 'passenger') {
             print("Passenger Done");
@@ -298,6 +301,8 @@ class _LoginState extends State<Login> {
               margin: EdgeInsets.all(10),
               duration: Duration(seconds: 3),
             );
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('isLoggedIn', true);
             Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
           } else {
             print("Nothing Done");

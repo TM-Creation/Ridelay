@@ -28,6 +28,7 @@ import '../../templates/previous_rides_screens_widgets/user_details_container.da
 import '../../templates/ride_widgets/ride_widget_buttons.dart';
 import '../booking_screens/solo_ride_flow/solo_ride_shown_screen.dart';
 import '../onboarding_screens/register_screens/passangerregistration.dart';
+import '../past_rides_screens/Driver_Previou_Ride_Screen.dart';
 import 'driver_solo_ride_waiting_screen.dart';
 
 class DriverRideSelectionScreen extends StatefulWidget {
@@ -285,7 +286,9 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => null,
+                    onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DriverPreviousRidesScreen()));
+                    },
                     child: const Text("Ride History"),
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
