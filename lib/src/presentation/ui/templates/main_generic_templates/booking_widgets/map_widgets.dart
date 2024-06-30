@@ -240,10 +240,6 @@ class _MapScreenState extends State<MapScreen> {
   BitmapDescriptor? _destinationIcon;
   final obj = LocationSelectionScreen();
   GoogleMapController? _mapController;
-  static const initailposition = CameraPosition(
-    target: LatLng(31.459917, 74.246294),
-    zoom: 11.5,
-  );
 
   @override
   void dispose() {
@@ -296,7 +292,7 @@ class _MapScreenState extends State<MapScreen> {
           width: ScreenConfig.screenSizeWidth,
           child:
           GoogleMap(
-            initialCameraPosition: initailposition,
+            initialCameraPosition: CameraPosition(target: userLiveLocation().userlivelocation!,zoom: 12),
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
             mapType: MapType.normal,
