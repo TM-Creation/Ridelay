@@ -292,7 +292,7 @@ class _MapScreenState extends State<MapScreen> {
           width: ScreenConfig.screenSizeWidth,
           child:
           GoogleMap(
-            initialCameraPosition: CameraPosition(target: userLiveLocation().userlivelocation!,zoom: 12),
+            initialCameraPosition: CameraPosition(target: LatLng(31.4625, -74.2465),zoom: 12),
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
             mapType: MapType.normal,
