@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_in_progress_and_finish_screen.dart';
@@ -44,8 +45,8 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       vahiclename = '';
   int fare = 0;
   double driverraiting = 0.0;
-  String rideid='',driverid='';
-  String ETA='';
+  String rideid = '', driverid = '';
+  String ETA = '';
 
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -93,22 +94,37 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       print("driver live location is: $driverlivelocation");
       _updatePolyline();
     });
+    socket.on('cancelRide', (data){
+      print('Ride Canceled $data');
+      Get.snackbar(
+        'Ride Canceled',
+        'Ride is Canceled by Driver Please book a new Driver',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
+      );
+      Navigator.pop(context);
+    });
     socket.on('pickupRide', (data) {
       print('on is run correctly');
-      Navigator.of(context)
-          .pushReplacementNamed(RideInProgressAndFinishedScreen.routeName, arguments: {
-        "pickupLocation":pickupEnterController.text,
-        "dropoffLocation": dropoffEnterController.text,
-        "driverName":drivername,
-        "driverRaiting":driverraiting,
-        "vahicleName":vahiclename,
-        "vahicleNumberplate":numberplate,
-        "fare":fare,
-        "rideid":rideid,
-        "driverID":driverid
-      });
+      Navigator.of(context).pushReplacementNamed(
+          RideInProgressAndFinishedScreen.routeName,
+          arguments: {
+            "pickupLocation": pickupEnterController.text,
+            "dropoffLocation": dropoffEnterController.text,
+            "driverName": drivername,
+            "driverRaiting": driverraiting,
+            "vahicleName": vahiclename,
+            "vahicleNumberplate": numberplate,
+            "fare": fare,
+            "rideid": rideid,
+            "driverID": driverid
+          });
     });
   }
+
   String calculateDistance(double pickupLat, double pickupLon,
       double dropoffLat, double dropoffLon) {
     const double earthRadiusKm = 6371; // Earth's radius in kilometers
@@ -133,6 +149,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
     distanceKm = distanceKm * 1.58500;
     return '${distanceKm.toStringAsFixed(2)} km';
   }
+
   Future<List<LatLng>> _getRoutePolylinePoints(
       LatLng origin, LatLng destination) async {
     String apiUrl =
@@ -193,11 +210,14 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
+    socket2.off('cancelRide');
     socket2.off('locationUpdate');
     socket2.off('pickupRide');
     super.dispose();
   }
-  Future<String> getTravelTime(double startLat, double startLng, double endLat, double endLng) async {
+
+  Future<String> getTravelTime(
+      double startLat, double startLng, double endLat, double endLng) async {
     final apiKey = 'AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
     final url = 'https://maps.googleapis.com/maps/api/directions/json'
         '?origin=$startLat,$startLng'
@@ -214,6 +234,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       throw Exception('Failed to get travel time: ${response.statusCode}');
     }
   }
+
   void _updatePolyline() {
     print(
         "roooola:  ${pickanddrop().pickloc} and ${LatLng(driverlivelocation[0], driverlivelocation[1])}");
@@ -221,9 +242,17 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
             LatLng(driverlivelocation[0], driverlivelocation[1]))
         .then((polylinePoints) {
       if (mounted) {
-        setState(() async{
-          distance = calculateDistance(driverlivelocation[0],driverlivelocation[1], pickanddrop().pickloc!.latitude,pickanddrop().pickloc!.longitude);
-          ETA=await getTravelTime(driverlivelocation[0],driverlivelocation[1], pickanddrop().pickloc!.latitude,pickanddrop().pickloc!.longitude);
+        setState(() async {
+          distance = calculateDistance(
+              driverlivelocation[0],
+              driverlivelocation[1],
+              pickanddrop().pickloc!.latitude,
+              pickanddrop().pickloc!.longitude);
+          ETA = await getTravelTime(
+              driverlivelocation[0],
+              driverlivelocation[1],
+              pickanddrop().pickloc!.latitude,
+              pickanddrop().pickloc!.longitude);
           _polylines = {
             Polyline(
               polylineId: PolylineId('route'),
@@ -244,10 +273,12 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       print('Error fetching route: $e');
     });
   }
+
   void _launchCaller(String phoneNumber) async {
     final Uri url = Uri(scheme: 'tel', path: phoneNumber);
     await launchUrl(url);
   }
+
   @override
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
@@ -286,18 +317,23 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                     Container(
                                       height: 35,
                                       width: 35,
-                                      decoration: squareButtonTemplate(radius: 8),
+                                      decoration:
+                                          squareButtonTemplate(radius: 8),
                                       child: Padding(
                                         padding: const EdgeInsets.all(3.0),
-                                        child: Image.asset("assets/images/CarIconColored.png",
+                                        child: Image.asset(
+                                            "assets/images/CarIconColored.png",
                                             fit: BoxFit.contain),
                                       ),
                                     ),
-                                    spaceWidth(ScreenConfig.screenSizeWidth * 0.03),
+                                    spaceWidth(
+                                        ScreenConfig.screenSizeWidth * 0.03),
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        displayText('Vehicle', ScreenConfig.theme.textTheme.button,
+                                        displayText('Vehicle',
+                                            ScreenConfig.theme.textTheme.button,
                                             width: 0.3),
                                         displayText(
                                             "$ETA",
@@ -308,20 +344,20 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                     ),
                                   ],
                                 ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 5.0),
-                                    child: displayText(
-                                        "Rs. $fare",
-                                        ScreenConfig.theme.textTheme.headline5
-                                            ?.copyWith(fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.end,
-                                        width: 0.2),
-                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 5.0),
+                                  child: displayText(
+                                      "Rs. $fare",
+                                      ScreenConfig.theme.textTheme.headline5
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.end,
+                                      width: 0.2),
+                                ),
                               ],
                             ),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
-                            displayText(
-                                "Hold Tight ! Your Ride Is Coming",
+                            displayText("Hold Tight ! Your Ride Is Coming",
                                 ScreenConfig.theme.textTheme.button,
                                 width: 0.8),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
@@ -333,55 +369,84 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    userDetailsContainer("assets/images/UserProfileImage.png",
-                                      "$drivername", "$driverraiting", true,),
-                                    spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                                    userDetailsContainer("assets/images/UserCarImage.png",
-                                      "$vahiclename", "$numberplate", false,)
+                                    userDetailsContainer(
+                                      "assets/images/UserProfileImage.png",
+                                      "$drivername",
+                                      "$driverraiting",
+                                      true,
+                                    ),
+                                    spaceHeight(
+                                        ScreenConfig.screenSizeHeight * 0.02),
+                                    userDetailsContainer(
+                                      "assets/images/UserCarImage.png",
+                                      "$vahiclename",
+                                      "$numberplate",
+                                      false,
+                                    )
                                   ],
                                 ),
                                 SizedBox(
                                   width: ScreenConfig.screenSizeWidth * 0.25,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           smallSquareButton(
-                                              "assets/images/PhoneIcon.png", () {
-                                                _launchCaller('+923030252618');
+                                              "assets/images/PhoneIcon.png",
+                                              () {
+                                            _launchCaller('+923030252618');
                                           }),
                                           smallSquareButton(
-                                              "assets/images/EmailIcon.png", () {}),
+                                              "assets/images/EmailIcon.png",
+                                              () {}),
                                         ],
                                       ),
-                                      spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
-                                      displayText("Driver $distance away",
-                                          ScreenConfig.theme.textTheme.bodyText2,
-                                          textAlign: TextAlign.center, width: 0.22),
-                                      spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                                      spaceHeight(
+                                          ScreenConfig.screenSizeHeight * 0.01),
+                                      displayText(
+                                          "Driver $distance away",
+                                          ScreenConfig
+                                              .theme.textTheme.bodyText2,
+                                          textAlign: TextAlign.center,
+                                          width: 0.22),
+                                      spaceHeight(
+                                          ScreenConfig.screenSizeHeight * 0.01),
                                       GestureDetector(
-                                        onTap: (){Navigator.pop(context);},
+                                        onTap: () {
+                                          socket2.emit('cancelRide',{'rideId':rideid});
+                                          Navigator.pop(context);
+                                        },
                                         child: Container(
-                                          width: ScreenConfig.screenSizeWidth * 0.25,
+                                          width: ScreenConfig.screenSizeWidth *
+                                              0.25,
                                           decoration: BoxDecoration(
                                               color: redFourthColor,
-                                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5)),
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.grey.withOpacity(0.40),
-                                                  offset: const Offset(0.0, 1.2), //(x,y)
+                                                  color: Colors.grey
+                                                      .withOpacity(0.40),
+                                                  offset: const Offset(
+                                                      0.0, 1.2), //(x,y)
                                                   blurRadius: 6.0,
                                                 )
                                               ]),
                                           child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
                                               child: displayNoSizedText(
                                                   'Cancel Ride',
-                                                  ScreenConfig.theme.textTheme.caption
-                                                      ?.copyWith(color: Colors.white),
+                                                  ScreenConfig
+                                                      .theme.textTheme.caption
+                                                      ?.copyWith(
+                                                          color: Colors.white),
                                                   textAlign: TextAlign.center)),
                                         ),
                                       )

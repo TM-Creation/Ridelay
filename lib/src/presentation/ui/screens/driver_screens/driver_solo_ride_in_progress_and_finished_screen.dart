@@ -50,8 +50,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
   String? distance = '';
   String rideId='';
   String ETA='';
-  String numericPart='';
-  int distanceValue=0;
+  double distanceValue=0;
   late GoogleMapController _controller;
   Set<Polyline> _polylines = {};
   void didChangeDependencies() {
@@ -189,8 +188,16 @@ class _DriverSoloRideInProgressAndFinishedScreenState
         setState(()async{
           distance = calculateDistance(driverlocation.latitude,driverlocation.longitude, drop![1], drop![0]);
          ETA=await getTravelTime(driverlocation.latitude, driverlocation.longitude, drop![1], drop![0]);
-          numericPart = distance!.replaceAll(RegExp(r'[^0-9]'), '');
-          distanceValue = int.tryParse(numericPart) ?? 0;
+          RegExp regExp = RegExp(r"[\d.]+");
+          String? match = regExp.stringMatch(distance!);
+
+          if (match != null) {
+            // Convert the extracted string to a double
+            distanceValue = double.parse(match);
+            print(distanceValue); // Output: 0.01
+          } else {
+            print("No match found");
+          }
          print("Estimated Time is $ETA");
          print("Polyline updates every time");
           _polylines = {
@@ -327,6 +334,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    print("Distance Value Is: $distanceValue $distance");
                                     if(distanceValue<=0.1){
                                       socket.emit('completeRide',{'rideId':rideId});
                                       Navigator.of(context)

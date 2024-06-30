@@ -56,8 +56,7 @@ class _DriverSoloRideWaitingScreenState
   Set<Polyline> _polylines = {};
   late LatLng _driverLocation;
   String ETA = '';
-  String numericPart='';
-  int distanceValue=0;
+  double distanceValue=0;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -108,11 +107,26 @@ class _DriverSoloRideWaitingScreenState
   @override
   void initState() {
     driverlocation = userLiveLocation().userlivelocation;
+    initsocket();
     super.initState();
   }
 
   IO.Socket socket = socketconnection().socket;
-
+  void initsocket(){
+    socket.on('cancelRide', (data){
+      print('Ride Canceled $data');
+      Get.snackbar(
+        'Ride Canceled',
+        'Ride is Canceled by Passenger',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
+      );
+      Navigator.pop(context);
+    });
+  }
   Future<void> _initLocationService() async {
     setState(() {
       _driverLocation = driverlocation!;
@@ -208,8 +222,16 @@ class _DriverSoloRideWaitingScreenState
               _driverLocation.longitude, pick![1], pick![0]);
           ETA = await getTravelTime(driverlocation!.latitude,
               driverlocation!.longitude, pick![1], pick![0]);
-          numericPart = distance!.replaceAll(RegExp(r'[^0-9]'), '');
-          distanceValue = int.tryParse(numericPart) ?? 0;
+          RegExp regExp = RegExp(r"[\d.]+");
+          String? match = regExp.stringMatch(distance!);
+
+          if (match != null) {
+            // Convert the extracted string to a double
+            distanceValue = double.parse(match);
+            print(distanceValue); // Output: 0.01
+          } else {
+            print("No match found");
+          }
           _polylines = {
             Polyline(
               polylineId: PolylineId('route'),
@@ -251,7 +273,7 @@ class _DriverSoloRideWaitingScreenState
  @override
   void dispose() {
     // TODO: implement dispose
-
+   socket.off('cancelRide');
    _positionStreamSubscription?.cancel();
     super.dispose();
   }
@@ -413,6 +435,7 @@ class _DriverSoloRideWaitingScreenState
                                         ScreenConfig.screenSizeHeight * 0.01),
                                     GestureDetector(
                                       onTap: () {
+                                        print("Distance Value Is: $distanceValue $distance");
                                         if(distanceValue<=0.1){
                                           setState(() {
                                             stopemit = true;
@@ -510,7 +533,10 @@ class _DriverSoloRideWaitingScreenState
                                           ScreenConfig.screenSizeHeight *
                                               0.023),
                                       GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          socket.emit('cancelRide',{'rideId':rideId});
+                                          Navigator.pop(context);
+                                        },
                                         child: Container(
                                           width: ScreenConfig.screenSizeWidth *
                                               0.25,
