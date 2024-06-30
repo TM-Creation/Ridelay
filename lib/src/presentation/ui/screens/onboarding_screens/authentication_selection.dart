@@ -33,13 +33,14 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
   }
   Future<void> _requestPermissionAndGetCurrentLocation() async {
     // Check if location permission is granted
+    print("1122Permission Start");
     var status = await Permission.location.request();
     if (status.isGranted) {
       // Get current position
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
-
+       print("1122Permission Accepted $position");
       // Update the map to show the user's current location
       userlocation = LatLng(position.latitude, position.longitude);
       setState(() {
