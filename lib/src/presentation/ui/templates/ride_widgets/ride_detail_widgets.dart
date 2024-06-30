@@ -368,7 +368,7 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
       headers: {'Content-Type': 'application/json'},
       body: json.encode(feedbackModel.toJson()),
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       print('Review submitted successfully');
       Get.snackbar(
         'Thanks for Ride with Ridelay',
@@ -382,7 +382,7 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
       Navigator.of(context).pushNamedAndRemoveUntil(
         RideSelectionScreen.routeName,(Route<dynamic> route) => false,);
     } else {
-      print('Failed to submit review: ${response.statusCode}');
+      print('Failed to submit review: ${response.statusCode} ${response.body}');
       Get.snackbar(
         'Server Error',
         'Server Not Found',
