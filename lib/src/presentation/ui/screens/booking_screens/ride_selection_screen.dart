@@ -96,9 +96,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: ()async{
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                    prefs.setBool('isLoggedIn', false);
+                  onPressed: (){
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
                   },
                   child: const Text("Logout"),

@@ -55,15 +55,8 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
   }
   void _nextPage() async{
     _saveFirstTime();
-    bool cheklogin=await _checkLoginStatus();
-    if(cheklogin==true){
-      Navigator.pushReplacementNamed(
-          context,RideSelectionScreen.routeName);
-    }
-    else{
-      Navigator.pushReplacementNamed(
-          context,AuthenticationSelection.routeName);
-    }
+    Navigator.pushReplacementNamed(
+        context,AuthenticationSelection.routeName);
   }
 
   void _saveFirstTime() async {
