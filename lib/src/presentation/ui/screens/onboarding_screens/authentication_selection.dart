@@ -43,6 +43,7 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
       // Update the map to show the user's current location
       userlocation = LatLng(position.latitude, position.longitude);
       setState(() {
+        print("User Live Location in Pick Widget: $userlocation");
         userLiveLocation().userlivelocation=userlocation;
       });
     } else {

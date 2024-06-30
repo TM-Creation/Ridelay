@@ -20,7 +20,6 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/theme.dart';
 

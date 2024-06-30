@@ -17,7 +17,6 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/othe
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RideSelectionScreen extends StatefulWidget {
   const RideSelectionScreen({Key? key}) : super(key: key);

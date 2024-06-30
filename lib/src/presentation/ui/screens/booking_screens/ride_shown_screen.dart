@@ -152,6 +152,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
       'pickupLocation': {'coordinates': pickanddrop().pickloc},
       'dropoffLocation': {'coordinates': pickanddrop().droploc},
       'fare': fare,
+      'distance':distance
     };
     print("${pickanddrop().pickloc} and 2nd is ${pickanddrop().droploc}");
     // Emit the 'rideRequest' event with the payload

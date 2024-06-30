@@ -422,6 +422,7 @@ class _MapScreenState extends State<MapScreen> {
                                   onTap: () async {
                                     print("Check User Live Location: ${userLiveLocation().userlivelocation}");
                                     widget.fieldOneController.text = '';
+                                    print("User Live Location in Map Widget: ${userLiveLocation().userlivelocation}");
                                     List<Placemark> placemarks =
                                         await placemarkFromCoordinates(
                                             userLiveLocation().userlivelocation!.latitude,

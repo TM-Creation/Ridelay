@@ -11,6 +11,7 @@ import 'package:ridely/src/presentation/ui/screens/booking_screens/location_sele
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/vehicle_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/transactionhistory.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/wallet.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
@@ -21,6 +22,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/driver_ride_detail_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -290,6 +292,30 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DriverPreviousRidesScreen()));
                     },
                     child: const Text("Ride History"),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      foregroundColor: Colors.white,
+                      backgroundColor: ScreenConfig.theme.primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: MediaQuery.sizeOf(context).width * 0.04,
+                          color: Colors.white),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.04,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: ()async{
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
+                    },
+                    child: const Text("Logout"),
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       foregroundColor: Colors.white,
