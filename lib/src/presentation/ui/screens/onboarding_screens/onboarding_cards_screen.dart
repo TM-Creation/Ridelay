@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../config/theme.dart';
 
 class OnboardingCardsScreen extends StatefulWidget {
   const OnboardingCardsScreen({Key? key}) : super(key: key);
@@ -43,22 +48,37 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
   void _checkFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool firstTime = prefs.getBool('first_time') ?? true;
+    bool cheklogin=prefs.getBool('isLoggedIn') ?? false;
+    String typeofuser=prefs.getString('user') ?? "Driver";
     if (!firstTime) {
-      bool cheklogin=await _checkLoginStatus();
-      print("Bolian Check: $cheklogin");
+      print("Bolian Check: $cheklogin $firstTime");
       if(cheklogin==true){
-        Navigator.pushReplacementNamed(
-            context,RideSelectionScreen.routeName);
+        if(typeofuser=='passenger'){
+          Navigator.pushReplacementNamed(
+              context,RideSelectionScreen.routeName);
+        }else if(typeofuser=='passenger'){
+          Navigator.pushReplacementNamed(
+              context,DriverRideSelectionScreen.routeName);
+        }
+        else{
+          Get.snackbar(
+            'Alert!',
+            'You are not Registered User',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: themeColor,
+            colorText: Colors.white,
+            margin: EdgeInsets.all(10),
+            duration: Duration(seconds: 3),
+          );
+          Navigator.pushReplacementNamed(
+              context,AuthenticationSelection.routeName);
+        }
       }
       else{
         Navigator.pushReplacementNamed(
             context,AuthenticationSelection.routeName); // User has already seen the intro, navigate to login page
       }
     }
-  }
-  Future<bool> _checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
   }
   void _nextPage() async{
     _saveFirstTime();

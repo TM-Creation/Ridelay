@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:http/http.dart' as http;
+import 'package:pinput/pinput.dart';
 import 'dart:io';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/authmodels/passangerloginmodel.dart';
@@ -289,6 +290,7 @@ class _LoginState extends State<Login> {
             );
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('isLoggedIn', true);
+            prefs.setString("user",typeofuser);
             Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
           } else if (typeofuser == 'passenger') {
             print("Passenger Done");
@@ -303,6 +305,7 @@ class _LoginState extends State<Login> {
             );
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('isLoggedIn', true);
+            prefs.setString("user",typeofuser);
             Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
           } else {
             print("Nothing Done");
