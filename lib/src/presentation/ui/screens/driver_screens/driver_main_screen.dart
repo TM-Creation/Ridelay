@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/config/theme.dart';
@@ -11,6 +13,7 @@ import 'package:ridely/src/presentation/ui/screens/booking_screens/location_sele
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/vehicle_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/transactionhistory.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/wallet.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
@@ -54,10 +57,42 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   String distance = '';
   String phonenumber = '';
   double raiting=0.0;
+  LatLng userlocation = LatLng(9.0, 7.9);
   @override
   void initState() {
+    _requestPermissionAndGetCurrentLocation();
     initSocket();
     super.initState();
+  }
+  Future<void> _requestPermissionAndGetCurrentLocation() async {
+    // Check if location permission is granted
+    print("1122Permission Start");
+    var status = await Permission.location.request();
+    if (status.isGranted) {
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      print("1122Permission Accepted $position");
+      userlocation = LatLng(position.latitude, position.longitude);
+      setState(() {
+        print("User Live Location in Pick Widget: $userlocation");
+        userLiveLocation().userlivelocation=userlocation;
+      });
+    } else {
+      print('Location permission denied');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+              'Please Give You Live Location',style: TextStyle(fontSize: 15,color: Colors.white),),
+          ),
+          backgroundColor: Colors.black,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      _requestPermissionAndGetCurrentLocation();
+    }
   }
   late IO.Socket socket;
   initSocket() {

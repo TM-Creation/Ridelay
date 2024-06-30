@@ -28,10 +28,10 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
   void initState() {
     errorValidatorShow = true;
     phoneNumberController = TextEditingController();
-    _requestPermissionAndGetCurrentLocation();
+    /*_requestPermissionAndGetCurrentLocation();*/
     super.initState();
   }
-  Future<void> _requestPermissionAndGetCurrentLocation() async {
+  /*Future<void> _requestPermissionAndGetCurrentLocation() async {
     // Check if location permission is granted
     print("1122Permission Start");
     var status = await Permission.location.request();
@@ -61,7 +61,7 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
       );
       _requestPermissionAndGetCurrentLocation();
     }
-  }
+  }*/
   @override
   Widget build(BuildContext context) {
     Widget logoDisplay() {
