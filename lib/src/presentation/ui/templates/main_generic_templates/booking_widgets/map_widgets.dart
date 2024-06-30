@@ -77,7 +77,7 @@ class _MapScreenState extends State<MapScreen> {
   List<dynamic> placeList2 = [];
   bool flag1 = false;
   bool flag2 = true;
-
+  bool liveselect=false;
   @override
   void initState() {
     _loadMarkerIcons();
@@ -416,16 +416,16 @@ class _MapScreenState extends State<MapScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () async {
-                                    print("Check User Live Location: ${userLiveLocation().userlivelocation}");
-                                    widget.fieldOneController.text = '';
-                                    print("User Live Location in Map Widget: ${userLiveLocation().userlivelocation}");
+                                    /*print("Check User Live Location: ${userLiveLocation().userlivelocation}");*/
+                                    widget.fieldOneController.text = 'Your Live Location';
+                                    /*print("User Live Location in Map Widget: ${userLiveLocation().userlivelocation}");
                                     List<Placemark> placemarks =
                                         await placemarkFromCoordinates(
                                             userLiveLocation().userlivelocation!.latitude,
                                             userLiveLocation().userlivelocation!.longitude);
-                                    print("usr live locatio is this");
+                                    print("usr live locatio is this");*/
                                     setState(() {
-                                      widget.fieldOneController.text =
+                                      /*widget.fieldOneController.text =
                                           '${placemarks.reversed.last.name}' +
                                               ' ' +
                                           '${placemarks.reversed.last.street}' +
@@ -435,7 +435,8 @@ class _MapScreenState extends State<MapScreen> {
                                               '${placemarks.reversed.last.locality}' +
                                               ' ' +
                                               '${placemarks.reversed.last.country}';
-                                      print('place mark $placemarks');
+                                      print('place mark $placemarks');*/
+                                      liveselect=true;
                                       flag1 = false;
                                     });
                                   },
@@ -597,10 +598,17 @@ class _MapScreenState extends State<MapScreen> {
                 onPressed: () async {
                   if (widget.fieldOneController.text.isNotEmpty &&
                       widget.fieldTwoController.text.isNotEmpty) {
-                    pick = await locationFromAddress(
-                        widget.fieldOneController.text);
+                    if(liveselect==true){
+                      setState(() {
+                        pick[0]=Location(latitude: userLiveLocation().userlivelocation!.latitude, longitude: userLiveLocation().userlivelocation!.longitude, timestamp: DateTime(2024));
+                      });
+                    }else{
+                      pick = await locationFromAddress(
+                          widget.fieldOneController.text);
+                    }
                     drop = await locationFromAddress(
                         widget.fieldTwoController.text);
+                    print("hahahahahhahahahaha:$pick");
                     setState(() {
                       pickanddrop().pickloc=LatLng(pick[0].latitude, pick[0].longitude);
                       pickanddrop().droploc=LatLng(drop[0].latitude, drop[0].longitude);

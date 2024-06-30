@@ -15,6 +15,7 @@ import 'package:ridely/src/presentation/ui/templates/previous_rides_screens_widg
 import 'package:http/http.dart' as http;
 
 import '../../../../models/passenger_rating_model/driverpreviousridemodel.dart';
+import '../../templates/main_generic_templates/other_widgets/space_line_between_two_text_fields.dart';
 class DriverPreviousRidesScreen extends StatefulWidget {
   const DriverPreviousRidesScreen({Key? key}) : super(key: key);
   static const routeName = '/previousrides-screen';
@@ -55,6 +56,38 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
   int mycount=3;
   @override
   Widget build(BuildContext context) {
+    Widget priceShow(String text1, String text2) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          displayNoSizedText(
+            text1,
+            ScreenConfig.theme.textTheme.button,
+          ),
+          displayNoSizedText(
+            text2,
+            ScreenConfig.theme.textTheme.button,
+          ),
+        ],
+      );
+    }
+    Widget priceShowBold(String text1, String text2) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          displayNoSizedText(
+            text1,
+            ScreenConfig.theme.textTheme.bodyText2
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          displayNoSizedText(
+            text2,
+            ScreenConfig.theme.textTheme.bodyText2
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+        ],
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -165,7 +198,126 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
                                               showDialog(
                                                 context: context,
                                                 builder: (BuildContext context) {
-                                                  return  DriverPreviousRideDetailScreen();
+                                                  return  AlertDialog(
+                                                    content: SizedBox(
+                                                      child: SingleChildScrollView(
+                                                        child: Column(
+                                                          children: [
+                                                            spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
+                                                            Container(
+                                                              width: ScreenConfig.screenSizeWidth * 0.9,
+                                                              decoration: blueContainerTemplate(),
+                                                              child: Center(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                                                                  child: SizedBox(
+                                                                    width: ScreenConfig.screenSizeWidth * 0.8,
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                      child: Column(
+                                                                        children: [
+                                                                          Container(
+                                                                            width: ScreenConfig.screenSizeWidth * 0.2,
+                                                                            height: ScreenConfig.screenSizeWidth * 0.2,
+                                                                            decoration: BoxDecoration(
+                                                                              image: DecorationImage(
+                                                                                  image: AssetImage(
+                                                                                      "assets/images/UserProfileImage.png"),
+                                                                                  fit: BoxFit.cover),
+                                                                              borderRadius:
+                                                                              const BorderRadius.all(Radius.circular(5)),
+                                                                            ),
+                                                                          ),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                                                                          Text(
+                                                                            "${ride.passenger.name}",
+                                                                            style: TextStyle(
+                                                                                color: Colors.white,
+                                                                                fontSize:
+                                                                                ScreenConfig.screenSizeWidth * 0.04),
+                                                                          ),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
+                                                                          Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              displayText(
+                                                                                  "Ride Time",
+                                                                                  ScreenConfig.theme.textTheme.bodyText1
+                                                                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                                                                  width: 0.2),
+                                                                              displayNoSizedText(
+                                                                                "${ride.createdAt.substring(0,10)}",
+                                                                                ScreenConfig.theme.textTheme.bodyText1
+                                                                                    ?.copyWith(
+                                                                                    fontWeight: FontWeight.bold),
+                                                                                textAlign: TextAlign.right,
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                                                                          lineSeparatorColored(Colors.white,
+                                                                              ScreenConfig.screenSizeWidth * 0.8),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
+                                                                          displayText(
+                                                                            "Reciept",
+                                                                            ScreenConfig.theme.textTheme.headline2,
+                                                                            width: ScreenConfig.screenSizeWidth * 0.8,
+                                                                          ),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                                                                          priceShow("Distance", "${ride.distance}"),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                                                                          priceShow("Fare", "${ride.fare}"),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                                                                          priceShow("Feedback", "${ride.feedback}"),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                                                                          lineSeparatorColored(Colors.white,
+                                                                              ScreenConfig.screenSizeWidth * 0.8),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
+                                                                          Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            children: [
+                                                                              Container(
+                                                                                height: 30,
+                                                                                decoration: squareButtonTemplate(radius: 5),
+                                                                                child: Center(
+                                                                                  child: displayText(
+                                                                                      "Your Rating",
+                                                                                      ScreenConfig.theme.textTheme.bodyText2
+                                                                                          ?.copyWith(
+                                                                                          fontWeight: FontWeight.bold,
+                                                                                          fontSize: 11,
+                                                                                          color: ScreenConfig
+                                                                                              .theme.primaryColor),
+                                                                                      textAlign: TextAlign.center,
+                                                                                      width: 0.3),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                                                                          Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                            children: [
+                                                                              FivePointedStar(
+                                                                                defaultSelectedCount: ride.rating,
+                                                                                count: 5,
+                                                                              ),
+                                                                            ],
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
                                                 },
                                               );
                                             },

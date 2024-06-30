@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/base%20url.dart';
+import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_waiting_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
@@ -873,11 +874,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
+                  CircularProgressIndicator(color: themeColor,),
+                  SizedBox(height: 20),
                   Text('Finding Driver...',
                       style: TextStyle(
-                          color: Colors.black,
+                          color: themeColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 15)),
                 ],
@@ -998,7 +999,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             .start,
                                                         children: [
                                                           Text(
-                                                            "Civic",
+                                                            "$vahiclename",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -1026,96 +1027,46 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                             Padding(
                                               padding:
                                                   const EdgeInsets.only(top: 8),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      acceptstatus();
-                                                    },
-                                                    child: Container(
-                                                        height: 40,
-                                                        width: ScreenConfig
-                                                                .screenSizeWidth *
-                                                            0.3,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.green,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            10)),
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .withOpacity(
-                                                                        0.40),
-                                                                offset: const Offset(
-                                                                    0.0,
-                                                                    1.2), //(x,y)
-                                                                blurRadius: 6.0,
-                                                              )
-                                                            ]),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      10.0,
-                                                                  vertical: 5),
-                                                          child: Center(
-                                                              child: Text(
-                                                            "Accept",
-                                                            style: TextStyle(
-                                                                fontSize: 14),
-                                                          )),
-                                                        )),
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () => null,
-                                                    child: Container(
-                                                        height: 40,
-                                                        width: ScreenConfig
-                                                                .screenSizeWidth *
-                                                            0.3,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.red,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            10)),
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .withOpacity(
-                                                                        0.40),
-                                                                offset: const Offset(
-                                                                    0.0,
-                                                                    1.2), //(x,y)
-                                                                blurRadius: 6.0,
-                                                              )
-                                                            ]),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      10.0,
-                                                                  vertical: 5),
-                                                          child: Center(
-                                                              child: Text(
-                                                            "Deny",
-                                                            style: TextStyle(
-                                                                fontSize: 14),
-                                                          )),
-                                                        )),
-                                                  ),
-                                                ],
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  acceptstatus();
+                                                },
+                                                child: Container(
+                                                    height: 40,
+                                                    width: ScreenConfig.screenSizeWidth * 0.7,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.green,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .all(Radius
+                                                                    .circular(
+                                                                        10)),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors
+                                                                .grey
+                                                                .withOpacity(
+                                                                    0.40),
+                                                            offset: const Offset(
+                                                                0.0,
+                                                                1.2), //(x,y)
+                                                            blurRadius: 6.0,
+                                                          )
+                                                        ]),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                              horizontal:
+                                                                  10.0,
+                                                              vertical: 5),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Accept",
+                                                        style: TextStyle(
+                                                            fontSize: 14),
+                                                      )),
+                                                    )),
                                               ),
                                             )
                                           ],

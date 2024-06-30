@@ -143,6 +143,5 @@ class userLiveLocation {
   }
 
   userLiveLocation._internal();
-
   LatLng? userlivelocation;
 }
