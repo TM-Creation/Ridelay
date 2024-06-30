@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/vehicle_selection_screen.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
@@ -99,7 +100,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                   onPressed: ()async{
                     SharedPreferences prefs = await SharedPreferences.getInstance();
                     prefs.setBool('isLoggedIn', false);
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthenticationSelection()));
                   },
                   child: const Text("Logout"),
                   style: ElevatedButton.styleFrom(

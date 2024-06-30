@@ -44,9 +44,16 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool firstTime = prefs.getBool('first_time') ?? true;
     if (!firstTime) {
-      // User has already seen the intro, navigate to login page
-      Navigator.pushReplacementNamed(
-          context,AuthenticationSelection.routeName);
+      bool cheklogin=await _checkLoginStatus();
+      print("Bolian Check: $cheklogin");
+      if(cheklogin==true){
+        Navigator.pushReplacementNamed(
+            context,RideSelectionScreen.routeName);
+      }
+      else{
+        Navigator.pushReplacementNamed(
+            context,AuthenticationSelection.routeName); // User has already seen the intro, navigate to login page
+      }
     }
   }
   Future<bool> _checkLoginStatus() async {
@@ -55,15 +62,8 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
   }
   void _nextPage() async{
     _saveFirstTime();
-    bool cheklogin=await _checkLoginStatus();
-    if(cheklogin==true){
-      Navigator.pushReplacementNamed(
-          context,RideSelectionScreen.routeName);
-    }
-    else{
-      Navigator.pushReplacementNamed(
-          context,AuthenticationSelection.routeName);
-    }
+    Navigator.pushReplacementNamed(
+        context,AuthenticationSelection.routeName);
   }
 
   void _saveFirstTime() async {
