@@ -383,6 +383,15 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
         RideSelectionScreen.routeName,(Route<dynamic> route) => false,);
     } else {
       print('Failed to submit review: ${response.statusCode}');
+      Get.snackbar(
+        'Server Error',
+        'Server Not Found',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
+      );
     }
   }
   return Container(
