@@ -379,7 +379,8 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
         margin: EdgeInsets.all(10),
         duration: Duration(seconds: 3),
       );
-      Navigator.of(context).pushReplacementNamed(RideSelectionScreen.routeName);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        RideSelectionScreen.routeName,(Route<dynamic> route) => false,);
     } else {
       print('Failed to submit review: ${response.statusCode}');
     }
@@ -407,7 +408,8 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
             children: [
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).pushReplacementNamed(RideSelectionScreen.routeName);
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    RideSelectionScreen.routeName,(Route<dynamic> route) => false,);
                 },
                 child: Container(
                     height: 33,

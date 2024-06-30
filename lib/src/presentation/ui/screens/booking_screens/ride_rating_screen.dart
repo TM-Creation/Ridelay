@@ -70,69 +70,63 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      body: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              RideSelectionScreen.routeName,(Route<dynamic> route) => false,);
-        },
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            SizedBox(
-              height: ScreenConfig.screenSizeHeight * 1.2,
-              child: Column(
-                children: [
-                  MapScreen(
-                      showAds: false,
-                      search: [],
-                      check: true,
-                      showTextFields: true,
-                      isFieldsReadOnly: true,
-                      isFullScreen: false,
-                      isShowMyLocationIcon: false,
-                      image: image,
-                      hintFieldOne: "Pick-Up Location",
-                      fieldOneButtonFunction: () {},
-                      suffixIconFieldOne: SizedBox(
-                        height: 60,
-                        width: 50,
-                        child: Row(
-                          children: [
-                            Buttons.smallSquareButton(
-                                "assets/images/CircularIconButton.png", () {}),
-                          ],
-                        ),
-                      ),
-                      fieldOneController: pickupEnterController,
-                      isDisplayFieldTwo: true,
-                      hintFieldTwo: "Drop Off Location",
-                      fieldTwoButtonFunction: () {},
-                      suffixIconFieldTwo: SizedBox(
-                        height: 60,
-                        width: 50,
-                        child: Row(
-                          children: [
-                            Buttons.smallSquareButton(
-                                "assets/images/PinPointIcon.png", () {}),
-                          ],
-                        ),
-                      ),
-                      fieldTwoController: dropoffEnterController),
-                  spaceHeight(
-                    ScreenConfig.screenSizeHeight * 0.2,
-                  )
-                ],
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+      body: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          SizedBox(
+            height: ScreenConfig.screenSizeHeight * 1.2,
+            child: Column(
               children: [
-                spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
-                bottomModalNonSlideable(),
+                MapScreen(
+                    showAds: false,
+                    search: [],
+                    check: true,
+                    showTextFields: true,
+                    isFieldsReadOnly: true,
+                    isFullScreen: false,
+                    isShowMyLocationIcon: false,
+                    image: image,
+                    hintFieldOne: "Pick-Up Location",
+                    fieldOneButtonFunction: () {},
+                    suffixIconFieldOne: SizedBox(
+                      height: 60,
+                      width: 50,
+                      child: Row(
+                        children: [
+                          Buttons.smallSquareButton(
+                              "assets/images/CircularIconButton.png", () {}),
+                        ],
+                      ),
+                    ),
+                    fieldOneController: pickupEnterController,
+                    isDisplayFieldTwo: true,
+                    hintFieldTwo: "Drop Off Location",
+                    fieldTwoButtonFunction: () {},
+                    suffixIconFieldTwo: SizedBox(
+                      height: 60,
+                      width: 50,
+                      child: Row(
+                        children: [
+                          Buttons.smallSquareButton(
+                              "assets/images/PinPointIcon.png", () {}),
+                        ],
+                      ),
+                    ),
+                    fieldTwoController: dropoffEnterController),
+                spaceHeight(
+                  ScreenConfig.screenSizeHeight * 0.2,
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
+              bottomModalNonSlideable(),
+            ],
+          )
+        ],
       ),
     );
   }
