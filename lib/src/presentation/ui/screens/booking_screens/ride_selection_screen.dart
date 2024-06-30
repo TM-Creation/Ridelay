@@ -197,7 +197,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
             fieldTwoController: TextEditingController(),
           ),
           Container(
-            height: ScreenConfig.screenSizeHeight * 0.34,
+            height: ScreenConfig.screenSizeHeight * 0.31,
             width: ScreenConfig.screenSizeWidth,
             decoration: bottomModalTemplate(),
             child: Padding(
@@ -229,51 +229,6 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                       ],
                     ),
                   ),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, PreviousRidesScreen.routeName);
-                    },
-                    child: Container(
-                      height: ScreenConfig.screenSizeHeight * 0.05,
-                      width: ScreenConfig.screenSizeWidth * 0.8,
-                      decoration: squareButtonTemplate(),
-                      child: Padding(
-                        padding:
-                        const EdgeInsets.only(left: 20.0, right: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  height:
-                                  ScreenConfig.screenSizeHeight * 0.04,
-                                  width: 25,
-                                  child: Image.asset(
-                                    "assets/images/YourPastTripsIcon.png",
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                spaceWidth(
-                                    ScreenConfig.screenSizeWidth * 0.03),
-                                displayText(
-                                    "YOUR PAST TRIPS",
-                                    ScreenConfig.theme.textTheme.headline4,
-                                    width: 0.5),
-                              ],
-                            ),
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 15,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 ],
               ),
             ),

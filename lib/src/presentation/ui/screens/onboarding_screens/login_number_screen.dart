@@ -95,7 +95,7 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
                   }),
                 ],
               ),
-              spaceHeight(ScreenConfig.screenSizeHeight * 0.2),
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
             ],
           ),
         ),
