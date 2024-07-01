@@ -59,6 +59,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   String phonenumber = '';
   double raiting=0.0;
   LatLng userlocation = LatLng(9.0, 7.9);
+  List<Map<String, dynamic>> rides = [];
   @override
   void initState() {
     _requestPermissionAndGetCurrentLocation();
@@ -119,7 +120,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     socket.emit('registerPassenger', PassId().id);
     socket.on('rideRequest', (data) {
       print("ridedata arrive $data");
-      datarespose = data['_id'];
+      /*datarespose = data['_id'];
       print(" and id is=$datarespose");
       passangerName = data['passenger']['name'];
       phonenumber = data['passenger']['phone'];
@@ -132,7 +133,27 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
           .toList();
       distance = calculateDistance(pick[1], pick[0], drop[1], drop[0]);
       print(
-          'Dynamic Data is: name=$passangerName, fare=$fare, distance=$distance');
+          'Dynamic Data is: name=$passangerName, fare=$fare, distance=$distance');*/
+      Map<String, dynamic> rideData = {
+        'id': data['_id'],
+        'passengerName': data['passenger']['name'],
+        'phoneNumber': data['passenger']['phone'],
+        'fare': data['fare'],
+        'pickupLocation': (data['pickupLocation']['coordinates'] as List<dynamic>)
+            .map((coordinate) => coordinate is int ? coordinate.toDouble() : coordinate as double)
+            .toList(),
+        'dropoffLocation': (data['dropoffLocation']['coordinates'] as List<dynamic>)
+            .map((coordinate) => coordinate is int ? coordinate.toDouble() : coordinate as double)
+            .toList(),
+        'distance': calculateDistance(
+          (data['pickupLocation']['coordinates'][1] as num).toDouble(),
+          (data['pickupLocation']['coordinates'][0] as num).toDouble(),
+          (data['dropoffLocation']['coordinates'][1] as num).toDouble(),
+          (data['dropoffLocation']['coordinates'][0] as num).toDouble(),
+        )
+      };
+      rides.add(rideData);
+      print('Ride Data is Arrive in Map: $rideData');
       rideRequestCount++;
       setState(() {
         print("setstate is run");
@@ -202,8 +223,9 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
     return '${distanceKm.toStringAsFixed(2)} km';
   }
 
-  void acceptrides() {
-    final payload = {'rideId': datarespose, 'driverId': PassId().id};
+  void acceptrides(String rideId) {
+    print("Ride is is this this: $rideId");
+    final payload = {'rideId': rideId, 'driverId': PassId().id};
     socket.emit('acceptRide', payload);
   }
   void _launchCaller(String phoneNumber) async {
@@ -407,7 +429,8 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                       children: [
                         spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                         Column(
-                          children: List.generate(rideRequestCount, (index) {
+                          children: List.generate(rides.length, (index) {
+                            final ride = rides[index];
                             return Column(
                               children: [
                                 Container(
@@ -478,7 +501,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                             .start,
                                                         children: [
                                                           Text(
-                                                            "$passangerName",
+                                                            "${ride['passengerName']}",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -494,7 +517,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                                     0.03),
                                                           ),
                                                           Text(
-                                                            "Distance: $distance",
+                                                            "Distance: ${ride['distance']}",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -502,7 +525,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                                     0.03),
                                                           ),
                                                           Text(
-                                                            "Fare: $fare",
+                                                            "Fare: ${ride['fare']}",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -539,7 +562,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                       smallSquareButton(
                                                           "assets/images/PhoneIcon.png",
                                                               () {
-                                                            _launchCaller(phonenumber);
+                                                            _launchCaller(ride['phoneNumber']);
                                                           }),
                                                       smallSquareButton(
                                                           "assets/images/EmailIcon.png",
@@ -551,7 +574,15 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                                                       0.035),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      acceptrides();
+                                                      setState(() {
+                                                        pick=ride['pickupLocation'];
+                                                        drop=ride['dropoffLocation'];
+                                                        passangerName=ride['passengerName'];
+                                                        phonenumber=ride['phoneNumber'];
+                                                        fare=ride['fare'];
+                                                        datarespose=ride['id'];
+                                                      });
+                                                      acceptrides(ride['id']);
                                                       startLoading();
                                                     },
                                                     child: Container(
