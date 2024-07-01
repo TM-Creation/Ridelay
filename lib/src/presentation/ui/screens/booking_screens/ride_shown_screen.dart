@@ -94,6 +94,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   //String? vahicleimage;
   String vahiclename='';
   String numberplate='';
+  List<Map<String, dynamic>> drivers = [];
   @override
   void initState(){
     initSocket();
@@ -131,7 +132,16 @@ class _RideShownScreenState extends State<RideShownScreen> {
       print("$data ride is accept ");
       isdriveraccept=false;
       requestshow=true;
-      drivername=data['driver']['name'];
+      Map<String,dynamic> driverData={
+        'driverName':data['driver']['name'],
+        'driverRaiting':data['driver']['rating'],
+        'vahicleName':data['vehicle']['name'],
+        'numberPlate':data['vehicle']['numberPlate'],
+        'rideId':data['_id'],
+        'driverId':data['driver']['_id'],
+      };
+
+      /*drivername=data['driver']['name'];
       //driverimage=data['driver']['driverImage'];
       driverraiting=data['driver']['rating'];
       //vahicleimage=data['vehicle']['vehicleImage'];
@@ -139,7 +149,8 @@ class _RideShownScreenState extends State<RideShownScreen> {
       numberplate=data['vehicle']['numberPlate'];
       reqrideid = data['_id'];
       final driver=data['driver'];
-      driverid=driver['_id'];
+      driverid=driver['_id'];*/
+      drivers.add(driverData);
       counter++;
       setState(() {
         print("check sestate");
@@ -169,7 +180,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   @override
 
   String typeofvahicle = '';
-  void acceptstatus() {
+  void acceptstatus(String rideId,String driverId) {
     final payload = {'rideId': reqrideid,
     'driverId':driverid};
     socket.emit('confirmRide', payload);
@@ -896,7 +907,8 @@ class _RideShownScreenState extends State<RideShownScreen> {
                       padding: const EdgeInsets.only(top: 15),
                       child: SingleChildScrollView(
                         child: Column(
-                          children: List.generate(counter, (index) {
+                          children: List.generate(drivers.length, (index) {
+                            final driver = drivers[index];
                             return Column(
                               children: [
                                 Container(
@@ -950,7 +962,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             .start,
                                                         children: [
                                                           Text(
-                                                            "$drivername",
+                                                            "${driver['driverName']}",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -958,7 +970,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                     0.03),
                                                           ),
                                                           Text(
-                                                            "$driverraiting *",
+                                                            "${driver['driverRaiting']} *",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -999,7 +1011,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                             .start,
                                                         children: [
                                                           Text(
-                                                            "$vahiclename",
+                                                            "${driver['vahicleName']}",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -1007,7 +1019,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                                     0.03),
                                                           ),
                                                           Text(
-                                                            "$numberplate",
+                                                            "${driver['numberPlate']}",
                                                             style: TextStyle(
                                                                 fontSize:
                                                                 ScreenConfig
@@ -1029,7 +1041,21 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                   const EdgeInsets.only(top: 8),
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  acceptstatus();
+                                                  setState(() {
+                                                    /*'driverName':data['driver']['name'],
+                                                    'driverRaiting':data['driver']['rating'],
+                                                    'vahicleName':data['vehicle']['name'],
+                                                    'numberPlate':data['vehicle']['numberPlate'],
+                                                    'rideId':data['_id'],
+                                                    'driverId':data['driver']['_id'],*/
+                                                    drivername=driver['driverName'];
+                                                    driverraiting=driver['driverRaiting'];
+                                                    vahiclename=driver['vahicleName'];
+                                                    numberplate=driver['numberPlate'];
+                                                    reqrideid=driver['rideId'];
+                                                    driverid=driver['driverId'];
+                                                  });
+                                                  acceptstatus(driver['rideId'],driver['driverId']);
                                                 },
                                                 child: Container(
                                                     height: 40,
