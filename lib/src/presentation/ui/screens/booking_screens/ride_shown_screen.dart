@@ -181,6 +181,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
   String typeofvahicle = '';
   void acceptstatus(String rideId,String driverId) {
+    print("Ride ID and Driver ID is this: $rideId $driverid");
     final payload = {'rideId': reqrideid,
     'driverId':driverid};
     socket.emit('confirmRide', payload);
