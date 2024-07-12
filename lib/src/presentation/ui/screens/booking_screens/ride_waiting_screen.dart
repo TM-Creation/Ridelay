@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/models/googlemapapikey.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_in_progress_and_finish_screen.dart';
 
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
@@ -153,7 +154,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
   Future<List<LatLng>> _getRoutePolylinePoints(
       LatLng origin, LatLng destination) async {
     String apiUrl =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${GoogleMapKey().googlemapkey}';
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -218,7 +219,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
 
   Future<String> getTravelTime(
       double startLat, double startLng, double endLat, double endLng) async {
-    final apiKey = 'AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE';
+    final apiKey = '${GoogleMapKey().googlemapkey}';
     final url = 'https://maps.googleapis.com/maps/api/directions/json'
         '?origin=$startLat,$startLng'
         '&destination=$endLat,$endLng'

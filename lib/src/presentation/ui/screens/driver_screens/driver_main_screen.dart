@@ -386,6 +386,8 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: ()async{
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      await prefs.remove('islogin');
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
                     },
                     child: const Text("Logout"),

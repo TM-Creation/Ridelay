@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/models/googlemapapikey.dart';
+import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/space_line_between_two_text_fields.dart';
@@ -78,6 +81,7 @@ class _MapScreenState extends State<MapScreen> {
   bool flag1 = false;
   bool flag2 = true;
   bool liveselect = false;
+  Set<Polyline> _polylines = {};
 
   @override
   void initState() {
@@ -102,7 +106,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void getSuggestion1(String input) async {
-    String KPLACES_API_KEY = "AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE";
+    String KPLACES_API_KEY = "${GoogleMapKey().googlemapkey}";
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
@@ -131,12 +135,11 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void getSuggestion2(String input) async {
-    String KPLACES_API_KEY = "AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE";
+    String KPLACES_API_KEY = "${GoogleMapKey().googlemapkey}";
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
         '$baseURL?input=$input&key=$KPLACES_API_KEY&sessiontoken=$sessionToken';
-
     try {
       var response = await http.get(Uri.parse(request));
       if (response.statusCode == 200) {
@@ -206,6 +209,9 @@ class _MapScreenState extends State<MapScreen> {
       origin: pickup,
       destination: dropoff,
     );
+    // Get nearest road for pickup and dropoff if needed
+    final nearestRoadToPickup = await getNearestRoad(pickup);
+    final nearestRoadToDropoff = await getNearestRoad(dropoff);
     if (directions != null) {
       _info = directions;
       if (_info != null) {
@@ -214,27 +220,64 @@ class _MapScreenState extends State<MapScreen> {
           widget.fieldButtonFunction!();
         }
         _adjustCameraToBounds();
-        if (mounted) {
-          setState(() {});
-        }
+
+        // Add polylines to the map
+        setState(() {
+          _polylines = {
+            Polyline(
+              polylineId: PolylineId('overview_polyline'),
+              color: themeColor,
+              width: 5,
+              points: _info!.polylinePoints
+                  .map((e) => LatLng(e.latitude, e.longitude))
+                  .toList(),
+            ),
+          };
+
+          if (nearestRoadToPickup != null && nearestRoadToPickup != pickup) {
+            _polylines.add(Polyline(
+              polylineId: PolylineId('walk_to_road_from_pickup'),
+              color: themeColor,
+              width: 7,
+              points: [
+                pickup,
+                nearestRoadToPickup,
+              ],
+              patterns: [PatternItem.dot],
+            ));
+          }
+
+          if (nearestRoadToDropoff != null && nearestRoadToDropoff != dropoff) {
+            _polylines.add(Polyline(
+              polylineId: PolylineId('walk_to_road_from_dropoff'),
+              color: themeColor,
+              width: 7,
+              points: [
+                nearestRoadToDropoff,
+                dropoff,
+              ],
+              patterns: [PatternItem.dot],
+            ));
+          }
+        });
       }
     } else {
       print("direction null");
     }
   }
 
-  Future<void> _loadMarkerIcons() async {
-    final double iconSize = 68.0; // Set the desired size of the icons
+
+  Future<void> _loadMarkerIcons() async {// Set the desired size of the icons
 
     _originIcon = await BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(size: Size(iconSize, iconSize)), // Specify the size
-      'assets/images/CircularIconButton.png',
+      ImageConfiguration(size: Size(50, 50)), // Specify the size
+      'assets/images/userpickup.png',
     );
 
-    _destinationIcon = await BitmapDescriptor.fromAssetImage(
+    /*_destinationIcon = await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(size: Size(iconSize, iconSize)), // Specify the size
       'assets/images/destinationIcon.png',
-    );
+    );*/
   }
 
   final dio = Dio();
@@ -242,7 +285,7 @@ class _MapScreenState extends State<MapScreen> {
   late List<Location> drop = [];
   Directions? _info;
   BitmapDescriptor? _originIcon;
-  BitmapDescriptor? _destinationIcon;
+  late final BitmapDescriptor _destinationIcon;
   final obj = LocationSelectionScreen();
   GoogleMapController? _mapController;
 
@@ -272,6 +315,25 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   late String livelocationdata;
+  Future<LatLng?> getNearestRoad(LatLng location) async {
+    final dio = Dio();
+    final response = await dio.get(
+      'https://roads.googleapis.com/v1/nearestRoads',
+      queryParameters: {
+        'points': '${location.latitude},${location.longitude}',
+        'key': GoogleMapKey().googlemapkey,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = response.data;
+      if (data['snappedPoints'] != null && data['snappedPoints'].isNotEmpty) {
+        final nearestRoad = data['snappedPoints'][0]['location'];
+        return LatLng(nearestRoad['latitude'], nearestRoad['longitude']);
+      }
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -279,13 +341,32 @@ class _MapScreenState extends State<MapScreen> {
       locationUpdate();
     }
     if (widget.search!.isNotEmpty) {
-      _mapController?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target:
-              LatLng(widget.search![0].latitude, widget.search![0].longitude),
-          zoom: 15.0,
-        ),
-      ));
+      if(liveselect==true){
+        setState(() {
+          widget.search=[Location(
+              latitude:
+              userLiveLocation().userlivelocation!.latitude,
+              longitude:
+              userLiveLocation().userlivelocation!.longitude,
+              timestamp: DateTime.timestamp())];
+        });
+        _mapController?.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target:
+            LatLng(widget.search![0].latitude, widget.search![0].longitude),
+            zoom: 15.0,
+          ),
+        ));
+      }
+      else{
+        _mapController?.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target:
+            LatLng(widget.search![0].latitude, widget.search![0].longitude),
+            zoom: 15.0,
+          ),
+        ));
+      }
     }
     return Stack(
       alignment: AlignmentDirectional.topCenter,
@@ -313,10 +394,10 @@ class _MapScreenState extends State<MapScreen> {
                     markerId: MarkerId('pickup'),
                     infoWindow: InfoWindow(
                       title: 'Origin',
-                      snippet: 'Pickup Location',
+                      snippet: 'Location',
                       anchor: Offset(0.5, 0.5),
                     ),
-                    icon: BitmapDescriptor.defaultMarker!,
+                    icon: BitmapDescriptor.defaultMarker,
                     position: LatLng(widget.search![0].latitude,
                         widget.search![0].longitude)),
               if (pick != null && pick.isNotEmpty)
@@ -327,8 +408,8 @@ class _MapScreenState extends State<MapScreen> {
                       snippet: 'Pickup Location',
                       anchor: Offset(0.5, 0.5),
                     ),
-                    icon: BitmapDescriptor.defaultMarker!,
-                    position: LatLng(pick[0].latitude, pick[0].longitude)),
+                    icon:  BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                    position:LatLng(pick[0].latitude, pick[0].longitude)),
               if (drop != null && drop.isNotEmpty)
                 Marker(
                     markerId: MarkerId('dropoff'),
@@ -337,22 +418,10 @@ class _MapScreenState extends State<MapScreen> {
                       snippet: 'Dropoff Location',
                       anchor: Offset(0.5, 0.5),
                     ),
-                    icon: BitmapDescriptor.defaultMarker!,
+                    icon: BitmapDescriptor.defaultMarker,
                     position: LatLng(drop[0].latitude, drop[0].longitude)),
             },
-            polylines: {
-              // if (_info != null && DistanceLessThenFiftyKM())
-              if (_info != null)
-                Polyline(
-                  polylineId: const PolylineId('overview_polyline'),
-                  color: Color(0XFFFC0A0A),
-                  width: 5,
-                  points: _info?.polylinePoints
-                          ?.map((e) => LatLng(e.latitude, e.longitude))
-                          .toList() ??
-                      [],
-                ),
-            },
+            polylines: _polylines,
             onCameraMove: ((_position) async {
               // Handle camera movement here if needed
             }),
@@ -605,7 +674,6 @@ class _MapScreenState extends State<MapScreen> {
                 onPressed: () async {
                   if (widget.fieldOneController.text.isNotEmpty &&
                       widget.fieldTwoController.text.isNotEmpty) {
-                    print('HEEEEEEEEEEEEELO');
                     if (liveselect == true) {
                       setState(() {
                         pick = [Location(
@@ -621,7 +689,6 @@ class _MapScreenState extends State<MapScreen> {
                     }
                     drop = await locationFromAddress(
                         widget.fieldTwoController.text);
-                    print("hahahahahhahahahaha:$pick");
                     setState(() {
                       pickanddrop().pickloc =
                           LatLng(pick[0].latitude, pick[0].longitude);
@@ -635,6 +702,15 @@ class _MapScreenState extends State<MapScreen> {
                         LatLng(drop[0].latitude, drop[0].longitude));
                   } else {
                     print('ni aya');
+                    Get.snackbar(
+                      'Alert!',
+                      'Please Enter Pick-up & Drop-off Location',
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: themeColor,
+                      colorText: Colors.white,
+                      margin: EdgeInsets.all(10),
+                      duration: Duration(seconds: 3),
+                    );
                   }
                 },
                 child: Icon(Icons.directions),
@@ -659,7 +735,6 @@ class Directions {
 
   factory Directions.fromMap(Map<String, dynamic> map) {
     if ((map['routes'] as List).isEmpty) return null!;
-
     final data = Map<String, dynamic>.from(map['routes'][0]);
 
     final northeast = data['bounds']['northeast'];
@@ -676,7 +751,6 @@ class Directions {
       distance = leg['distance']['text'];
       duration = leg['duration']['text'];
     }
-
     return Directions(
       bounds: bounds,
       polylinePoints:
@@ -692,9 +766,7 @@ class DirectionsRepository {
       'https://maps.googleapis.com/maps/api/directions/json?';
 
   final Dio _dio;
-
   DirectionsRepository({required Dio dio}) : _dio = dio ?? Dio();
-
   Future<Directions?> getDirections({
     required LatLng origin,
     required LatLng destination,
@@ -704,7 +776,7 @@ class DirectionsRepository {
       queryParameters: {
         'origin': '${origin.latitude},${origin.longitude}',
         'destination': '${destination.latitude},${destination.longitude}',
-        'key': 'AIzaSyAW34SKXZzfAUZYRkFqvMceV740PImrruE',
+        'key': '${GoogleMapKey().googlemapkey}',
       },
     );
     print('$destination helo');

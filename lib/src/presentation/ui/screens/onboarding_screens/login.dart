@@ -20,6 +20,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/theme.dart';
 
@@ -204,7 +205,7 @@ class _LoginState extends State<Login> {
                       'Continue',
                       style: ScreenConfig.theme.textTheme.headline6?.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w300),
-                    ), () {
+                    ), () async {
             FocusScope.of(context).unfocus();
             if (!validateStructureEmail(email.text)) {
               setState(() {
@@ -221,20 +222,6 @@ class _LoginState extends State<Login> {
                 progres=true;
               });
               navigate();
-            }else {
-              print("snakbar");
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Center(
-                    child: Text(
-                      'Email or Password is Incorect',
-                      style: TextStyle(fontSize: 15, color: Colors.white),
-                    ),
-                  ),
-                  backgroundColor: Colors.black,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
             }
           }),
         ),
@@ -286,6 +273,8 @@ class _LoginState extends State<Login> {
               margin: EdgeInsets.all(10),
               duration: Duration(seconds: 3),
             );
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('islogin', 'driver');
             Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
           } else if (typeofuser == 'passenger') {
             print("Passenger Done");
@@ -298,6 +287,8 @@ class _LoginState extends State<Login> {
               margin: EdgeInsets.all(10),
               duration: Duration(seconds: 3),
             );
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('islogin', 'passenger');
             Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
           } else {
             print("Nothing Done");

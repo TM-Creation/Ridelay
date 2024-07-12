@@ -19,6 +19,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/othe
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RideSelectionScreen extends StatefulWidget {
   const RideSelectionScreen({Key? key}) : super(key: key);
@@ -130,7 +131,9 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: (){
+                  onPressed: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    await prefs.remove('islogin');
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
                   },
                   child: const Text("Logout"),

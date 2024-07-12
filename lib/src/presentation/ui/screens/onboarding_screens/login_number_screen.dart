@@ -52,7 +52,6 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
           height: ScreenConfig.screenSizeHeight * 1.2,
           width: ScreenConfig.screenSizeWidth * 0.9,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
@@ -61,6 +60,7 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
                   logoDisplay(),
                 ],
               ),
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

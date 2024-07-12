@@ -590,19 +590,25 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 progres=true;
               });
               navigate();
-            }else {
-              print("snakbar");
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Center(
-                    child: Text(
-                      'Password & Confirom Password are not Equal',
-                      style: TextStyle(fontSize: 15, color: Colors.white),
-                    ),
-                  ),
-                  backgroundColor: Colors.black,
-                  behavior: SnackBarBehavior.floating,
-                ),
+            }else if(password.text.isNotEmpty && conpassword.text.isNotEmpty && password.text != conpassword.text){
+              Get.snackbar(
+                'Alert!',
+                'Password & Confirm Password are not Equal',
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: themeColor,
+                colorText: Colors.white,
+                margin: EdgeInsets.all(10),
+                duration: Duration(seconds: 3),
+              );
+            }else{
+              Get.snackbar(
+                'Alert!',
+                'Please Fill All Data',
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: themeColor,
+                colorText: Colors.white,
+                margin: EdgeInsets.all(10),
+                duration: Duration(seconds: 3),
               );
             }
           }),

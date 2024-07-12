@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_shown_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
@@ -144,28 +146,26 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                   );
                                 }
                                 else{
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Center(
-                                        child: Text(
-                                          'Please Select Below 60KM Distance',style: TextStyle(fontSize: 15,color: Colors.white),),
-                                      ),
-                                      backgroundColor: Colors.black,
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
+                                  Get.snackbar(
+                                    'Alert!',
+                                    'Please Select Below to 60km Distance',
+                                    snackPosition: SnackPosition.TOP,
+                                    backgroundColor: themeColor,
+                                    colorText: Colors.white,
+                                    margin: EdgeInsets.all(10),
+                                    duration: Duration(seconds: 3),
                                   );
                                 }
 
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Center(
-                                      child: Text(
-                                        'Please Select Pick-Up & Drop Off Location',style: TextStyle(fontSize: 15,color: Colors.white),),
-                                    ),
-                                    backgroundColor: Colors.black,
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
+                                Get.snackbar(
+                                  'Alert!',
+                                  'Please Enter Pick-up & Drop-off Location',
+                                  snackPosition: SnackPosition.TOP,
+                                  backgroundColor: themeColor,
+                                  colorText: Colors.white,
+                                  margin: EdgeInsets.all(10),
+                                  duration: Duration(seconds: 3),
                                 );
                               }
                             },
