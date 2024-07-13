@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/base%20url.dart';
@@ -51,7 +52,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String userNumber = "";
-
+  String number='';
   @override
   void initState() {
     super.initState();
@@ -68,7 +69,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
       name: firstName.text,
       email: email.text,
       password: password.text,
-      phone: phoneNumber.text,
+      phone: number,
       location: Location(
         type: "Point",
         coordinates: [userLiveLocation().userlivelocation!.longitude, userLiveLocation().userlivelocation!.latitude], // Static example coordinates
@@ -169,7 +170,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                       if (fNameError)
                         displayRegistrationValidation("nameerror"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                      _displayTextField(
+                      /*_displayTextField(
                           name: 'Phone number (e.g +923123456789)',
                           hint: 'Enter phone number with country extension',
                           onChanged: (val) {
@@ -208,7 +209,53 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                           controller: phoneNumber),
                       if (phoneNumberError)
                         displayRegistrationValidation("phoneNumber"),
-                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),*/
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Phone Number',
+                            style: ScreenConfig.theme.textTheme.headline6
+                                ?.copyWith(fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                            height: ScreenConfig.screenSizeHeight * 0.01,
+                          ),
+                          Container(
+                            height: 70,
+                            child: IntlPhoneField(
+                              controller: phoneNumber,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                                hintText: 'Enter Phone Number',
+                                hintStyle: ScreenConfig.theme.textTheme.headline5,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                                  borderSide: BorderSide(
+                                      color: ScreenConfig.theme.colorScheme.primary, width: 0.75),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                                  borderSide: BorderSide(
+                                      color: ScreenConfig.theme.colorScheme.primary, width: 0.75),
+                                ),
+                              ),
+                              initialCountryCode: 'US',
+                              // Initial selection and favorite
+                              onChanged: (phone) {
+                                print(phone
+                                    .completeNumber); // Prints the complete number with country code
+                                setState(() {
+                                  number = phone.completeNumber;
+                                });
+                              },
+                              style: TextStyle(color: Colors.black, fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                       _displayTextField(
                           name: 'Email Address',
                           // capText: UpperCaseTextFormatter(),
@@ -316,16 +363,6 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                 color: Colors.white, fontWeight: FontWeight.w300),
           ), () {
             FocusScope.of(context).unfocus();
-            if (!validatePhoneNumber(phoneNumber.text) ||
-                phoneNumber.text.length != 13) {
-              setState(() {
-                phoneNumberError = true;
-              });
-            } else {
-              setState(() {
-                phoneNumberError = false;
-              });
-            }
             if (!validateStructureEmail(email.text)) {
               setState(() {
                 emailError = true;
@@ -344,8 +381,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                 fNameError = false;
               });
             }
-            if (phoneNumberError == false &&
-                fNameError == false &&
+            if (fNameError == false &&
                 emailError == false &&
                 pasd == false &&
                 conpsd == false && password.text==conpassword.text) {
@@ -354,19 +390,25 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                 progres=true;
               });
               navigate();
-            }else {
-              print("snakbar");
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Center(
-                    child: Text(
-                      'Password & Confirom Password are not Equal',
-                      style: TextStyle(fontSize: 15, color: Colors.white),
-                    ),
-                  ),
-                  backgroundColor: Colors.black,
-                  behavior: SnackBarBehavior.floating,
-                ),
+            }else if(password.text.isNotEmpty && conpassword.text.isNotEmpty && password.text != conpassword.text){
+              Get.snackbar(
+                'Alert!',
+                'Password & Confirm Password are not Equal',
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: themeColor,
+                colorText: Colors.white,
+                margin: EdgeInsets.all(10),
+                duration: Duration(seconds: 3),
+              );
+            }else{
+              Get.snackbar(
+                'Alert!',
+                'Please Fill All Data',
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: themeColor,
+                colorText: Colors.white,
+                margin: EdgeInsets.all(10),
+                duration: Duration(seconds: 3),
               );
             }
           }),
