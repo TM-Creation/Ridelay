@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/config/debug_helper.dart';
@@ -17,6 +18,7 @@ import '../../templates/main_generic_templates/app_bars/app_bar.dart';
 
 class LoginNumberScreen extends StatefulWidget {
   static const routeName = '/loginNumberEnter-screen';
+
   const LoginNumberScreen({Key? key}) : super(key: key);
 
   @override
@@ -25,12 +27,21 @@ class LoginNumberScreen extends StatefulWidget {
 
 class _LoginNumberScreenState extends State<LoginNumberScreen> {
   LatLng userlocation = LatLng(9.0, 7.9);
-  bool progres=false;
+  bool progres = false;
+
   @override
   void initState() {
     errorValidatorShow = false;
     phoneNumberController = TextEditingController();
     super.initState();
+  }
+
+  String number = '';
+@override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    phoneNumberController.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -43,6 +54,7 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
         ),
       );
     }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -70,27 +82,49 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
                         ?.copyWith(color: Colors.black.withOpacity(0.5)),
                   ),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  displayText(
-                      "Enter phone number with country extension. (e.g +921234567890)",
+                  displayText("Enter phone number with country extension.",
                       ScreenConfig.theme.textTheme.headline3),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                  const PhoneNumberTextField(),
+                  IntlPhoneField(
+                    controller: phoneNumberController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter Phone Number',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(),
+                      ),
+                    ),
+                    initialCountryCode: 'US',
+                    // Initial selection and favorite
+                    onChanged: (phone) {
+                      print(phone
+                          .completeNumber); // Prints the complete number with country code
+                      setState(() {
+                        number = phone.completeNumber;
+                      });
+                    },
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
-                  Buttons.longWidthButton(progres
-                      ? Container(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(color: Colors.white,))
-                      : Text(
-                    'Login',
-                    style: ScreenConfig.theme.textTheme.headline6?.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.w300),
-                  ),() {
+                  Buttons.longWidthButton(
+                      progres
+                          ? Container(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ))
+                          : Text(
+                              'Login',
+                              style: ScreenConfig.theme.textTheme.headline6
+                                  ?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w300),
+                            ), () {
                     if (!errorValidatorShow) {
                       DebugHelper.printAll("Initiate Print");
                       Navigator.pushNamed(
                           context, OTPVerificationScreen.routeName,
-                          arguments: {'number': phoneNumberController.text});
+                          arguments: {'number': number});
                     }
                   }),
                 ],
@@ -103,4 +137,3 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
     );
   }
 }
-

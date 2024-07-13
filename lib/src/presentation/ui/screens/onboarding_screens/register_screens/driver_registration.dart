@@ -8,6 +8,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/authmodels/driverregmodel.dart';
 import 'package:ridely/src/presentation/ui/config/compress_image.dart';
@@ -49,7 +50,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   final TextEditingController conpassword = TextEditingController();
   String valueCity = '';
   String valueCountry = '';
-
+  String number='';
   final _formKey = GlobalKey<FormState>();
 
   String userNumber = "";
@@ -72,7 +73,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       name: drivername.text,
       email: email.text,
       password: password.text,
-      phone: driverphonenumber.text,
+      phone: number,
       location: Location(
         type: "Point",
         coordinates: [userLiveLocation().userlivelocation!.longitude, userLiveLocation().userlivelocation!.latitude], // Static example coordinates
@@ -363,7 +364,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                           inputType: TextInputType.text),
                       if (nameerror) displayRegistrationValidation("nameerror"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                      _displayTextField(
+                      /*_displayTextField(
                           name: 'Phone Number',
                           hint: 'Enter Your Phone Number',
                           validator: (value) {
@@ -386,8 +387,53 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                           },
                           inputType: TextInputType.text),
                       if (phoneerror)
-                        displayRegistrationValidation("phoneerror"),
-                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                        displayRegistrationValidation("phoneerror"),*/
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Phone Number',
+                            style: ScreenConfig.theme.textTheme.headline6
+                                ?.copyWith(fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                            height: ScreenConfig.screenSizeHeight * 0.01,
+                          ),
+                          Container(
+                            height: 70,
+                            child: IntlPhoneField(
+                              controller: driverphonenumber,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                                hintText: 'Enter Phone Number',
+                                hintStyle: ScreenConfig.theme.textTheme.headline5,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                                  borderSide: BorderSide(
+                                      color: ScreenConfig.theme.colorScheme.primary, width: 0.75),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                                  borderSide: BorderSide(
+                                      color: ScreenConfig.theme.colorScheme.primary, width: 0.75),
+                                ),
+                              ),
+                              initialCountryCode: 'US',
+                              // Initial selection and favorite
+                              onChanged: (phone) {
+                                print(phone
+                                    .completeNumber); // Prints the complete number with country code
+                                setState(() {
+                                  number = phone.completeNumber;
+                                });
+                              },
+                              style: TextStyle(color: Colors.black, fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                       _displayTextField(
                           name: 'Email',
                           hint: 'Enter Your Email',
@@ -559,16 +605,6 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 emailerror = false;
               });
             }
-            if (driverphonenumber.text.isEmpty ||
-                driverphonenumber.text.length < 13) {
-              setState(() {
-                phoneerror = true;
-              });
-            } else {
-              setState(() {
-                phoneerror = false;
-              });
-            }
             if (_imageFile == null) {
               setState(() {
                 picError = true;
@@ -581,7 +617,6 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
             if (picError == false &&
                 idNumberError == false &&
                 emailerror == false &&
-                phoneerror == false &&
                 passworderror == false &&
                 nameerror == false &&
                 password.text == conpassword.text) {

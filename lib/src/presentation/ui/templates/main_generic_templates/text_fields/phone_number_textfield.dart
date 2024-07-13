@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/config/validator.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/validator_widgets/error_text.dart';
@@ -25,7 +26,7 @@ class _PhoneNumberTextFieldState extends State<PhoneNumberTextField> {
         width: ScreenConfig.screenSizeWidth * 0.9,
         child: Column(
           children: [
-            TextFormField(
+            /*TextFormField(
               style: ScreenConfig.theme.textTheme.headline4
                   ?.copyWith(fontWeight: FontWeight.normal, fontSize: 20),
               textInputAction: TextInputAction.done,
@@ -101,7 +102,8 @@ class _PhoneNumberTextFieldState extends State<PhoneNumberTextField> {
                       width: 0.75),
                 ),
               ),
-            ),
+            ),*/
+
             if (errorValidatorShow)
               Column(
                 children: [

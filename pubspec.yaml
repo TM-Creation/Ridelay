@@ -54,6 +54,7 @@ dependencies:
   socket_io_client: ^2.0.3+1
   five_pointed_star: ^1.0.3
   url_launcher: ^6.3.0
+  intl_phone_field: ^3.2.0
 dev_dependencies:
   flutter_launcher_icons: ^0.10.0
   flutter_lints: ^1.0.0
