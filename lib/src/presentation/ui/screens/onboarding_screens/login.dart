@@ -254,6 +254,10 @@ class _LoginState extends State<Login> {
         final typeofuser = iddata['type'];
         final tokenofuser = data['token'];
         print("id a gi $id");
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('uid', id);
+        await prefs.setString('utoken', tokenofuser);
+        await prefs.setString('utype', typeofuser);
         setState(() {
           PassId().id = id;
           PassId().token = tokenofuser;

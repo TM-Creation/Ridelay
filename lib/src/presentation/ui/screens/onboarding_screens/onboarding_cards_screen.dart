@@ -46,13 +46,26 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool firstTime = prefs.getBool('first_time') ?? true;
     String isLogin= prefs.getString('islogin') ?? '';
+    String uid=prefs.getString('uid') ?? '';
+    String utoken=prefs.getString('utoken') ?? '';
+    String utype=prefs.getString('utype') ?? '';
     if (!firstTime) {
       if(isLogin.isNotEmpty){
         if(isLogin=='passenger'){
+          setState(() {
+            PassId().id=uid;
+            PassId().token=utoken;
+            PassId().type=utype;
+          });
           Navigator.pushReplacementNamed(
               context,RideSelectionScreen.routeName);
         }
         else if(isLogin=='driver'){
+          setState(() {
+            PassId().id=uid;
+            PassId().token=utoken;
+            PassId().type=utype;
+          });
           Navigator.pushReplacementNamed(
               context,DriverRideSelectionScreen.routeName);
         }else{
