@@ -98,6 +98,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   }*/
   late IO.Socket socket;
   initSocket() {
+    print('Null or Empty Check: ${PassId().token} -- ${PassId().type} -- ${PassId().id}');
     socket = IO.io(baseulr().burl, <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {

@@ -109,6 +109,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
   final LatLng? pickuplocation = pickanddrop().pickloc,
       dropofflocation = pickanddrop().droploc;
   initSocket() {
+    print('Null or Empty Check: ${PassId().token} -- ${PassId().type} -- ${PassId().id}');
     socket = IO.io(baseulr().burl, <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {
