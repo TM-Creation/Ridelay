@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ridely/src/presentation/ui/config/theme.dart';
 
 import '../../../../infrastructure/screen_config/screen_config.dart';
 import '../../templates/main_generic_templates/text_templates/display_text.dart';
@@ -11,140 +12,103 @@ class TransactionHistory extends StatefulWidget {
 }
 
 class _TransactionHistoryState extends State<TransactionHistory> {
+  List<Map<String, dynamic>> apiData = [
+    {"id": 1, "name": "John Doe", "email": "john.doe@example.com","payment":"70"},
+    {"id": 2, "name": "Jane Smith", "email": "jane.smith@example.com","payment":"70"},
+    {"id": 1, "name": "John Doe", "email": "john.doe@example.com","payment":"70"},
+    {"id": 2, "name": "Jane Smith", "email": "jane.smith@example.com","payment":"70"},
+    {"id": 1, "name": "John Doe", "email": "john.doe@example.com","payment":"70"},
+    {"id": 2, "name": "Jane Smith", "email": "jane.smith@example.com","payment":"70"},
+    {"id": 1, "name": "John Doe", "email": "john.doe@example.com","payment":"70"},
+    {"id": 2, "name": "Jane Smith", "email": "jane.smith@example.com","payment":"70"},
+    // Add more entries based on your API response structure
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> storehistory = [];
-    final int length = 5;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: themeColor,
+        automaticallyImplyLeading: false,
+        title: Center(
+          child: Text(
+            'Transaction History',
+            style: TextStyle(fontSize: ScreenConfig.screenSizeWidth*0.04,fontWeight: FontWeight.bold,color: Colors.white),
+          ),
+        ),
       ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Table(
-            border: TableBorder.all(),
-            columnWidths: const <int, TableColumnWidth>{
-              0: FixedColumnWidth(80), // Set width for the first column
-              1: FixedColumnWidth(80),
-              2: FlexColumnWidth(120), // Flex column width for the third column
-              3: FixedColumnWidth(120), // Set width for the fourth column
-            },
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            children: [
-              TableRow(
-                children: [
-                  TableCell(
-                    child: Container(
-                      color: ScreenConfig.theme.primaryColor,
-                      child: const Center(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+            ),
+            DataTable(
+              headingRowColor:
+                  MaterialStateColor.resolveWith((states) => themeColor),
+              // Styling for the entire DataTable
+              headingTextStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: ScreenConfig.screenSizeWidth*0.03),
+              //dataRowColor: MaterialStateColor.resolveWith((states) => Colors.blue.shade100), // Background color of data rows
+              dividerThickness: 1.0,
+              // Thickness of cell dividers
+              columns: [
+                DataColumn(label: Text('Date')),
+                DataColumn(label: Text('Time')),
+                DataColumn(label: Text('Type')),
+                DataColumn(label: Text('Payment'))
+              ],
+              rows: List.generate(
+                apiData.length,
+                (index) => DataRow(
+                  cells: [
+                    // Each DataCell with its own style
+                    DataCell(
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         child: Text(
-                          "Date",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          apiData[index]['id'].toString(),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
                     ),
-                  ),
-                  TableCell(
-                    child: Container(
-                      color: ScreenConfig.theme.primaryColor,
-                      child: const Center(
+                    DataCell(
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         child: Text(
-                          "Time",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          apiData[index]['name'],
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
                     ),
-                  ),
-                  TableCell(
-                    child: Container(
-                      color: ScreenConfig.theme.primaryColor,
-                      child: const Center(
+                    DataCell(
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         child: Text(
-                          "Type",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          apiData[index]['email'],
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
                     ),
-                  ),
-                  TableCell(
-                    child: Container(
-                      color: ScreenConfig.theme.primaryColor,
-                      child: const Center(
+                    DataCell(
+                      Container(
+                        padding:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         child: Text(
-                          "Costs",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              for (var i = 0; i < length; i++)
-                TableRow(
-                  children: [
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Container(
-                        child: const Center(
-                          child: Text(
-                            "12-5-22",
-                            style: TextStyle(fontSize: 18,color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Container(
-
-                        child: const Center(
-                          child: Text(
-                            "13:10",
-                            style: TextStyle(fontSize: 18,color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Container(
-                        child: const Center(
-                          child: Text(
-                            "payment to indrive",
-                            style: TextStyle(fontSize: 18,color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Container(
-                        child: const Center(
-                          child: Text(
-                            "- PKR 19.48",
-                            style: TextStyle(fontSize: 18, color: Colors.red),
-                          ),
+                          apiData[index]['id'].toString(),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
                     ),
                   ],
                 ),
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );

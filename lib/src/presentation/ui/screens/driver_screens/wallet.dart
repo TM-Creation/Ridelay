@@ -393,7 +393,7 @@ class _WalletState extends State<Wallet> {
             ),
             SizedBox(height: Height * 0.035),
             GestureDetector(
-              onTap: () => _showTermsAndConditionsDialog(context),
+              //onTap: () => _showTermsAndConditionsDialog(context),
               child: Container(
                 width: double.infinity,
                 height: Height * 0.05,
