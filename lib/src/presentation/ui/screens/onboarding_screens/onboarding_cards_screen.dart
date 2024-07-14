@@ -6,6 +6,7 @@ import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/driver_registration.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
@@ -53,6 +54,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
     String uid=prefs.getString('uid') ?? '';
     String utoken=prefs.getString('utoken') ?? '';
     String utype=prefs.getString('utype') ?? '';
+    String driveid=prefs.getString('driverid') ?? '';
     setState(() {
       ft=firstTime;
     });
@@ -80,6 +82,9 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
           Navigator.pushReplacementNamed(
               context,DriverRideSelectionScreen.routeName);
         }else{
+          setState(() {
+            driverId().driverid=driveid;
+          });
           Navigator.pushReplacementNamed(
               context,AuthenticationSelection.routeName);
         }

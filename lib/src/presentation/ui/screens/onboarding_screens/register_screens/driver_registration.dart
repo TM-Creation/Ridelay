@@ -3,6 +3,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'dart:io';
@@ -14,6 +15,7 @@ import 'package:ridely/src/models/authmodels/driverregmodel.dart';
 import 'package:ridely/src/presentation/ui/config/compress_image.dart';
 import 'package:ridely/src/presentation/ui/config/validator.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
+import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/vahicle_registeration.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
@@ -24,6 +26,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../models/base url.dart';
 import '../../../config/theme.dart';
 import '../../driver_screens/driver_main_screen.dart';
@@ -41,7 +44,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   final ImagePicker _picker = ImagePicker();
 
   PickedFile? _imageFile;
-  bool progres=false;
+  bool progres = false;
   final TextEditingController email = TextEditingController();
   final TextEditingController drivername = TextEditingController();
   final TextEditingController driverphonenumber = TextEditingController();
@@ -50,7 +53,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   final TextEditingController conpassword = TextEditingController();
   String valueCity = '';
   String valueCountry = '';
-  String number='';
+  String number = '';
   final _formKey = GlobalKey<FormState>();
 
   String userNumber = "";
@@ -59,6 +62,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   void initState() {
     super.initState();
   }
+
   baseulr burl = baseulr();
   bool nameerror = false;
   bool phoneerror = false;
@@ -76,11 +80,14 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       phone: number,
       location: Location(
         type: "Point",
-        coordinates: [userLiveLocation().userlivelocation!.longitude, userLiveLocation().userlivelocation!.latitude], // Static example coordinates
+        coordinates: [
+          userLiveLocation().userlivelocation!.longitude,
+          userLiveLocation().userlivelocation!.latitude
+        ], // Static example coordinates
       ),
       vehicle: "609c78a1c25e6d6bfdb1b16b",
       rating: 4.8,
-      identityCardNumber:idNumber.text,
+      identityCardNumber: idNumber.text,
       status: "available",
       wallet: "60d21b4667d0d8992e610c87",
       driverImage: "http://example.com/images/john_doe.jpg",
@@ -88,6 +95,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
     print('User data to be sent: ${jsonEncode(user.toJson())}');
     postUserData(user);
   }
+
   @override
   Widget build(BuildContext context) {
     Future<bool> pickImage(ImageSource source) async {
@@ -220,8 +228,10 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                             Buttons.longWidthButton(
                               Text(
                                 'Capture From Camera',
-                                style: ScreenConfig.theme.textTheme.headline6?.copyWith(
-                                    color: Colors.white, fontWeight: FontWeight.w300),
+                                style: ScreenConfig.theme.textTheme.headline6
+                                    ?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w300),
                               ),
                               () async {
                                 final isImageSelectedCorrectSize =
@@ -238,8 +248,10 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                             Buttons.longWidthButton(
                               Text(
                                 'Pick From Gallery',
-                                style: ScreenConfig.theme.textTheme.headline6?.copyWith(
-                                    color: Colors.white, fontWeight: FontWeight.w300),
+                                style: ScreenConfig.theme.textTheme.headline6
+                                    ?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w300),
                               ),
                               () async {
                                 final isImageSelectedCorrectSize =
@@ -406,18 +418,26 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                             child: IntlPhoneField(
                               controller: driverphonenumber,
                               decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 hintText: 'Enter Phone Number',
-                                hintStyle: ScreenConfig.theme.textTheme.headline5,
+                                hintStyle:
+                                    ScreenConfig.theme.textTheme.headline5,
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8.0)),
                                   borderSide: BorderSide(
-                                      color: ScreenConfig.theme.colorScheme.primary, width: 0.75),
+                                      color: ScreenConfig
+                                          .theme.colorScheme.primary,
+                                      width: 0.75),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8.0)),
                                   borderSide: BorderSide(
-                                      color: ScreenConfig.theme.colorScheme.primary, width: 0.75),
+                                      color: ScreenConfig
+                                          .theme.colorScheme.primary,
+                                      width: 0.75),
                                 ),
                               ),
                               initialCountryCode: 'US',
@@ -429,7 +449,8 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                                   number = phone.completeNumber;
                                 });
                               },
-                              style: TextStyle(color: Colors.black, fontSize: 15),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 15),
                             ),
                           ),
                         ],
@@ -482,8 +503,8 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                             }
                           },
                           lengthLimit: LengthLimitingTextInputFormatter(13),
-                          filterTextInput:
-                              FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+                          filterTextInput: FilteringTextInputFormatter.allow(
+                              RegExp('[0-9]')),
                           // capText: UpperCaseTextFormatter(),
 
                           validator: (value) {
@@ -548,6 +569,53 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                       if (conpassworderror)
                         displayRegistrationValidation("conpassd"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      Center(
+                          child: Text(
+                        'If You Alreday Have an Account!',
+                        style: TextStyle(
+                            color: themeColor,
+                            fontSize: ScreenConfig.screenSizeWidth * 0.04),
+                      )),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                      Row(
+
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                  builder: (context) => VehicleRegistrationScreen()));
+                            },
+                            child: Text(
+                              'Register Vahicle',
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: ScreenConfig.screenSizeWidth * 0.03,decoration: TextDecoration.underline,decorationColor: Colors.blue),
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          Text(
+                            'or',
+                            style: TextStyle(
+                                color: themeColor,
+                                fontSize: ScreenConfig.screenSizeWidth * 0.03),
+                          ),
+                          SizedBox(width: 10,),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                  builder: (context) => Login()));
+                            },
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: ScreenConfig.screenSizeWidth * 0.03,decoration: TextDecoration.underline,decorationColor: Colors.blue),
+                            ),
+                          ),
+                        ],
+                      ),
                       spaceHeight(70),
                     ],
                   ),
@@ -565,16 +633,19 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
         height: 60,
         color: Colors.white,
         child: Center(
-          child: Buttons.longWidthButton(progres
-              ? Container(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(color: Colors.white,))
-              : Text(
-            'Continue',
-            style: ScreenConfig.theme.textTheme.headline6?.copyWith(
-                color: Colors.white, fontWeight: FontWeight.w300),
-          ), () {
+          child: Buttons.longWidthButton(
+              progres
+                  ? Container(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ))
+                  : Text(
+                      'Continue',
+                      style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w300),
+                    ), () {
             // navigate();
 
             FocusScope.of(context).unfocus();
@@ -622,10 +693,12 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 password.text == conpassword.text) {
               print("Accepted");
               setState(() {
-                progres=true;
+                progres = true;
               });
               navigate();
-            }else if(password.text.isNotEmpty && conpassword.text.isNotEmpty && password.text != conpassword.text){
+            } else if (password.text.isNotEmpty &&
+                conpassword.text.isNotEmpty &&
+                password.text != conpassword.text) {
               Get.snackbar(
                 'Alert!',
                 'Password & Confirm Password are not Equal',
@@ -635,7 +708,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 margin: EdgeInsets.all(10),
                 duration: Duration(seconds: 3),
               );
-            }else{
+            } else {
               Get.snackbar(
                 'Alert!',
                 'Please Fill All Data',
@@ -653,6 +726,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
   Future<void> postUserData(driverregmodel user) async {
     final url = Uri.parse(
         '${burl.burl}/api/v1/driver/register'); // Replace with your API endpoint
@@ -664,13 +738,16 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
     try {
       final response = await http.post(url, headers: headers, body: body);
       setState(() {
-        progres=false;
+        progres = false;
       });
       if (response.statusCode == 201) {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString(
+            'driverid', jsonDecode(response.body)['data']['_id']);
         setState(() {
-          driverId().driverid=jsonDecode(response.body)['data']['_id'];
+          driverId().driverid = jsonDecode(response.body)['data']['_id'];
           print("Driver Id is: ${driverId().driverid}");
         });
         Get.snackbar(
@@ -682,11 +759,11 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           margin: EdgeInsets.all(10),
           duration: Duration(seconds: 3),
         );
-        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>VehicleRegistrationScreen()));
-      }
-      else if(response.statusCode == 400){
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => VehicleRegistrationScreen()));
+      } else if (response.statusCode == 400) {
         final responseData = jsonDecode(response.body);
-        final message=responseData['message'];
+        final message = responseData['message'];
         print("object $message");
         Get.snackbar(
           'Error',
@@ -697,8 +774,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           margin: EdgeInsets.all(10),
           duration: Duration(seconds: 3),
         );
-      }
-      else {
+      } else {
         // Error occurred
         print('Failed to post user data: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -718,6 +794,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
     }
   }
 }
+
 class driverId {
   static final driverId _instance = driverId._internal();
 

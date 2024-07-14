@@ -153,7 +153,7 @@ class _LoginState extends State<Login> {
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       _displayTextField(
                         name: 'Password',
-                        hint: 'Set a Complex Password',
+                        hint: 'Enter Your Password',
                         validator: (value) {
                           return null;
                         },
