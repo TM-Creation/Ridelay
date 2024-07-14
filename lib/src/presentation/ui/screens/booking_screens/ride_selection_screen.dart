@@ -32,12 +32,12 @@ class RideSelectionScreen extends StatefulWidget {
 class _RideSelectionScreenState extends State<RideSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
   @override
-  LatLng userlocation = LatLng(9.0, 7.9);
+  /*LatLng userlocation = LatLng(9.0, 7.9);*/
   void initState() {
-    _requestPermissionAndGetCurrentLocation();
+   /* _requestPermissionAndGetCurrentLocation();*/
     super.initState();
   }
-  Future<void> _requestPermissionAndGetCurrentLocation() async {
+  /*Future<void> _requestPermissionAndGetCurrentLocation() async {
     // Check if location permission is granted
     print("1122Permission Start");
     var status = await Permission.location.request();
@@ -67,7 +67,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
       );
       _requestPermissionAndGetCurrentLocation();
     }
-  }
+  }*/
   List<Location> search=[];
   void searchupdate()async{
    final searchlocation=await locationFromAddress(locationEnterController.text);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
@@ -13,6 +14,8 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/phone_number_textfield.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
+
+import '../../config/theme.dart';
 
 class AuthenticationSelection extends StatefulWidget {
   static const routeName = '/loginNumberEnter-screen';
@@ -28,10 +31,10 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
   void initState() {
     errorValidatorShow = true;
     phoneNumberController = TextEditingController();
-    /*_requestPermissionAndGetCurrentLocation();*/
+    _requestPermissionAndGetCurrentLocation();
     super.initState();
   }
-  /*Future<void> _requestPermissionAndGetCurrentLocation() async {
+  Future<void> _requestPermissionAndGetCurrentLocation() async {
     // Check if location permission is granted
     print("1122Permission Start");
     var status = await Permission.location.request();
@@ -40,7 +43,7 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
-       print("1122Permission Accepted $position");
+      print("1122Permission Accepted $position");
       // Update the map to show the user's current location
       userlocation = LatLng(position.latitude, position.longitude);
       setState(() {
@@ -49,7 +52,7 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
       });
     } else {
       print('Location permission denied');
-      ScaffoldMessenger.of(context).showSnackBar(
+      /*ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Center(
             child: Text(
@@ -58,10 +61,19 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
           backgroundColor: Colors.black,
           behavior: SnackBarBehavior.floating,
         ),
+      );*/
+      Get.snackbar(
+        'Location Permission',
+        'Please Give You Live Location',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
       );
       _requestPermissionAndGetCurrentLocation();
     }
-  }*/
+  }
   @override
   Widget build(BuildContext context) {
     Widget logoDisplay() {

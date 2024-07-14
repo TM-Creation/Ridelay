@@ -58,15 +58,15 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   String distance = '';
   String phonenumber = '';
   double raiting=0.0;
-  LatLng userlocation = LatLng(9.0, 7.9);
+  /*LatLng userlocation = LatLng(9.0, 7.9);*/
   List<Map<String, dynamic>> rides = [];
   @override
   void initState() {
-    _requestPermissionAndGetCurrentLocation();
+    //_requestPermissionAndGetCurrentLocation();
     initSocket();
     super.initState();
   }
-  Future<void> _requestPermissionAndGetCurrentLocation() async {
+  /*Future<void> _requestPermissionAndGetCurrentLocation() async {
     // Check if location permission is granted
     print("1122Permission Start");
     var status = await Permission.location.request();
@@ -95,7 +95,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       );
       _requestPermissionAndGetCurrentLocation();
     }
-  }
+  }*/
   late IO.Socket socket;
   initSocket() {
     socket = IO.io(baseulr().burl, <String, dynamic>{
