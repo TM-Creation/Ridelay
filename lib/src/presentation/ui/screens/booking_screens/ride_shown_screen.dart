@@ -66,6 +66,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
         comfortfare = (80 * totaldistance!).toInt();
         rickshawfare = (45 * totaldistance!).toInt();
         bykefare = (35 * totaldistance!).toInt();
+        print('Polyline error cheeek: ${pickupEnterController.text} ${dropoffEnterController.text}');
       });
     }
   }

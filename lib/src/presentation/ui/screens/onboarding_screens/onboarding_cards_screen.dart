@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
+import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
@@ -42,6 +45,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
     super.initState();
     _checkFirstTime();
   }
+  bool ft=false;
   void _checkFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool firstTime = prefs.getBool('first_time') ?? true;
@@ -49,7 +53,14 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
     String uid=prefs.getString('uid') ?? '';
     String utoken=prefs.getString('utoken') ?? '';
     String utype=prefs.getString('utype') ?? '';
+    setState(() {
+      ft=firstTime;
+    });
     if (!firstTime) {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      userLiveLocation().userlivelocation=LatLng(position.latitude, position.longitude);
       if(isLogin.isNotEmpty){
         if(isLogin=='passenger'){
           setState(() {
@@ -125,7 +136,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
         },
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: Center(
+          body: ft ? Center(
             child: SizedBox(
               height: ScreenConfig.screenSizeHeight * 1.2,
               width: ScreenConfig.screenSizeWidth * 0.9,
@@ -155,8 +166,8 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
                       currentOnboardingImage == 0
                           ? "assets/images/SplashCar.png"
                           : currentOnboardingImage == 1
-                              ? "assets/images/SplashRickshaw.png"
-                              : "assets/images/SplashBike.png",
+                          ? "assets/images/SplashRickshaw.png"
+                          : "assets/images/SplashBike.png",
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -171,7 +182,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
                 ],
               ),
             ),
-          ),
+          ) :Center(child: CircularProgressIndicator(color: themeColor,)),
         ));
   }
 }

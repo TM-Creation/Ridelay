@@ -298,20 +298,40 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void locationUpdate() async {
-    final pickLocations =
-        await locationFromAddress(widget.fieldOneController.text);
-    final dropLocations =
-        await locationFromAddress(widget.fieldTwoController.text);
+    if(widget.isFieldsReadOnly==true){
+      final dropLocations =
+      await locationFromAddress(widget.fieldTwoController.text);
 
-    // Update the state within setState
-    setState(() {
-      pick = pickLocations as List<Location>;
-      drop = dropLocations as List<Location>;
-      showpolyline(
-        LatLng(pick[0].latitude, pick[0].longitude),
-        LatLng(drop[0].latitude, drop[0].longitude),
-      );
-    });
+      // Update the state within setState
+      setState(() {
+        pick = [Location(
+            latitude:
+            userLiveLocation().userlivelocation!.latitude,
+            longitude:
+            userLiveLocation().userlivelocation!.longitude,
+            timestamp: DateTime.timestamp())];
+        drop = dropLocations as List<Location>;
+        showpolyline(
+          LatLng(pick[0].latitude, pick[0].longitude),
+          LatLng(drop[0].latitude, drop[0].longitude),
+        );
+      });
+    }else{
+      final pickLocations =
+      await locationFromAddress(widget.fieldOneController.text);
+      final dropLocations =
+      await locationFromAddress(widget.fieldTwoController.text);
+
+      // Update the state within setState
+      setState(() {
+        pick = pickLocations as List<Location>;
+        drop = dropLocations as List<Location>;
+        showpolyline(
+          LatLng(pick[0].latitude, pick[0].longitude),
+          LatLng(drop[0].latitude, drop[0].longitude),
+        );
+      });
+    }
   }
 
   late String livelocationdata;
