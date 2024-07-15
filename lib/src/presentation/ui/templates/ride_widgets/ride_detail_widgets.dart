@@ -384,6 +384,7 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
         margin: EdgeInsets.all(10),
         duration: Duration(seconds: 3),
       );
+      feedBackController.clear();
       Navigator.of(context).pushNamedAndRemoveUntil(
         RideSelectionScreen.routeName,(Route<dynamic> route) => false,);
     } else {
