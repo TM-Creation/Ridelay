@@ -279,7 +279,7 @@ class _LoginState extends State<Login> {
             );
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString('islogin', 'driver');
-            Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
+            Navigator.of(context).pushReplacementNamed(DriverRideSelectionScreen.routeName);
           } else if (typeofuser == 'passenger') {
             print("Passenger Done");
             Get.snackbar(
@@ -293,7 +293,7 @@ class _LoginState extends State<Login> {
             );
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString('islogin', 'passenger');
-            Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
+            Navigator.of(context).pushReplacementNamed(RideSelectionScreen.routeName);
           } else {
             print("Nothing Done");
           }
