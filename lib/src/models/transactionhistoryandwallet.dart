@@ -2,7 +2,7 @@ class DriverWallet {
   final String id;
   final String owner;
   final String ownerModel;
-  final int balance;
+  final double balance;
   final List<Transaction> transactions;
   final String createdAt;
   final String updatedAt;
@@ -37,7 +37,7 @@ class DriverWallet {
 }
 
 class Transaction {
-  final int amount;
+  final double amount;
   final String type;
   final String date;
   final String description;
@@ -53,7 +53,7 @@ class Transaction {
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
-      amount: json['amount'] ?? 0,
+      amount: json['amount'] ?? 0.0,
       type: json['type'] ?? '',
       date: json['date'] ?? '',
       description: json['description'] ?? '',
