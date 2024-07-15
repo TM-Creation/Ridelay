@@ -21,7 +21,6 @@ import '../../config/theme.dart';
 String feedBack = "";
 int mycount = 0;
 TextEditingController feedBackController = TextEditingController();
-
 class RatiangStaric extends StatefulWidget {
   const RatiangStaric({key});
 
@@ -30,6 +29,12 @@ class RatiangStaric extends StatefulWidget {
 }
 
 class _RatiangStaricState extends State<RatiangStaric> {
+  @override
+  void dispose() {
+    feedBackController.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Expanded(

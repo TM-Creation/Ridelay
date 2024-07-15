@@ -34,7 +34,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
 
   @override
   void dispose(){
-    distance=null;
+    distance?.totalDistance=='';
     super.dispose();
   }
   void update(){

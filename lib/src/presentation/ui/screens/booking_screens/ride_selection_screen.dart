@@ -79,167 +79,172 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: ()async{
+        return true;
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
         backgroundColor: Colors.white,
-        title: displayNoSizedText(
-          "Welcome to Ridelay",
-          ScreenConfig.theme.textTheme.headline4
-              ?.copyWith(fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: displayNoSizedText(
+            "Welcome to Ridelay",
+            ScreenConfig.theme.textTheme.headline4
+                ?.copyWith(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      drawer: Drawer(
-        backgroundColor: Colors.white,
-        width: MediaQuery.sizeOf(context).width * 0.6,
-        child: Padding(
-          padding: EdgeInsets.all(MediaQuery.sizeOf(context).width * 0.04),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    onPressed: Navigator.of(context).pop,
-                    icon: Image.asset(
-                      "assets/images/CrossIcon.png",
-                      color: ScreenConfig.theme.primaryColor,
-                      width: MediaQuery.sizeOf(context).width * 0.03,
-                      height: MediaQuery.sizeOf(context).height * 0.03,
+        drawer: Drawer(
+          backgroundColor: Colors.white,
+          width: MediaQuery.sizeOf(context).width * 0.6,
+          child: Padding(
+            padding: EdgeInsets.all(MediaQuery.sizeOf(context).width * 0.04),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: Navigator.of(context).pop,
+                      icon: Image.asset(
+                        "assets/images/CrossIcon.png",
+                        color: ScreenConfig.theme.primaryColor,
+                        width: MediaQuery.sizeOf(context).width * 0.03,
+                        height: MediaQuery.sizeOf(context).height * 0.03,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.03,
+                ),
+                Center(
+                  child: Text(
+                    "Moeen",
+                    style: TextStyle(
+                        color: ScreenConfig.theme.primaryColor,
+                        fontSize: MediaQuery.sizeOf(context).width * 0.062),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.04,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      await prefs.remove('islogin');
+                      await prefs.remove('uid');
+                      await prefs.remove('utoken');
+                      await prefs.remove('utype');
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
+                    },
+                    child: const Text("Logout"),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      foregroundColor: Colors.white,
+                      backgroundColor: ScreenConfig.theme.primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: MediaQuery.sizeOf(context).width * 0.04,
+                          color: Colors.white),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.03,
-              ),
-              Center(
-                child: Text(
-                  "Moeen",
-                  style: TextStyle(
-                      color: ScreenConfig.theme.primaryColor,
-                      fontSize: MediaQuery.sizeOf(context).width * 0.062),
                 ),
-              ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.04,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                    await prefs.remove('islogin');
-                    await prefs.remove('uid');
-                    await prefs.remove('utoken');
-                    await prefs.remove('utype');
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
-                  },
-                  child: const Text("Logout"),
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    foregroundColor: Colors.white,
-                    backgroundColor: ScreenConfig.theme.primaryColor,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: MediaQuery.sizeOf(context).width * 0.04,
-                        color: Colors.white),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-      body: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
-        children: [
-          MapScreen(
-            check: false,
-            isFieldsReadOnly: false,
-            showTextFields: true,
-            showAds: false,
-            isShowMyLocationIcon: true,
-            isFullScreen: false,
-            search: search,
-            image: "assets/images/RideSelectionScreenMap.png",
-            hintFieldOne: "Search Location",
-            fieldOneButtonFunction: () {},
-            suffixIconFieldOne: SizedBox(
-              height: 60,
-              width: 50,
-              child: Row(
-                children: [
-                  Buttons.smallSquareButton(
-                      "assets/images/SearchIcon.png", () {
-                        searchupdate();
-                  }),
-                ],
+        body: Stack(
+          alignment: AlignmentDirectional.bottomCenter,
+          children: [
+            MapScreen(
+              check: false,
+              isFieldsReadOnly: false,
+              showTextFields: true,
+              showAds: false,
+              isShowMyLocationIcon: true,
+              isFullScreen: false,
+              search: search,
+              image: "assets/images/RideSelectionScreenMap.png",
+              hintFieldOne: "Search Location",
+              fieldOneButtonFunction: () {},
+              suffixIconFieldOne: SizedBox(
+                height: 60,
+                width: 50,
+                child: Row(
+                  children: [
+                    Buttons.smallSquareButton(
+                        "assets/images/SearchIcon.png", () {
+                          searchupdate();
+                    }),
+                  ],
+                ),
               ),
-            ),
-            fieldOneController: locationEnterController,
-            isDisplayFieldTwo: false,
-            hintFieldTwo: " ",
-            fieldTwoButtonFunction: () {},
-            suffixIconFieldTwo: SizedBox(
-              height: 60,
-              width: 50,
-              child: Row(
-                children: [
-                  Buttons.smallSquareButton(
-                      "assets/images/SearchIcon.png", () {
+              fieldOneController: locationEnterController,
+              isDisplayFieldTwo: false,
+              hintFieldTwo: " ",
+              fieldTwoButtonFunction: () {},
+              suffixIconFieldTwo: SizedBox(
+                height: 60,
+                width: 50,
+                child: Row(
+                  children: [
+                    Buttons.smallSquareButton(
+                        "assets/images/SearchIcon.png", () {
 
-                  }),
-                ],
+                    }),
+                  ],
+                ),
               ),
+              fieldTwoController: TextEditingController(),
             ),
-            fieldTwoController: TextEditingController(),
-          ),
-          Container(
-            height: ScreenConfig.screenSizeHeight * 0.31,
-            width: ScreenConfig.screenSizeWidth,
-            decoration: bottomModalTemplate(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: Column(
-                children: [
-                  sliderBar(),
-                  SizedBox(height: 20,),
-                  spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
-                  SizedBox(
-                    width: ScreenConfig.screenSizeWidth * 0.8,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Buttons.squareRideScreenButton(
-                            "assets/images/RideButtonIcon.png",
-                            "RIDE",
-                            "Go for ride now", () {
-                          Navigator.of(context)
-                              .pushNamed(VehicleSelectionScreen.routeName);
-                        }),
-                        Buttons.squareRideScreenButton(
-                            "assets/images/RideShareButtonIcon.png",
-                            "SHARE A RIDE",
-                            "Share a ride", () {
-                          Navigator.of(context)
-                              .pushNamed(LocationSelectionScreen.routeName);
-                        }),
-                      ],
+            Container(
+              height: ScreenConfig.screenSizeHeight * 0.31,
+              width: ScreenConfig.screenSizeWidth,
+              decoration: bottomModalTemplate(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                child: Column(
+                  children: [
+                    sliderBar(),
+                    SizedBox(height: 20,),
+                    spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                    SizedBox(
+                      width: ScreenConfig.screenSizeWidth * 0.8,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Buttons.squareRideScreenButton(
+                              "assets/images/RideButtonIcon.png",
+                              "RIDE",
+                              "Go for ride now", () {
+                            Navigator.of(context)
+                                .pushNamed(VehicleSelectionScreen.routeName);
+                          }),
+                          Buttons.squareRideScreenButton(
+                              "assets/images/RideShareButtonIcon.png",
+                              "SHARE A RIDE",
+                              "Share a ride", () {
+                            Navigator.of(context)
+                                .pushNamed(LocationSelectionScreen.routeName);
+                          }),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
