@@ -65,7 +65,6 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   @override
   void initState() {
     rideRequestCount==0;
-    rides==[];
     //_requestPermissionAndGetCurrentLocation();
     initSocket();
     super.initState();
@@ -177,6 +176,9 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       print(">>>>>$data");
       print(
           "data of eve: $pick $drop $passangerName $phonenumber $fare $distance");
+      setState(() {
+        rides==[];
+      });
       Navigator.of(context)
           .pushNamed(DriverSoloRideWaitingScreen.routeName, arguments: {
         'pickuplocation': pick,
@@ -204,7 +206,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       if (isLoading == true) {
         setState(() {
           isLoading = false;
-          rideRequestCount==0;
+          rides==[];
         });
       }
     });
