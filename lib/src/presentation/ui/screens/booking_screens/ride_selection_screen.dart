@@ -81,7 +81,7 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: ()async{
-        return true;
+        return false;
       },
       child: Scaffold(
         extendBodyBehindAppBar: true,

@@ -64,6 +64,8 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
 
   @override
   void initState() {
+    rideRequestCount==0;
+    rides==[];
     //_requestPermissionAndGetCurrentLocation();
     initSocket();
     super.initState();
@@ -202,6 +204,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       if (isLoading == true) {
         setState(() {
           isLoading = false;
+          rideRequestCount==0;
         });
       }
     });
@@ -255,7 +258,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: ()async{
-          return true;
+          return false;
         },
         child: Scaffold(
             resizeToAvoidBottomInset: false,

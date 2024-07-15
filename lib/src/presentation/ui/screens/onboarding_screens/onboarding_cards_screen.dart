@@ -44,10 +44,10 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
   @override
   void initState() {
     super.initState();
-    _checkFirstTime();
+    //_checkFirstTime();
   }
-  bool ft=false;
-  void _checkFirstTime() async {
+  bool ft=true;
+  /*void _checkFirstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool firstTime = prefs.getBool('first_time') ?? true;
     String isLogin= prefs.getString('islogin') ?? '';
@@ -94,7 +94,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
             context,AuthenticationSelection.routeName);
       }
     }
-  }
+  }*/
   void _nextPage() async{
     _saveFirstTime();
     Navigator.pushReplacementNamed(
@@ -122,7 +122,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
         width: ScreenConfig.screenSizeWidth * 0.08,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(3, (index) {
+          children: List.generate(2, (index) {
             return CircleAvatar(
               backgroundColor: index <= currentIndex
                   ? ScreenConfig.theme.primaryColor
@@ -141,7 +141,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
         },
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: ft ? Center(
+          body: Center(
             child: SizedBox(
               height: ScreenConfig.screenSizeHeight * 1.2,
               width: ScreenConfig.screenSizeWidth * 0.9,
@@ -187,7 +187,7 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
                 ],
               ),
             ),
-          ) :Center(child: CircularProgressIndicator(color: themeColor,)),
+          ),
         ));
   }
 }

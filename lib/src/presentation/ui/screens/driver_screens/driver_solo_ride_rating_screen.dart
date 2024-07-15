@@ -69,8 +69,8 @@ class _DriverSoloRideRatingScreenState
       backgroundColor: Colors.white,
       body: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              DriverRideSelectionScreen.routeName,(Route<dynamic> route) => false,);
+          Navigator.of(context).pushReplacementNamed(
+              DriverRideSelectionScreen.routeName);
         },
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
