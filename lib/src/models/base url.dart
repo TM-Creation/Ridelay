@@ -1,3 +1,3 @@
  class baseulr{
-  var burl='https://94e7-154-80-83-253.ngrok-free.app';
+  var burl='https://dd50-2404-3100-1c22-b4cd-1015-4690-9970-e62c.ngrok-free.app';
  }
