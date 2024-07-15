@@ -4,6 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:pinput/pinput.dart';
+import 'package:ridely/src/models/transactionhistoryandwallet.dart';
+import 'package:ridely/src/presentation/ui/config/theme.dart';
+import 'package:ridely/src/presentation/ui/screens/driver_screens/transactionhistory.dart';
 
 import '../../../../infrastructure/screen_config/screen_config.dart';
 class Wallet extends StatefulWidget {
@@ -13,7 +16,13 @@ class Wallet extends StatefulWidget {
   State<Wallet> createState() => _WalletState();
 }
 class _WalletState extends State<Wallet> {
-
+  late Future<DriverWallet?> futureWallet;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    futureWallet = WalletService().fetchDriverWallet();
+  }
   @override
   Widget build(BuildContext context) {
     final Height = MediaQuery.of(context).size.height;
@@ -307,22 +316,20 @@ class _WalletState extends State<Wallet> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-         leading:  IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(
-                Icons.arrow_back,
-                color: ScreenConfig.theme.primaryColor
-              ))
-      ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
+        padding:  EdgeInsets.only(left: 20,right: 20,bottom: 20,top: ScreenConfig.screenSizeWidth*0.2),
         child: Column(
          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Wallet",
-              style: TextStyle(fontSize: Width * 0.073, fontWeight: FontWeight.w500,color: ScreenConfig.theme.primaryColor),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Wallet",
+                  style: TextStyle(fontSize: Width * 0.073, fontWeight: FontWeight.w500,color: ScreenConfig.theme.primaryColor),
+                ),
+                Icon(Icons.wallet,color: themeColor,size: ScreenConfig.screenSizeWidth*0.1,)
+              ],
             ),
             SizedBox(height: Height * 0.02),
             Container(
@@ -342,9 +349,27 @@ class _WalletState extends State<Wallet> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(
-                          "${balance}.00",
-                          style: TextStyle(fontSize: Width * 0.074, fontWeight: FontWeight.bold),
+                        FutureBuilder<DriverWallet?>(
+                          future: futureWallet,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator(color: Colors.white,);
+                            } else if (snapshot.hasError) {
+                              return Center(child: Text('Error: ${snapshot.error}'));
+                            } else if (!snapshot.hasData) {
+                              return Center(child: Text('No transaction data found'));
+                            } else {
+                              final wallet = snapshot.data!;
+                              final dateTime = DateTime.parse(wallet.updatedAt);
+                              final date =
+                                  "${dateTime.year}-${dateTime.month}-${dateTime.day}";
+                              final time = "${dateTime.hour}:${dateTime.minute}";
+                              return Text(
+                                "${wallet.balance}",
+                                style: TextStyle(fontSize: Width * 0.074, fontWeight: FontWeight.bold),
+                              );
+                            }
+                          },
                         ),
                         SizedBox(width: Width * 0.02),
                         Padding(
@@ -353,11 +378,42 @@ class _WalletState extends State<Wallet> {
                         ),
                       ],
                     ),
-                    SizedBox(height: Height * 0.01),
-                    Text(
-                      "Payout scheduled: $payout_schedule",
-                      style: TextStyle(color: Color(0XFFaeaeae), fontSize: Width * 0.045),
-                    ),
+                    SizedBox(height: Height * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Last Transaction:",
+                          style: TextStyle(
+                              color: Color(0XFFaeaeae),
+                              fontSize: Width * 0.045,fontWeight: FontWeight.bold),
+                        ),
+                        FutureBuilder<DriverWallet?>(
+                          future: futureWallet,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator(color: Colors.white,);
+                            } else if (snapshot.hasError) {
+                              return Center(child: Text('Error: ${snapshot.error}'));
+                            } else if (!snapshot.hasData) {
+                              return Center(child: Text('No transaction data found'));
+                            } else {
+                              final wallet = snapshot.data!;
+                              final dateTime = DateTime.parse(wallet.updatedAt);
+                              final date =
+                                  "${dateTime.year}-${dateTime.month}-${dateTime.day}";
+                              final time = "${dateTime.hour}:${dateTime.minute}";
+                              return Text(
+                                "$time   $date",
+                                style: TextStyle(
+                                    color: Color(0XFFaeaeae),
+                                    fontSize: Width * 0.035),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
