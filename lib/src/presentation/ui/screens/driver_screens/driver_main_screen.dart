@@ -177,7 +177,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       print(
           "data of eve: $pick $drop $passangerName $phonenumber $fare $distance");
       setState(() {
-        rides==[];
+        rides.clear();
       });
       Navigator.of(context)
           .pushNamed(DriverSoloRideWaitingScreen.routeName, arguments: {
