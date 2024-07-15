@@ -206,6 +206,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
       if (isLoading == true) {
         setState(() {
           isLoading = false;
+          rides==[];
         });
       }
     });
