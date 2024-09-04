@@ -1,3 +1,3 @@
 class GoogleMapKey{
-  var googlemapkey='AIzaSyCoYbLnkLSUXrnfNO9T3iqEd9YOOwPqzrA';
+  var googlemapkey='AIzaSyCwxsNS8sRGQkh1K2FGzh8sJDQcJuWjqUs';
 }
