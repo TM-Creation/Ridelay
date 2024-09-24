@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
               PassId().type=utype;
             });
             Navigator.pushReplacementNamed(
-                context,RideSelectionScreen.routeName);
+                context,VehicleSelectionScreen.routeName);
           }
           else if(isLogin=='driver'){
             setState(() {

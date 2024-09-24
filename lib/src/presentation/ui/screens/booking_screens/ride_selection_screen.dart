@@ -21,16 +21,17 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RideSelectionScreen extends StatefulWidget {
-  const RideSelectionScreen({Key? key}) : super(key: key);
-  static const routeName = '/rideselection-screen';
+class VehicleSelectionScreen extends StatefulWidget {
+  const VehicleSelectionScreen({Key? key}) : super(key: key);
+  static const routeName = '/vehicleselection-screen';
 
   @override
-  State<RideSelectionScreen> createState() => _RideSelectionScreenState();
+  State<VehicleSelectionScreen> createState() => _VehicleSelectionScreenState();
 }
 
-class _RideSelectionScreenState extends State<RideSelectionScreen> {
+class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
   TextEditingController locationEnterController = TextEditingController();
+  String vahicle = '';
   @override
   /*LatLng userlocation = LatLng(9.0, 7.9);*/
   void initState() {
@@ -217,24 +218,41 @@ class _RideSelectionScreenState extends State<RideSelectionScreen> {
                     sliderBar(),
                     SizedBox(height: 20,),
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
+                    displayText(
+                        "SELECT ACCORDING TO YOUR NEED",
+                        ScreenConfig.theme.textTheme.headline4
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        width: 0.9),
+                    spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                     SizedBox(
-                      width: ScreenConfig.screenSizeWidth * 0.8,
+                      width: ScreenConfig.screenSizeWidth * 0.9,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Buttons.squareRideScreenButton(
-                              "assets/images/RideButtonIcon.png",
-                              "RIDE",
-                              "Go for ride now", () {
-                            Navigator.of(context)
-                                .pushNamed(VehicleSelectionScreen.routeName);
+                          Buttons.squareRideSelectionScreenButton(
+                              "assets/images/CarButtonIcon.png",
+                              "CAR",
+                              "Upto 3 persons", () {
+                            Navigator.of(context).pushNamed(
+                                LocationSelectionScreen.routeName,
+                                arguments: vahicle = 'car');
                           }),
-                          Buttons.squareRideScreenButton(
-                              "assets/images/RideShareButtonIcon.png",
-                              "SHARE A RIDE",
-                              "Share a ride", () {
-                            Navigator.of(context)
-                                .pushNamed(LocationSelectionScreen.routeName);
+                          Buttons.squareRideSelectionScreenButton(
+                              "assets/images/rikshawbuttonicon.png",
+                              "Rickshaw",
+                              "Upto 1 Person Ride", () {
+                            Navigator.of(context).pushNamed(
+                                LocationSelectionScreen.routeName,
+                                arguments: vahicle = 'rickshaw');
+                          }),
+                          Buttons.squareRideSelectionScreenButton(
+                              "assets/images/BikeButtonIcon.png",
+                              "BIKE",
+                              "One Person Ride", () {
+                            Navigator.of(context).pushNamed(
+                                LocationSelectionScreen.routeName,
+                                arguments: vahicle = 'bike');
                           }),
                         ],
                       ),

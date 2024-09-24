@@ -361,22 +361,12 @@ class _MapScreenState extends State<MapScreen> {
       locationUpdate();
     }
     if (widget.search!.isNotEmpty) {
-      if(liveselect==true){
-        setState(() {
-          widget.search=[Location(
-              latitude:
-              userLiveLocation().userlivelocation!.latitude,
-              longitude:
-              userLiveLocation().userlivelocation!.longitude,
-              timestamp: DateTime.timestamp())];
-        });
-        _mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target:
-            LatLng(widget.search![0].latitude, widget.search![0].longitude),
-            zoom: 15.0,
-          ),
-        ));
+      if(widget.isDisplayFieldTwo){
+       setState(() {
+         widget.fieldOneController.text='Your Live Location';
+         liveselect=true;
+         flag1=false;
+       });
       }
       else{
         _mapController?.animateCamera(CameraUpdate.newCameraPosition(
@@ -659,6 +649,46 @@ class _MapScreenState extends State<MapScreen> {
                                         print("locations: $locations");
                                         if (locations != null &&
                                             locations.isNotEmpty) {
+                                          if (widget.fieldOneController.text.isNotEmpty &&
+                                              widget.fieldTwoController.text.isNotEmpty) {
+                                            if (liveselect == true) {
+                                              setState(() {
+                                                pick = [Location(
+                                                    latitude:
+                                                    userLiveLocation().userlivelocation!.latitude,
+                                                    longitude:
+                                                    userLiveLocation().userlivelocation!.longitude,
+                                                    timestamp: DateTime.timestamp())];
+                                              });
+                                            } else {
+                                              pick = await locationFromAddress(
+                                                  widget.fieldOneController.text);
+                                            }
+                                            drop = await locationFromAddress(
+                                                widget.fieldTwoController.text);
+                                            setState(() {
+                                              pickanddrop().pickloc =
+                                                  LatLng(pick[0].latitude, pick[0].longitude);
+                                              pickanddrop().droploc =
+                                                  LatLng(drop[0].latitude, drop[0].longitude);
+                                              print("${pickanddrop().pickloc} pickloc a gya");
+                                            });
+
+                                            print("${pick} and  ${drop} both a done");
+                                            showpolyline(LatLng(pick[0].latitude, pick[0].longitude),
+                                                LatLng(drop[0].latitude, drop[0].longitude));
+                                          } else {
+                                            print('ni aya');
+                                            Get.snackbar(
+                                              'Alert!',
+                                              'Please Enter Pick-up & Drop-off Location',
+                                              snackPosition: SnackPosition.TOP,
+                                              backgroundColor: themeColor,
+                                              colorText: Colors.white,
+                                              margin: EdgeInsets.all(10),
+                                              duration: Duration(seconds: 3),
+                                            );
+                                          }
                                           print(
                                               "longitude: ${locations.last.longitude}");
                                           print(
@@ -670,6 +700,7 @@ class _MapScreenState extends State<MapScreen> {
                                       } catch (e) {
                                         print('Error getting location: $e');
                                       }
+
                                     },
                                     title: Text(
                                       placeList2[index]['description'],
@@ -686,7 +717,7 @@ class _MapScreenState extends State<MapScreen> {
               )
           ],
         ),
-        if (widget.isDisplayFieldTwo && widget.autoupdatepolyline == false)
+        /*if (widget.isDisplayFieldTwo && widget.autoupdatepolyline == false)
           Positioned(
               bottom: 80,
               left: 20,
@@ -734,7 +765,7 @@ class _MapScreenState extends State<MapScreen> {
                   }
                 },
                 child: Icon(Icons.directions),
-              )),
+              )),*/
       ],
     );
   }

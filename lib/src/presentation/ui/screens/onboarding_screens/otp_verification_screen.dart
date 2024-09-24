@@ -186,11 +186,11 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
             if (args['number'] == "+923321357777") {
               DebugHelper.printAll("IsDriver");
               Navigator.of(context)
-                  .pushReplacementNamed(RideSelectionScreen.routeName);
+                  .pushReplacementNamed(VehicleSelectionScreen.routeName);
             } else {
               DebugHelper.printAll("IsCustomer");
               Navigator.of(context)
-                  .pushReplacementNamed(RideSelectionScreen.routeName);
+                  .pushReplacementNamed(VehicleSelectionScreen.routeName);
             }
 
             // //TODO: FOR TEST VERSIONS ONLY FIX IN PRODUCTION

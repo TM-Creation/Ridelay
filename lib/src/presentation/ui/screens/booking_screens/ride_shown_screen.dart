@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/config/theme.dart';
+import 'package:ridely/src/presentation/ui/screens/booking_screens/faraupdatescreen.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_waiting_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/driver_main_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
@@ -175,7 +176,18 @@ class _RideShownScreenState extends State<RideShownScreen> {
     socket.on('rideRequested', (data) {
       print("data of riderequest $data");
     });
-    isdriveraccept=true;
+    Navigator.pushReplacementNamed(context, FareUpdateScreen.routeName,arguments: {
+      "pickupLocation":pickupEnterController.text,
+      "dropoffLocation": dropoffEnterController.text,
+      "driverName":drivername,
+      "driverRaiting":driverraiting,
+      "vahicleName":vahiclename,
+      "vahicleNumberplate":numberplate,
+      "fare":fare,
+      "rideid":reqrideid,
+      "driverID":driverid
+    });
+    //isdriveraccept=true;
   }
 
 //6654523062cc5411c069d411
@@ -188,7 +200,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
     'driverId':driverid};
     socket.emit('confirmRide', payload);
     print('Driver Accepted');
-    Navigator.pushReplacementNamed(context, RideWaitingScreen.routeName,arguments: {
+    Navigator.pushReplacementNamed(context, FareUpdateScreen.routeName,arguments: {
       "pickupLocation":pickupEnterController.text,
       "dropoffLocation": dropoffEnterController.text,
       "driverName":drivername,
@@ -881,9 +893,9 @@ class _RideShownScreenState extends State<RideShownScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
-      backgroundColor:
-          requestshow ? ScreenConfig.theme.primaryColor : Colors.white,
-      body: isdriveraccept
+     /* backgroundColor:
+          requestshow ? ScreenConfig.theme.primaryColor : Colors.white,*/
+      body: /*isdriveraccept
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1045,12 +1057,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                               child: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    /*'driverName':data['driver']['name'],
+                                                    *//*'driverName':data['driver']['name'],
                                                     'driverRaiting':data['driver']['rating'],
                                                     'vahicleName':data['vehicle']['name'],
                                                     'numberPlate':data['vehicle']['numberPlate'],
                                                     'rideId':data['_id'],
-                                                    'driverId':data['driver']['_id'],*/
+                                                    'driverId':data['driver']['_id'],*//*
                                                     drivername=driver['driverName'];
                                                     driverraiting=driver['driverRaiting'];
                                                     vahiclename=driver['vahicleName'];
@@ -1115,7 +1127,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                     ),
                   ),
                 )
-              : Stack(
+              : */Stack(
                   alignment: AlignmentDirectional.bottomCenter,
                   children: [
                     SizedBox(

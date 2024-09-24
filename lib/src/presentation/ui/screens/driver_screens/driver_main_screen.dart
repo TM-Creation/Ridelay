@@ -246,7 +246,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
   }
 
   void acceptrides(String rideId) {
-    print("Ride is is this this: $rideId");
+    print("Ride is this: $rideId");
     final payload = {'rideId': rideId, 'driverId': PassId().id};
     socket.emit('acceptRide', payload);
   }

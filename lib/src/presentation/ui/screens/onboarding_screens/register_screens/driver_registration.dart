@@ -43,12 +43,17 @@ class DriverRegistrationScreen extends StatefulWidget {
 class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   final ImagePicker _picker = ImagePicker();
 
-  PickedFile? _imageFile;
+  PickedFile? _imageFile1;
+  PickedFile? _imageFile2;
+  PickedFile? _imageFile3;
+  PickedFile? _imageFile4;
+  PickedFile? _imageFile5;
+
   bool progres = false;
   final TextEditingController email = TextEditingController();
   final TextEditingController drivername = TextEditingController();
   final TextEditingController driverphonenumber = TextEditingController();
-  final TextEditingController idNumber = TextEditingController();
+  /*final TextEditingController idNumber = TextEditingController();*/
   final TextEditingController password = TextEditingController();
   final TextEditingController conpassword = TextEditingController();
   String valueCity = '';
@@ -66,8 +71,12 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   baseulr burl = baseulr();
   bool nameerror = false;
   bool phoneerror = false;
-  bool idNumberError = false;
-  bool picError = false;
+  /*bool idNumberError = false;*/
+  bool picError1 = false;
+  bool picError2 = false;
+  bool picError3 = false;
+  bool picError4 = false;
+  bool picError5 = false;
   bool emailerror = false;
   bool passworderror = false;
   bool conpassworderror = false;
@@ -87,7 +96,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       ),
       vehicle: "609c78a1c25e6d6bfdb1b16b",
       rating: 4.8,
-      identityCardNumber: idNumber.text,
+      identityCardNumber: '',
       status: "available",
       wallet: "60d21b4667d0d8992e610c87",
       driverImage: "http://example.com/images/john_doe.jpg",
@@ -98,7 +107,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future<bool> pickImage(ImageSource source) async {
+    Future<bool> pickImage(ImageSource source, {required int num}) async {
       try {
         // ignore: deprecated_member_use
         final pickedFile = await _picker.getImage(
@@ -107,8 +116,24 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
         if (pickedFile != null) {
           if (isImageLesserThanDefinedSize(File(pickedFile.path))) {
             setState(() {
-              _imageFile = pickedFile;
-              picError = false;
+              if (num == 1) {
+                _imageFile1 = pickedFile;
+                picError1 = false;
+              } else if (num == 2) {
+                _imageFile2 = pickedFile;
+                picError2 = false;
+              } else if (num == 3) {
+                _imageFile3 = pickedFile;
+                picError3 = false;
+              }else if (num == 4) {
+                _imageFile4 = pickedFile;
+                picError4 = false;
+              } else if (num == 5) {
+                _imageFile5 = pickedFile;
+                picError5 = false;
+              } else {
+                print('Num is Null');
+              }
 
               // _cnicFrontFile = pickedFile;
             });
@@ -116,7 +141,19 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
             return true;
           } else {
             setState(() {
-              picError = true;
+              if (num == 1) {
+                picError1 = true;
+              } else if (num == 2) {
+                picError2 = true;
+              } else if (num == 3) {
+                picError3 = true;
+              }else if (num == 4) {
+                picError4 = true;
+              } else if (num == 5) {
+                picError5 = true;
+              } else {
+                print('Num is Null');
+              }
             });
 
             return false;
@@ -183,7 +220,8 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
             ),
           ],
         );
-    Future pickImageBottomSheet({required BuildContext context}) {
+    Future pickImageBottomSheet(
+        {required BuildContext context, required int number}) {
       return showModalBottomSheet(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
@@ -192,6 +230,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           builder: (ctx) =>
               Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                 Container(
+                  color: themeColor,
                   alignment: AlignmentDirectional.topStart,
                   padding: const EdgeInsets.only(top: 12, left: 15, bottom: 6),
                   child: Row(
@@ -201,12 +240,16 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        icon: const Icon(Icons.close),
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
                       ),
                       Text(
                         "Pick Image",
                         style: ScreenConfig.theme.textTheme.headline6
                             ?.merge(const TextStyle(
+                          color: Colors.white,
                           fontWeight: FontWeight.normal,
                         )),
                       ),
@@ -235,7 +278,8 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                               ),
                               () async {
                                 final isImageSelectedCorrectSize =
-                                    await pickImage(ImageSource.camera);
+                                    await pickImage(ImageSource.camera,
+                                        num: number);
                                 Navigator.of(context).pop();
                                 // if (!isImageSelectedCorrectSize) {
                                 //   imageSizeErrorDialogBox(context);
@@ -255,7 +299,8 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                               ),
                               () async {
                                 final isImageSelectedCorrectSize =
-                                    await pickImage(ImageSource.gallery);
+                                    await pickImage(ImageSource.gallery,
+                                        num: number);
                                 Navigator.of(context).pop();
                                 // if (!isImageSelectedCorrectSize) {
                                 //   imageSizeErrorDialogBox(context);
@@ -297,15 +342,16 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                           minHeight: ScreenConfig.screenSizeHeight * 0.04,
                           maxWidth: ScreenConfig.screenSizeWidth * 0.2,
                           minWidth: ScreenConfig.screenSizeWidth * 0.1),
-                      child: _imageFile != null
+                      child: _imageFile1 != null
                           ? CircleAvatar(
                               radius: ScreenConfig.screenSizeHeight * 0.1,
                               backgroundImage: FileImage(
-                                File(_imageFile!.path),
+                                File(_imageFile1!.path),
                               ))
                           : GestureDetector(
                               onTap: () async {
-                                pickImageBottomSheet(context: context);
+                                pickImageBottomSheet(
+                                    context: context, number: 1);
                               },
                               child: Center(
                                   child: Icon(
@@ -350,7 +396,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                           _displayAddPhotoSection(),
                         ],
                       ),
-                      if (picError) displayRegistrationValidation("image"),
+                      if (picError1) displayRegistrationValidation("image"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       _displayTextField(
                           name: 'Name',
@@ -482,7 +528,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                           inputType: TextInputType.text),
                       if (emailerror) displayRegistrationValidation("email"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                      _displayTextField(
+                      /*_displayTextField(
                           name: 'ID Card Number',
                           hint: 'Enter your National ID Card Number',
                           onChanged: (val) {
@@ -514,9 +560,174 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                             return null;
                           },
                           controller: idNumber,
-                          inputType: TextInputType.number),
-                      if (idNumberError)
-                        displayRegistrationValidation("idNumber"),
+                          inputType: TextInputType.number),*/
+                      Text(
+                        'Id Card Front Side Image',
+                        style: ScreenConfig.theme.textTheme.headline6
+                            ?.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      DottedBorder(
+                        color: Colors.black,
+                        // Color of the dotted border
+                        strokeWidth: 2,
+                        // Thickness of the dots
+                        dashPattern: [6, 3],
+                        // Length and spacing of the dashes
+                        borderType: BorderType.RRect,
+                        radius: Radius.circular(20),
+                        child: GestureDetector(
+                          onTap: () async {
+                            pickImageBottomSheet(context: context, number: 2);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20)),
+                            height: ScreenConfig.screenSizeHeight * 0.25,
+                            width: double.infinity,
+                            child: _imageFile2 != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image(
+                                        fit: BoxFit.fill,
+                                        image: FileImage(
+                                          File(_imageFile2!.path),
+                                        )),
+                                  )
+                                : Icon(
+                                    CupertinoIcons.add_circled,
+                                    size: ScreenConfig.screenSizeWidth * 0.1,
+                                  ),
+                          ),
+                        ),
+                      ),
+                      if (picError2) displayRegistrationValidation("image1"),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      Text(
+                        'Id Card Back Side Image',
+                        style: ScreenConfig.theme.textTheme.headline6
+                            ?.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      DottedBorder(
+                        color: Colors.black,
+                        // Color of the dotted border
+                        strokeWidth: 2,
+                        // Thickness of the dots
+                        dashPattern: [6, 3],
+                        // Length and spacing of the dashes
+                        borderType: BorderType.RRect,
+                        radius: Radius.circular(20),
+                        child: GestureDetector(
+                          onTap: () async {
+                            pickImageBottomSheet(context: context, number: 3);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20)),
+                            height: ScreenConfig.screenSizeHeight * 0.25,
+                            width: double.infinity,
+                            child: _imageFile3 != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image(
+                                        fit: BoxFit.fill,
+                                        image: FileImage(
+                                          File(_imageFile3!.path),
+                                        )),
+                                  )
+                                : Icon(
+                                    CupertinoIcons.add_circled,
+                                    size: ScreenConfig.screenSizeWidth * 0.1,
+                                  ),
+                          ),
+                        ),
+                      ),
+                      if (picError3) displayRegistrationValidation("image1"),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      Text(
+                        'Driving License Front Side Image',
+                        style: ScreenConfig.theme.textTheme.headline6
+                            ?.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      DottedBorder(
+                        color: Colors.black,
+                        // Color of the dotted border
+                        strokeWidth: 2,
+                        // Thickness of the dots
+                        dashPattern: [6, 3],
+                        // Length and spacing of the dashes
+                        borderType: BorderType.RRect,
+                        radius: Radius.circular(20),
+                        child: GestureDetector(
+                          onTap: () async {
+                            pickImageBottomSheet(context: context, number: 4);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20)),
+                            height: ScreenConfig.screenSizeHeight * 0.25,
+                            width: double.infinity,
+                            child: _imageFile4 != null
+                                ? ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image(
+                                  fit: BoxFit.fill,
+                                  image: FileImage(
+                                    File(_imageFile4!.path),
+                                  )),
+                            )
+                                : Icon(
+                              CupertinoIcons.add_circled,
+                              size: ScreenConfig.screenSizeWidth * 0.1,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (picError4) displayRegistrationValidation("image1"),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      Text(
+                        'Driving Liicense Back Side Image',
+                        style: ScreenConfig.theme.textTheme.headline6
+                            ?.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
+                      DottedBorder(
+                        color: Colors.black,
+                        // Color of the dotted border
+                        strokeWidth: 2,
+                        // Thickness of the dots
+                        dashPattern: [6, 3],
+                        // Length and spacing of the dashes
+                        borderType: BorderType.RRect,
+                        radius: Radius.circular(20),
+                        child: GestureDetector(
+                          onTap: () async {
+                            pickImageBottomSheet(context: context, number: 5);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20)),
+                            height: ScreenConfig.screenSizeHeight * 0.25,
+                            width: double.infinity,
+                            child: _imageFile5 != null
+                                ? ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image(
+                                  fit: BoxFit.fill,
+                                  image: FileImage(
+                                    File(_imageFile5!.path),
+                                  )),
+                            )
+                                : Icon(
+                              CupertinoIcons.add_circled,
+                              size: ScreenConfig.screenSizeWidth * 0.1,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (picError5) displayRegistrationValidation("image1"),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       _displayTextField(
                         name: 'Password',
@@ -578,40 +789,50 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                       )),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                       Row(
-
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           GestureDetector(
-                            onTap: (){
-                              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                  builder: (context) => VehicleRegistrationScreen()));
+                            onTap: () {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          VehicleRegistrationScreen()));
                             },
                             child: Text(
                               'Register Vahicle',
                               style: TextStyle(
                                   color: Colors.blue,
-                                  fontSize: ScreenConfig.screenSizeWidth * 0.03,decoration: TextDecoration.underline,decorationColor: Colors.blue),
+                                  fontSize: ScreenConfig.screenSizeWidth * 0.03,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.blue),
                             ),
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(
+                            width: 10,
+                          ),
                           Text(
                             'or',
                             style: TextStyle(
                                 color: themeColor,
                                 fontSize: ScreenConfig.screenSizeWidth * 0.03),
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(
+                            width: 10,
+                          ),
                           GestureDetector(
-                            onTap: (){
-                              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                  builder: (context) => Login()));
+                            onTap: () {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => Login()));
                             },
                             child: Text(
                               'Login',
                               style: TextStyle(
                                   color: Colors.blue,
-                                  fontSize: ScreenConfig.screenSizeWidth * 0.03,decoration: TextDecoration.underline,decorationColor: Colors.blue),
+                                  fontSize: ScreenConfig.screenSizeWidth * 0.03,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.blue),
                             ),
                           ),
                         ],
@@ -649,15 +870,6 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
             // navigate();
 
             FocusScope.of(context).unfocus();
-            if (idNumber.text.isEmpty || idNumber.text.length != 13) {
-              setState(() {
-                idNumberError = true;
-              });
-            } else {
-              setState(() {
-                idNumberError = false;
-              });
-            }
             if (drivername.text.isEmpty || drivername.text.length < 2) {
               setState(() {
                 nameerror = true;
@@ -676,17 +888,34 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 emailerror = false;
               });
             }
-            if (_imageFile == null) {
+            if (_imageFile1 == null) {
               setState(() {
-                picError = true;
+                picError1 = true;
               });
             } else {
               setState(() {
-                picError = false;
+                picError1 = false;
               });
             }
-            if (picError == false &&
-                idNumberError == false &&
+            if (_imageFile2 == null) {
+              setState(() {
+                picError2 = true;
+              });
+            } else {
+              setState(() {
+                picError2 = false;
+              });
+            }
+            if (_imageFile3 == null) {
+              setState(() {
+                picError3 = true;
+              });
+            } else {
+              setState(() {
+                picError3 = false;
+              });
+            }
+            if (picError3 == false && picError2 == false && picError1 == false &&
                 emailerror == false &&
                 passworderror == false &&
                 nameerror == false &&

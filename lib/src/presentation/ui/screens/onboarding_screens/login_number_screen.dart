@@ -86,6 +86,7 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
                       ScreenConfig.theme.textTheme.headline3),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   IntlPhoneField(
+                    keyboardType: TextInputType.number,
                     controller: phoneNumberController,
                     decoration: InputDecoration(
                       hintText: 'Enter Phone Number',
@@ -93,7 +94,7 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
                         borderSide: BorderSide(),
                       ),
                     ),
-                    initialCountryCode: 'US',
+                    initialCountryCode: 'PK',
                     // Initial selection and favorite
                     onChanged: (phone) {
                       print(phone

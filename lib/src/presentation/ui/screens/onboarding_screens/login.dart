@@ -293,7 +293,7 @@ class _LoginState extends State<Login> {
             );
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString('islogin', 'passenger');
-            Navigator.of(context).pushNamed(RideSelectionScreen.routeName);
+            Navigator.of(context).pushNamed(VehicleSelectionScreen.routeName);
           } else {
             print("Nothing Done");
           }

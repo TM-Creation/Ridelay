@@ -30,12 +30,6 @@ class RatiangStaric extends StatefulWidget {
 
 class _RatiangStaricState extends State<RatiangStaric> {
   @override
-  void dispose() {
-    feedBackController.dispose();
-    // TODO: implement dispose
-    super.dispose();
-  }
-  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Row(
@@ -255,11 +249,49 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   )
                 ],
               ),
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.015),
+              Center(
+                child: GestureDetector(
+                  onTap: (){},
+                  child: Container(
+                    width: ScreenConfig.screenSizeWidth *
+                        0.5,
+                    decoration: BoxDecoration(
+                        color: thirdColor,
+                        borderRadius:
+                        const BorderRadius.all(
+                            Radius.circular(5)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey
+                                .withOpacity(0.40),
+                            offset: const Offset(
+                                0.0, 1.2), //(x,y)
+                            blurRadius: 6.0,
+                          )
+                        ]),
+                    child: Padding(
+                        padding:
+                        const EdgeInsets.all(5.0),
+                        child: displayNoSizedText(
+                            'Complete Your Ride Early',
+                            ScreenConfig
+                                .theme.textTheme.caption
+                                ?.copyWith(
+                                color: ScreenConfig
+                                    .theme
+                                    .primaryColor,
+                                fontWeight:
+                                FontWeight.bold,fontSize: 10),
+                            textAlign: TextAlign.center)),
+                  ),
+                ),
+              )
             ],
           ),
         ),
       ),
-      spaceHeight(ScreenConfig.screenSizeHeight * 0.015),
+      //spaceHeight(ScreenConfig.screenSizeHeight * 0.015),
     ],
   );
 }
@@ -384,9 +416,8 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
         margin: EdgeInsets.all(10),
         duration: Duration(seconds: 3),
       );
-      feedBackController.clear();
       Navigator.of(context).pushNamedAndRemoveUntil(
-        RideSelectionScreen.routeName,(Route<dynamic> route) => false,);
+        VehicleSelectionScreen.routeName,(Route<dynamic> route) => false,);
     } else {
       print('Failed to submit review: ${response.statusCode} ${response.body}');
       Get.snackbar(
@@ -424,7 +455,7 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
               GestureDetector(
                 onTap: (){
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                    RideSelectionScreen.routeName,(Route<dynamic> route) => false,);
+                    VehicleSelectionScreen.routeName,(Route<dynamic> route) => false,);
                 },
                 child: Container(
                     height: 33,

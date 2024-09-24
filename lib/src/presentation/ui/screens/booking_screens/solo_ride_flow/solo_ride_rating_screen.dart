@@ -54,7 +54,7 @@ class _SoloRideRatingScreenState extends State<SoloRideRatingScreen> {
       body: GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamedAndRemoveUntil(
-              RideSelectionScreen.routeName, ModalRoute.withName("/"));
+              VehicleSelectionScreen.routeName, ModalRoute.withName("/"));
         },
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,

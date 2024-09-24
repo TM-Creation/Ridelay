@@ -4,6 +4,12 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/vali
 Widget _getRegistrationValidations(String value) {
   if (value == "image") {
     return errorValidator('Picture can not be empty', TextAlign.center);
+  } else if (value == "image2") {
+    return errorValidator(
+        'Picture can not be empty', TextAlign.left);
+  }else if (value == "image1") {
+    return errorValidator(
+        'Picture can not be empty', TextAlign.left);
   }else if (value == "nameerror") {
     return errorValidator(
         'Enter a valid Name', TextAlign.left);

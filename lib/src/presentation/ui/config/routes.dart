@@ -36,7 +36,7 @@ final Map<String, Widget Function(BuildContext)> routes = {
       const DriverRegistrationScreen(),
   ChoiceCustomerDriverScreen.routeName: (ctx) =>
       const ChoiceCustomerDriverScreen(),
-  RideSelectionScreen.routeName: (ctx) => const RideSelectionScreen(),
+  VehicleSelectionScreen.routeName: (ctx) => const VehicleSelectionScreen(),
   DriverRideSelectionScreen.routeName: (ctx) =>
       const DriverRideSelectionScreen(),
   VehicleSelectionScreen.routeName: (ctx) => const VehicleSelectionScreen(),
