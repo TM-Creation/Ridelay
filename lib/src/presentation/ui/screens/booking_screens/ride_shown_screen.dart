@@ -39,14 +39,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
   bool showConfirmYourRide = false;
   String distance = '', duration = '';
   double? totaldistance;
-  int counter=0;
-  int minifare = 0,
-      gofare = 0,
-      comfortfare = 0,
-      rickshawfare = 0,
-      bykefare = 0;
+  int counter = 0;
+  int minifare = 0, gofare = 0, comfortfare = 0, rickshawfare = 0, bykefare = 0;
   int fare = 454;
-  String ETA='';
+  String ETA = '';
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -67,7 +64,8 @@ class _RideShownScreenState extends State<RideShownScreen> {
         comfortfare = (80 * totaldistance!).toInt();
         rickshawfare = (45 * totaldistance!).toInt();
         bykefare = (35 * totaldistance!).toInt();
-        print('Polyline error cheeek: ${pickupEnterController.text} ${dropoffEnterController.text}');
+        print(
+            'Polyline error cheeek: ${pickupEnterController.text} ${dropoffEnterController.text}');
       });
     }
   }
@@ -90,19 +88,22 @@ class _RideShownScreenState extends State<RideShownScreen> {
   }
 
   bool isdriveraccept = false, requestshow = false;
-  String drivername='';
-  double driverraiting=4.2;
+  String drivername = '';
+  double driverraiting = 4.2;
+
   //String driverimage='';
   //String? vahicleimage;
-  String vahiclename='';
-  String numberplate='';
+  String vahiclename = '';
+  String numberplate = '';
   List<Map<String, dynamic>> drivers = [];
+
   @override
-  void initState(){
+  void initState() {
     initSocket();
     print("initState call");
     super.initState();
   }
+
   late IO.Socket socket;
   final String? id = PassId().id;
   var reqrideid = '';
@@ -131,7 +132,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
       });
     }
     socket.emit('registerPassenger', PassId().id);
-    socket.on('rideAccepted', (data) {
+     /*socket.on('rideAccepted', (data) {
       print("$data ride is accept ");
       isdriveraccept=false;
       requestshow=true;
@@ -144,7 +145,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
         'driverId':data['driver']['_id'],
       };
 
-      /*drivername=data['driver']['name'];
+      *//*  drivername=data['driver']['name'];
       //driverimage=data['driver']['driverImage'];
       driverraiting=data['driver']['rating'];
       //vahicleimage=data['vehicle']['vehicleImage'];
@@ -152,13 +153,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
       numberplate=data['vehicle']['numberPlate'];
       reqrideid = data['_id'];
       final driver=data['driver'];
-      driverid=driver['_id'];*/
+      driverid=driver['_id']; *//*
       drivers.add(driverData);
       counter++;
       setState(() {
         print("check sestate");
       });
-    });
+    }); */
   }
   void sendridereq() {
     // Create payload
@@ -179,22 +180,22 @@ class _RideShownScreenState extends State<RideShownScreen> {
     Navigator.pushReplacementNamed(context, FareUpdateScreen.routeName,arguments: {
       "pickupLocation":pickupEnterController.text,
       "dropoffLocation": dropoffEnterController.text,
-      "driverName":drivername,
-      "driverRaiting":driverraiting,
-      "vahicleName":vahiclename,
-      "vahicleNumberplate":numberplate,
+      //"driverName":drivername,
+      //"driverRaiting":driverraiting,
+      //"vahicleName":vahiclename,
+      //"vahicleNumberplate":numberplate,
       "fare":fare,
       "rideid":reqrideid,
-      "driverID":driverid
+      //"driverID":driverid
     });
     //isdriveraccept=true;
   }
 
 //6654523062cc5411c069d411
   @override
-
   String typeofvahicle = '';
-  void acceptstatus(String rideId,String driverId) {
+
+  /*void acceptstatus(String rideId,String driverId) {
     print("Ride ID and Driver ID is this: $rideId $driverid");
     final payload = {'rideId': reqrideid,
     'driverId':driverid};
@@ -211,13 +212,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
       "rideid":reqrideid,
       "driverID":driverid
     });
-  }
-@override
-  void dispose() {
+  }*/
+  @override
+  /*void dispose() {
     socket.off('rideAccepted');
     // TODO: implement dispose
     super.dispose();
-  }
+  }*/
   @override
   Widget build(BuildContext context) {
     print("Counting $counter");
@@ -295,6 +296,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
+
                               /*Navigator.of(context).pushNamed(
                                 RideWaitingScreen.routeName,
                                 arguments: {
@@ -890,10 +892,11 @@ class _RideShownScreenState extends State<RideShownScreen> {
         ),
       );
     }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
-     /* backgroundColor:
+      /* backgroundColor:
           requestshow ? ScreenConfig.theme.primaryColor : Colors.white,*/
       body: /*isdriveraccept
           ? Center(
@@ -1057,12 +1060,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                               child: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    *//*'driverName':data['driver']['name'],
+                                                    */ /*'driverName':data['driver']['name'],
                                                     'driverRaiting':data['driver']['rating'],
                                                     'vahicleName':data['vehicle']['name'],
                                                     'numberPlate':data['vehicle']['numberPlate'],
                                                     'rideId':data['_id'],
-                                                    'driverId':data['driver']['_id'],*//*
+                                                    'driverId':data['driver']['_id'],*/ /*
                                                     drivername=driver['driverName'];
                                                     driverraiting=driver['driverRaiting'];
                                                     vahiclename=driver['vahicleName'];
@@ -1127,69 +1130,67 @@ class _RideShownScreenState extends State<RideShownScreen> {
                     ),
                   ),
                 )
-              : */Stack(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  children: [
-                    SizedBox(
-                      height: ScreenConfig.screenSizeHeight * 1.2,
-                      child: Column(
+              : */
+          Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          SizedBox(
+            height: ScreenConfig.screenSizeHeight * 1.2,
+            child: Column(
+              children: [
+                MapScreen(
+                    search: [],
+                    showAds: false,
+                    showTextFields: true,
+                    isFieldsReadOnly: true,
+                    isFullScreen: false,
+                    autoupdatepolyline: true,
+                    isShowMyLocationIcon: false,
+                    check: true,
+                    image: image,
+                    hintFieldOne: "Pick-Up Location",
+                    fieldOneButtonFunction: () {},
+                    suffixIconFieldOne: SizedBox(
+                      height: 60,
+                      width: 50,
+                      child: Row(
                         children: [
-                          MapScreen(
-                              search: [],
-                              showAds: false,
-                              showTextFields: true,
-                              isFieldsReadOnly: true,
-                              isFullScreen: false,
-                              autoupdatepolyline: true,
-                              isShowMyLocationIcon: false,
-                              check: true,
-                              image: image,
-                              hintFieldOne: "Pick-Up Location",
-                              fieldOneButtonFunction: () {},
-                              suffixIconFieldOne: SizedBox(
-                                height: 60,
-                                width: 50,
-                                child: Row(
-                                  children: [
-                                    Buttons.smallSquareButton(
-                                        "assets/images/CircularIconButton.png",
-                                        () {}),
-                                  ],
-                                ),
-                              ),
-                              fieldOneController: pickupEnterController,
-                              isDisplayFieldTwo: true,
-                              hintFieldTwo: "Drop Off Location",
-                              fieldTwoButtonFunction: () {},
-                              suffixIconFieldTwo: SizedBox(
-                                height: 60,
-                                width: 50,
-                                child: Row(
-                                  children: [
-                                    Buttons.smallSquareButton(
-                                        "assets/images/PinPointIcon.png",
-                                        () {}),
-                                  ],
-                                ),
-                              ),
-                              fieldTwoController: dropoffEnterController),
-                          spaceHeight(
-                            ScreenConfig.screenSizeHeight * 0.2,
-                          )
+                          Buttons.smallSquareButton(
+                              "assets/images/CircularIconButton.png", () {}),
                         ],
                       ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        if (showConfirmYourRide)
-                          confirmYourRideWidget(typeofvahicle),
-                        spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
-                        bottomModalNonSlideable(),
-                      ],
-                    )
-                  ],
-                ),
+                    fieldOneController: pickupEnterController,
+                    isDisplayFieldTwo: true,
+                    hintFieldTwo: "Drop Off Location",
+                    fieldTwoButtonFunction: () {},
+                    suffixIconFieldTwo: SizedBox(
+                      height: 60,
+                      width: 50,
+                      child: Row(
+                        children: [
+                          Buttons.smallSquareButton(
+                              "assets/images/PinPointIcon.png", () {}),
+                        ],
+                      ),
+                    ),
+                    fieldTwoController: dropoffEnterController),
+                spaceHeight(
+                  ScreenConfig.screenSizeHeight * 0.2,
+                )
+              ],
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (showConfirmYourRide) confirmYourRideWidget(typeofvahicle),
+              spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
+              bottomModalNonSlideable(),
+            ],
+          )
+        ],
+      ),
     );
   }
 }

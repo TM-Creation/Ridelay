@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:ridely/src/presentation/ui/screens/booking_screens/faraupdatescreen.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_in_progress_and_finish_screen.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/ride_rating_screen.dart';
@@ -46,6 +47,7 @@ final Map<String, Widget Function(BuildContext)> routes = {
       const LocationSelectionSoloScreen(),
   RideShownScreen.routeName: (ctx) => const RideShownScreen(),
   SoloRideShownScreen.routeName: (ctx) => const SoloRideShownScreen(),
+  FareUpdateScreen.routeName:(ctx) => const FareUpdateScreen(),
   RideWaitingScreen.routeName: (ctx) => const RideWaitingScreen(),
   SoloRideWaitingScreen.routeName: (ctx) => const SoloRideWaitingScreen(),
   DriverSoloRideWaitingScreen.routeName: (ctx) =>

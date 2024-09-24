@@ -67,7 +67,7 @@ class _RideRatingScreenState extends State<RideRatingScreen> {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       body: Stack(
