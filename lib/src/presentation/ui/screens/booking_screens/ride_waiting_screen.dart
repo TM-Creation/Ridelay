@@ -334,11 +334,11 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         displayText('Vehicle',
-                                            ScreenConfig.theme.textTheme.button,
+                                            ScreenConfig.theme.textTheme.labelLarge,
                                             width: 0.3),
                                         displayText(
                                             "$ETA",
-                                            ScreenConfig.theme.textTheme.button
+                                            ScreenConfig.theme.textTheme.labelLarge
                                                 ?.copyWith(fontSize: 9),
                                             width: 0.3),
                                       ],
@@ -349,7 +349,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                   padding: const EdgeInsets.only(bottom: 5.0),
                                   child: displayText(
                                       "Rs. $fare",
-                                      ScreenConfig.theme.textTheme.headline5
+                                      ScreenConfig.theme.textTheme.titleMedium
                                           ?.copyWith(
                                               fontWeight: FontWeight.bold),
                                       textAlign: TextAlign.end,
@@ -359,7 +359,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                             ),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                             displayText("Hold Tight ! Your Ride Is Coming",
-                                ScreenConfig.theme.textTheme.button,
+                                ScreenConfig.theme.textTheme.labelLarge,
                                 width: 0.8),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                             Row(
@@ -412,7 +412,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                       displayText(
                                           "Driver $distance away",
                                           ScreenConfig
-                                              .theme.textTheme.bodyText2,
+                                              .theme.textTheme.bodyMedium,
                                           textAlign: TextAlign.center,
                                           width: 0.22),
                                       spaceHeight(
@@ -445,7 +445,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                               child: displayNoSizedText(
                                                   'Cancel Ride',
                                                   ScreenConfig
-                                                      .theme.textTheme.caption
+                                                      .theme.textTheme.labelSmall
                                                       ?.copyWith(
                                                           color: Colors.white),
                                                   textAlign: TextAlign.center)),

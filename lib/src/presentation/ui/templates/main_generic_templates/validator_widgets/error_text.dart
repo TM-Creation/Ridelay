@@ -6,7 +6,7 @@ Widget errorValidator(String error, TextAlign alignmentText) {
     width: ScreenConfig.screenSizeWidth * 0.9,
     child: Text(
       error,
-      style: ScreenConfig.theme.textTheme.bodyText1?.merge(TextStyle(
+      style: ScreenConfig.theme.textTheme.bodyLarge?.merge(TextStyle(
           color: Colors.red,
           fontWeight: FontWeight.normal)),
       textAlign: alignmentText,

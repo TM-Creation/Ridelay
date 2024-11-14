@@ -45,7 +45,7 @@ Widget rectangleSquareButton(String type, void Function() func) {
           padding: const EdgeInsets.all(5.0),
           child: displayNoSizedText(
               type,
-              ScreenConfig.theme.textTheme.caption
+              ScreenConfig.theme.textTheme.labelSmall
                   ?.copyWith(color: Colors.white),
               textAlign: TextAlign.center)),
     ),
@@ -75,7 +75,7 @@ Widget driverRectangleSquareButton(String type, void Function() func) {
           padding: const EdgeInsets.all(5.0),
           child: displayNoSizedText(
               type,
-              ScreenConfig.theme.textTheme.caption
+              ScreenConfig.theme.textTheme.labelSmall
                   ?.copyWith(color: ScreenConfig.theme.primaryColor,fontWeight: FontWeight.bold),
               textAlign: TextAlign.center)),
     ),

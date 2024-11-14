@@ -71,7 +71,7 @@ class _PreviousRideContainerState extends State<PreviousRideContainer> {
                         children: [
                           displayText(
                             "Your rating",
-                            ScreenConfig.theme.textTheme.bodyText1,
+                            ScreenConfig.theme.textTheme.bodyLarge,
                             width: 0.2,
                           ),
                           ratingsContainer(ScreenConfig.screenSizeWidth*0.07, 3)
@@ -93,12 +93,12 @@ class _PreviousRideContainerState extends State<PreviousRideContainer> {
                                 children: [
                                   displayText(
                                     "Distance:",
-                                    ScreenConfig.theme.textTheme.headline4,
+                                    ScreenConfig.theme.textTheme.titleLarge,
                                     width: 0.25,
                                   ),
                                   displayText(
                                     "275 km",
-                                    ScreenConfig.theme.textTheme.headline4,
+                                    ScreenConfig.theme.textTheme.titleLarge,
                                     width: 0.2,
                                   ),
                                 ],

@@ -339,11 +339,11 @@ class _DriverSoloRideWaitingScreenState
                                           MainAxisAlignment.center,
                                       children: [
                                         displayText('Mini',
-                                            ScreenConfig.theme.textTheme.button,
+                                            ScreenConfig.theme.textTheme.labelLarge,
                                             width: 0.3),
                                         displayText(
                                             "$ETA",
-                                            ScreenConfig.theme.textTheme.button
+                                            ScreenConfig.theme.textTheme.labelLarge
                                                 ?.copyWith(fontSize: 9),
                                             width: 0.3),
                                       ],
@@ -355,7 +355,7 @@ class _DriverSoloRideWaitingScreenState
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                             displayText(
                                 "Please Hurry! Your Customer is Waiting",
-                                ScreenConfig.theme.textTheme.button,
+                                ScreenConfig.theme.textTheme.labelLarge,
                                 width: 0.8),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                             Row(
@@ -404,7 +404,7 @@ class _DriverSoloRideWaitingScreenState
                                                   displayText(
                                                     passangername!,
                                                     ScreenConfig.theme.textTheme
-                                                        .bodyText2,
+                                                        .bodyMedium,
                                                     width: 0.2,
                                                   ),
                                                 ],
@@ -412,7 +412,7 @@ class _DriverSoloRideWaitingScreenState
                                               displayText(
                                                 "Fare:  $fare",
                                                 ScreenConfig
-                                                    .theme.textTheme.bodyText2,
+                                                    .theme.textTheme.bodyMedium,
                                                 width: 0.22,
                                               ),
                                             ],
@@ -490,7 +490,7 @@ class _DriverSoloRideWaitingScreenState
                                             child: displayNoSizedText(
                                                 'Passanger Picked',
                                                 ScreenConfig
-                                                    .theme.textTheme.caption
+                                                    .theme.textTheme.labelSmall
                                                     ?.copyWith(
                                                         color: ScreenConfig
                                                             .theme.primaryColor,
@@ -527,7 +527,7 @@ class _DriverSoloRideWaitingScreenState
                                       displayText(
                                           "$distance Remaining",
                                           ScreenConfig
-                                              .theme.textTheme.bodyText2,
+                                              .theme.textTheme.bodyMedium,
                                           textAlign: TextAlign.center,
                                           width: 0.22),
                                       spaceHeight(
@@ -561,7 +561,7 @@ class _DriverSoloRideWaitingScreenState
                                               child: displayNoSizedText(
                                                   'Cancel Ride',
                                                   ScreenConfig
-                                                      .theme.textTheme.caption
+                                                      .theme.textTheme.labelSmall
                                                       ?.copyWith(
                                                           color: ScreenConfig
                                                               .theme

@@ -91,7 +91,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
           backgroundColor: Colors.white,
           title: displayNoSizedText(
             "Welcome to Ridelay",
-            ScreenConfig.theme.textTheme.headline4
+            ScreenConfig.theme.textTheme.titleLarge
                 ?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -220,7 +220,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                     displayText(
                         "SELECT ACCORDING TO YOUR NEED",
-                        ScreenConfig.theme.textTheme.headline4
+                        ScreenConfig.theme.textTheme.titleLarge
                             ?.copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                         width: 0.9),

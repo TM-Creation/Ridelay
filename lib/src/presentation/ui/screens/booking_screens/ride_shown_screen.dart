@@ -17,6 +17,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/book
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/slider_for_bottom_navigation.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../onboarding_screens/register_screens/passangerregistration.dart';
@@ -99,30 +100,38 @@ class _RideShownScreenState extends State<RideShownScreen> {
 
   @override
   void initState() {
-    initSocket();
+    getprefdata();
     print("initState call");
     super.initState();
   }
 
+  Future<void> getprefdata() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    id = await prefs.getString('uid');
+    token = await prefs.getString('utoken');
+    type = await prefs.getString('utype');
+    initSocket();
+  }
+
   late IO.Socket socket;
-  final String? id = PassId().id;
+  late final String? id;
+  late final String? token;
+  late final String? type;
   var reqrideid = '';
-  var driverid='';
+  var driverid = '';
   final LatLng? pickuplocation = pickanddrop().pickloc,
       dropofflocation = pickanddrop().droploc;
+
   initSocket() {
-    print('Null or Empty Check: ${PassId().token} -- ${PassId().type} -- ${PassId().id}');
+    print('Null or Empty Check: $token -- $type -- $id');
     socket = IO.io(baseulr().burl, <String, dynamic>{
       'transports': ['websocket'],
-      'extraHeaders': {
-        'authorization': PassId().token,
-        'usertype': PassId().type
-      },
+      'extraHeaders': {'authorization': token, 'usertype': type},
       'autoConnect': false,
     });
-    if(socket.connected){
+    if (socket.connected) {
       print('Socket Already Connected');
-    }else{
+    } else {
       socket.connect();
       socket.onConnect((_) {
         print("Server Connect with Socket");
@@ -131,8 +140,8 @@ class _RideShownScreenState extends State<RideShownScreen> {
         });
       });
     }
-    socket.emit('registerPassenger', PassId().id);
-     /*socket.on('rideAccepted', (data) {
+    socket.emit('registerPassenger', id);
+    /*socket.on('rideAccepted', (data) {
       print("$data ride is accept ");
       isdriveraccept=false;
       requestshow=true;
@@ -145,7 +154,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
         'driverId':data['driver']['_id'],
       };
 
-      *//*  drivername=data['driver']['name'];
+      */ /*  drivername=data['driver']['name'];
       //driverimage=data['driver']['driverImage'];
       driverraiting=data['driver']['rating'];
       //vahicleimage=data['vehicle']['vehicleImage'];
@@ -153,7 +162,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
       numberplate=data['vehicle']['numberPlate'];
       reqrideid = data['_id'];
       final driver=data['driver'];
-      driverid=driver['_id']; *//*
+      driverid=driver['_id']; */ /*
       drivers.add(driverData);
       counter++;
       setState(() {
@@ -161,14 +170,15 @@ class _RideShownScreenState extends State<RideShownScreen> {
       });
     }); */
   }
+
   void sendridereq() {
     // Create payload
     final payload = {
-      'passengerId': PassId().id,
+      'passengerId': id,
       'pickupLocation': {'coordinates': pickanddrop().pickloc},
       'dropoffLocation': {'coordinates': pickanddrop().droploc},
       'fare': fare,
-      'distance':distance
+      'distance': distance
     };
     print("${pickanddrop().pickloc} and 2nd is ${pickanddrop().droploc}");
     // Emit the 'rideRequest' event with the payload
@@ -176,18 +186,20 @@ class _RideShownScreenState extends State<RideShownScreen> {
     print('Emitted rideRequest with payload: $payload');
     socket.on('rideRequested', (data) {
       print("data of riderequest $data");
+      Navigator.pushReplacementNamed(context, FareUpdateScreen.routeName,
+          arguments: {
+            "pickupLocation": pickupEnterController.text,
+            "dropoffLocation": dropoffEnterController.text,
+            //"driverName":drivername,
+            //"driverRaiting":driverraiting,
+            //"vahicleName":vahiclename,
+            //"vahicleNumberplate":numberplate,
+            "fare": fare,
+            "rideid": reqrideid,
+            //"driverID":driverid
+          });
     });
-    Navigator.pushReplacementNamed(context, FareUpdateScreen.routeName,arguments: {
-      "pickupLocation":pickupEnterController.text,
-      "dropoffLocation": dropoffEnterController.text,
-      //"driverName":drivername,
-      //"driverRaiting":driverraiting,
-      //"vahicleName":vahiclename,
-      //"vahicleNumberplate":numberplate,
-      "fare":fare,
-      "rideid":reqrideid,
-      //"driverID":driverid
-    });
+
     //isdriveraccept=true;
   }
 
@@ -264,7 +276,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                       displayText(
                           "Please Confirm Your Ride",
-                          ScreenConfig.theme.textTheme.headline1
+                          ScreenConfig.theme.textTheme.displayLarge
                               ?.copyWith(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.start,
                           width: 0.4),
@@ -289,14 +301,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
                               decoration: redContainerTemplate(radius: 5),
                               child: Center(
                                 child: displayText("CANCEL",
-                                    ScreenConfig.theme.textTheme.button,
+                                    ScreenConfig.theme.textTheme.labelLarge,
                                     width: 0.15, textAlign: TextAlign.center),
                               ),
                             ),
                           ),
                           GestureDetector(
                             onTap: () {
-
                               /*Navigator.of(context).pushNamed(
                                 RideWaitingScreen.routeName,
                                 arguments: {
@@ -317,7 +328,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
                               decoration: blueContainerTemplate(radius: 5),
                               child: Center(
                                 child: displayText("CONFIRM",
-                                    ScreenConfig.theme.textTheme.button,
+                                    ScreenConfig.theme.textTheme.labelLarge,
                                     width: 0.2, textAlign: TextAlign.center),
                               ),
                             ),
@@ -419,12 +430,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                     displayText(
                                                         namesList[0],
                                                         ScreenConfig.theme
-                                                            .textTheme.button,
+                                                            .textTheme.labelLarge,
                                                         width: 0.3),
                                                     displayText(
                                                         "$duration",
                                                         ScreenConfig.theme
-                                                            .textTheme.button
+                                                            .textTheme.labelLarge
                                                             ?.copyWith(
                                                                 fontSize: 15),
                                                         width: 0.3),
@@ -439,13 +450,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                   "RS. $minifare",
                                                   min
                                                       ? ScreenConfig.theme
-                                                          .textTheme.button
+                                                          .textTheme.labelLarge
                                                           ?.copyWith(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold)
                                                       : ScreenConfig.theme
-                                                          .textTheme.headline5
+                                                          .textTheme.titleMedium
                                                           ?.copyWith(
                                                               fontWeight:
                                                                   FontWeight
@@ -526,12 +537,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                     displayText(
                                                         namesList[1],
                                                         ScreenConfig.theme
-                                                            .textTheme.button,
+                                                            .textTheme.labelLarge,
                                                         width: 0.3),
                                                     displayText(
                                                         "$duration",
                                                         ScreenConfig.theme
-                                                            .textTheme.button
+                                                            .textTheme.labelLarge
                                                             ?.copyWith(
                                                                 fontSize: 15),
                                                         width: 0.3),
@@ -546,13 +557,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                   "RS. $gofare",
                                                   go
                                                       ? ScreenConfig.theme
-                                                          .textTheme.button
+                                                          .textTheme.labelLarge
                                                           ?.copyWith(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold)
                                                       : ScreenConfig.theme
-                                                          .textTheme.headline5
+                                                          .textTheme.titleMedium
                                                           ?.copyWith(
                                                               fontWeight:
                                                                   FontWeight
@@ -633,12 +644,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                     displayText(
                                                         namesList[2],
                                                         ScreenConfig.theme
-                                                            .textTheme.button,
+                                                            .textTheme.labelLarge,
                                                         width: 0.3),
                                                     displayText(
                                                         "$duration",
                                                         ScreenConfig.theme
-                                                            .textTheme.button
+                                                            .textTheme.labelLarge
                                                             ?.copyWith(
                                                                 fontSize: 15),
                                                         width: 0.3),
@@ -653,13 +664,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                   "RS. $comfortfare",
                                                   comfrt
                                                       ? ScreenConfig.theme
-                                                          .textTheme.button
+                                                          .textTheme.labelLarge
                                                           ?.copyWith(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold)
                                                       : ScreenConfig.theme
-                                                          .textTheme.headline5
+                                                          .textTheme.titleMedium
                                                           ?.copyWith(
                                                               fontWeight:
                                                                   FontWeight
@@ -736,12 +747,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                   displayText(
                                                       "Rickshaw",
                                                       ScreenConfig.theme
-                                                          .textTheme.button,
+                                                          .textTheme.labelLarge,
                                                       width: 0.3),
                                                   displayText(
                                                       "$duration",
                                                       ScreenConfig.theme
-                                                          .textTheme.button
+                                                          .textTheme.labelLarge
                                                           ?.copyWith(
                                                               fontSize: 15),
                                                       width: 0.3),
@@ -756,12 +767,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                 "RS. $rickshawfare",
                                                 rikshaw
                                                     ? ScreenConfig
-                                                        .theme.textTheme.button
+                                                        .theme.textTheme.labelLarge
                                                         ?.copyWith(
                                                             fontWeight:
                                                                 FontWeight.bold)
                                                     : ScreenConfig.theme
-                                                        .textTheme.headline5
+                                                        .textTheme.titleMedium
                                                         ?.copyWith(
                                                             fontWeight:
                                                                 FontWeight
@@ -839,12 +850,12 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                       displayText(
                                                           "Bike",
                                                           ScreenConfig.theme
-                                                              .textTheme.button,
+                                                              .textTheme.labelLarge,
                                                           width: 0.3),
                                                       displayText(
                                                           "$duration",
                                                           ScreenConfig.theme
-                                                              .textTheme.button
+                                                              .textTheme.labelLarge
                                                               ?.copyWith(
                                                                   fontSize: 15),
                                                           width: 0.3),
@@ -859,13 +870,13 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                                     "RS. $bykefare",
                                                     bik
                                                         ? ScreenConfig.theme
-                                                            .textTheme.button
+                                                            .textTheme.labelLarge
                                                             ?.copyWith(
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold)
                                                         : ScreenConfig.theme
-                                                            .textTheme.headline5
+                                                            .textTheme.titleMedium
                                                             ?.copyWith(
                                                                 fontWeight:
                                                                     FontWeight

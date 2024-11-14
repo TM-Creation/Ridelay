@@ -29,7 +29,7 @@ class _PreviousRidesScreenState extends State<PreviousRidesScreen> {
               children: [
                 displayText(
                   "Previous Rides",
-                  ScreenConfig.theme.textTheme.headline1,
+                  ScreenConfig.theme.textTheme.displayLarge,
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                 Column(

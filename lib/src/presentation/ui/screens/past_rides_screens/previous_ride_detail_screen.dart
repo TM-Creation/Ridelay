@@ -29,11 +29,11 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
         children: [
           displayNoSizedText(
             text1,
-            ScreenConfig.theme.textTheme.button,
+            ScreenConfig.theme.textTheme.labelLarge,
           ),
           displayNoSizedText(
             text2,
-            ScreenConfig.theme.textTheme.button,
+            ScreenConfig.theme.textTheme.labelLarge,
           ),
         ],
       );
@@ -45,12 +45,12 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
         children: [
           displayNoSizedText(
             text1,
-            ScreenConfig.theme.textTheme.bodyText2
+            ScreenConfig.theme.textTheme.bodyMedium
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
           displayNoSizedText(
             text2,
-            ScreenConfig.theme.textTheme.bodyText2
+            ScreenConfig.theme.textTheme.bodyMedium
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
@@ -89,7 +89,7 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
                     controller: TextEditingController(),
                     decoration: InputDecoration(
                       hintText: '',
-                      hintStyle: ScreenConfig.theme.textTheme.headline5,
+                      hintStyle: ScreenConfig.theme.textTheme.titleMedium,
                       suffixIcon: SizedBox(
                         height: 60,
                         width: 50,
@@ -103,7 +103,7 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.all(20),
                     ),
-                    style: ScreenConfig.theme.textTheme.headline5,
+                    style: ScreenConfig.theme.textTheme.titleMedium,
                   ),
                 ),
                 spaceHeight(10),
@@ -131,7 +131,7 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
                     controller: TextEditingController(),
                     decoration: InputDecoration(
                       hintText: '',
-                      hintStyle: ScreenConfig.theme.textTheme.headline5,
+                      hintStyle: ScreenConfig.theme.textTheme.titleMedium,
                       suffixIcon: SizedBox(
                         height: 60,
                         width: 50,
@@ -145,7 +145,7 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.all(20),
                     ),
-                    style: ScreenConfig.theme.textTheme.headline5,
+                    style: ScreenConfig.theme.textTheme.titleMedium,
                   ),
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
@@ -180,25 +180,25 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
                               children: [
                                 displayText(
                                     "Ride Time",
-                                    ScreenConfig.theme.textTheme.bodyText1
+                                    ScreenConfig.theme.textTheme.bodyLarge
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                     width: 0.2),
                                 Row(
                                   children: [
                                     displayNoSizedText(
                                       "13.00 hrs",
-                                      ScreenConfig.theme.textTheme.bodyText1
+                                      ScreenConfig.theme.textTheme.bodyLarge
                                           ?.copyWith(
                                               fontWeight: FontWeight.bold),
                                       textAlign: TextAlign.right,
                                     ),
                                     displayNoSizedText(
                                       "  to  ",
-                                      ScreenConfig.theme.textTheme.bodyText1,
+                                      ScreenConfig.theme.textTheme.bodyLarge,
                                     ),
                                     displayNoSizedText(
                                         "14.00 hrs",
-                                        ScreenConfig.theme.textTheme.bodyText1
+                                        ScreenConfig.theme.textTheme.bodyLarge
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.right),
@@ -212,7 +212,7 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                             displayText(
                               "Reciept",
-                              ScreenConfig.theme.textTheme.headline2,
+                              ScreenConfig.theme.textTheme.displayMedium,
                               width: ScreenConfig.screenSizeWidth * 0.8,
                             ),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -242,7 +242,7 @@ class _PreviousRideDetailScreenState extends State<PreviousRideDetailScreen> {
                                   child: Center(
                                     child: displayText(
                                         "Your rating",
-                                        ScreenConfig.theme.textTheme.bodyText2
+                                        ScreenConfig.theme.textTheme.displayMedium
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 11,

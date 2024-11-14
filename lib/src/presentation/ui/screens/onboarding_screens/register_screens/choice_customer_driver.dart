@@ -40,7 +40,7 @@ class _ChoiceCustomerDriverScreenState
                 children: [
                   displayText(
                       'Are you a',
-                      ScreenConfig.theme.textTheme.headline6
+                      ScreenConfig.theme.textTheme.titleSmall
                           ?.copyWith(fontWeight: FontWeight.w500),
                       textAlign: TextAlign.center),
                   Buttons.squareLargeSelectionScreenButton(
@@ -56,7 +56,7 @@ class _ChoiceCustomerDriverScreenState
                   }),
                   displayText(
                       'Or a',
-                      ScreenConfig.theme.textTheme.headline6
+                      ScreenConfig.theme.textTheme.titleSmall
                           ?.copyWith(fontWeight: FontWeight.w500),
                       textAlign: TextAlign.center),
                   Buttons.squareLargeSelectionScreenButton(

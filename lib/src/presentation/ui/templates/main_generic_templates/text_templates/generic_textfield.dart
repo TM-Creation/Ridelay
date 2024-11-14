@@ -27,11 +27,11 @@ Widget genericTextField(
           controller: controller,
           decoration: InputDecoration(
               hintText: hint,
-              hintStyle: ScreenConfig.theme.textTheme.headline5,
+              hintStyle: ScreenConfig.theme.textTheme.titleMedium,
               suffixIcon: suffixIconButton,
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(20)),
-          style: ScreenConfig.theme.textTheme.headline5));
+          style: ScreenConfig.theme.textTheme.titleMedium));
 }
 
 

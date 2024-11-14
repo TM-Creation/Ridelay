@@ -9,9 +9,11 @@ import 'package:get/get_core/src/get_main.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/authmodels/driverregmodel.dart';
+import 'package:ridely/src/models/imageuploadmodel.dart';
 import 'package:ridely/src/presentation/ui/config/compress_image.dart';
 import 'package:ridely/src/presentation/ui/config/validator.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
@@ -30,6 +32,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../models/base url.dart';
 import '../../../config/theme.dart';
 import '../../driver_screens/driver_main_screen.dart';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DriverRegistrationScreen extends StatefulWidget {
   const DriverRegistrationScreen({Key? key}) : super(key: key);
@@ -53,6 +61,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   final TextEditingController email = TextEditingController();
   final TextEditingController drivername = TextEditingController();
   final TextEditingController driverphonenumber = TextEditingController();
+
   /*final TextEditingController idNumber = TextEditingController();*/
   final TextEditingController password = TextEditingController();
   final TextEditingController conpassword = TextEditingController();
@@ -71,6 +80,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   baseulr burl = baseulr();
   bool nameerror = false;
   bool phoneerror = false;
+
   /*bool idNumberError = false;*/
   bool picError1 = false;
   bool picError2 = false;
@@ -80,29 +90,94 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
   bool emailerror = false;
   bool passworderror = false;
   bool conpassworderror = false;
+  var url1;
+  var url2;
+  var url3;
+  var url4;
+  var url5;
 
   void navigate() {
-    driverregmodel user = driverregmodel(
-      name: drivername.text,
-      email: email.text,
-      password: password.text,
-      phone: number,
-      location: Location(
-        type: "Point",
-        coordinates: [
-          userLiveLocation().userlivelocation!.longitude,
-          userLiveLocation().userlivelocation!.latitude
-        ], // Static example coordinates
-      ),
-      vehicle: "609c78a1c25e6d6bfdb1b16b",
-      rating: 4.8,
-      identityCardNumber: '',
-      status: "available",
-      wallet: "60d21b4667d0d8992e610c87",
-      driverImage: "http://example.com/images/john_doe.jpg",
-    );
+    print('${userLiveLocation().userlivelocation!.latitude} longitude of driver is here');
+    Driver user = Driver(name: drivername.text,
+        type: 'driver',
+        email: email.text,
+        password: password.text,
+        phone: driverphonenumber.text,
+        location: Location(
+          type: "Point",
+          coordinates: [userLiveLocation().userlivelocation!.latitude, userLiveLocation().userlivelocation!.longitude], // Static example coordinates
+        ),
+        driverImage: url1,
+        idCardFront: url2,
+        idCardBack: url3,
+        drivingLicenseFront: url4,
+        drivingLicenseBack: url5);
     print('User data to be sent: ${jsonEncode(user.toJson())}');
     postUserData(user);
+  }
+
+  Future<void> uploadImage(PickedFile pickedFile, int num) async {
+    final String uploadUrl = '${burl.burl}/upload-image';
+    try {
+      final File imageFile = File(
+          pickedFile.path); // Convert PickedFile to File
+      var stream = http.ByteStream(imageFile.openRead());
+      stream.cast();
+
+      var length = await imageFile.length();
+
+      // Get the mime type of the file
+      var mimeType = lookupMimeType(imageFile.path);
+
+      // Create the multipart request
+      var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));
+
+      var multipartFile = http.MultipartFile(
+        'image', stream, length,
+        filename: basename(imageFile.path),
+        contentType: MediaType(mimeType!.split('/')[0], mimeType.split('/')[1]),
+      );
+
+      // Attach the file to the request
+      request.files.add(multipartFile);
+
+      // Send the request
+      var response = await request.send();
+
+      // Check if the request was successful
+      if (response.statusCode == 200) {
+        // Get the response body
+        final responseBody = await response.stream.bytesToString();
+        print('Image uploaded successfully.');
+        print('Response body: $responseBody');
+        final jsonResponse = json.decode(responseBody);
+        final imageUrl = jsonResponse['url'];
+        setState(() {
+          if (num == 1) {
+            url1 = imageUrl;
+            print('Image 1 Uploaded');
+          } else if (num == 2) {
+            url2 = imageUrl;
+            print('Image 2 Uploaded');
+          } else if (num == 3) {
+            url3 = imageUrl;
+            print('Image 3 Uploaded');
+          } else if (num == 4) {
+            url4 = imageUrl;
+            print('Image 4 Uploaded');
+          } else if (num == 5) {
+            url5 = imageUrl;
+            print('Image 5 Uploaded');
+          } else {
+            print('Num is Null');
+          }
+        });
+      } else {
+        print('Failed to upload image. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
   }
 
   @override
@@ -119,18 +194,23 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
               if (num == 1) {
                 _imageFile1 = pickedFile;
                 picError1 = false;
+                uploadImage(pickedFile, 1);
               } else if (num == 2) {
                 _imageFile2 = pickedFile;
                 picError2 = false;
+                uploadImage(pickedFile, 2);
               } else if (num == 3) {
                 _imageFile3 = pickedFile;
                 picError3 = false;
-              }else if (num == 4) {
+                uploadImage(pickedFile, 3);
+              } else if (num == 4) {
                 _imageFile4 = pickedFile;
                 picError4 = false;
+                uploadImage(pickedFile, 4);
               } else if (num == 5) {
                 _imageFile5 = pickedFile;
                 picError5 = false;
+                uploadImage(pickedFile, 5);
               } else {
                 print('Num is Null');
               }
@@ -147,7 +227,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 picError2 = true;
               } else if (num == 3) {
                 picError3 = true;
-              }else if (num == 4) {
+              } else if (num == 4) {
                 picError4 = true;
               } else if (num == 5) {
                 picError5 = true;
@@ -169,16 +249,15 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       }
     }
 
-    Widget _displayTextField(
-            {required String name,
-            required String hint,
-            required String? Function(String?)? validator,
-            required LengthLimitingTextInputFormatter lengthLimit,
-            required FilteringTextInputFormatter filterTextInput,
-            required TextEditingController controller,
-            required Function(String val)? onChanged,
-            required TextInputType inputType,
-            bool readOnly = false}) =>
+    Widget _displayTextField({required String name,
+      required String hint,
+      required String? Function(String?)? validator,
+      required LengthLimitingTextInputFormatter lengthLimit,
+      required FilteringTextInputFormatter filterTextInput,
+      required TextEditingController controller,
+      required Function(String val)? onChanged,
+      required TextInputType inputType,
+      bool readOnly = false}) =>
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +265,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           children: [
             Text(
               name,
-              style: ScreenConfig.theme.textTheme.headline6
+              style: ScreenConfig.theme.textTheme.titleSmall
                   ?.copyWith(fontWeight: FontWeight.w500),
             ),
             SizedBox(
@@ -204,18 +283,19 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           ],
         );
 
-    Widget _displayBodyText() => Column(
+    Widget _displayBodyText() =>
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             spaceHeight(ScreenConfig.screenSizeHeight * 0.06),
             displayText(
               "Driver Information",
-              ScreenConfig.theme.textTheme.headline1
+              ScreenConfig.theme.textTheme.displayLarge
                   ?.copyWith(color: Colors.black.withOpacity(0.5)),
             ),
             displayText(
               'Add Driver Photo',
-              ScreenConfig.theme.textTheme.headline6
+              ScreenConfig.theme.textTheme.titleSmall
                   ?.copyWith(fontWeight: FontWeight.w500),
             ),
           ],
@@ -247,7 +327,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                       ),
                       Text(
                         "Pick Image",
-                        style: ScreenConfig.theme.textTheme.headline6
+                        style: ScreenConfig.theme.textTheme.titleSmall
                             ?.merge(const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.normal,
@@ -271,15 +351,15 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                             Buttons.longWidthButton(
                               Text(
                                 'Capture From Camera',
-                                style: ScreenConfig.theme.textTheme.headline6
+                                style: ScreenConfig.theme.textTheme.titleSmall
                                     ?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300),
                               ),
-                              () async {
+                                  () async {
                                 final isImageSelectedCorrectSize =
-                                    await pickImage(ImageSource.camera,
-                                        num: number);
+                                await pickImage(ImageSource.camera,
+                                    num: number);
                                 Navigator.of(context).pop();
                                 // if (!isImageSelectedCorrectSize) {
                                 //   imageSizeErrorDialogBox(context);
@@ -292,15 +372,15 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                             Buttons.longWidthButton(
                               Text(
                                 'Pick From Gallery',
-                                style: ScreenConfig.theme.textTheme.headline6
+                                style: ScreenConfig.theme.textTheme.titleSmall
                                     ?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300),
                               ),
-                              () async {
+                                  () async {
                                 final isImageSelectedCorrectSize =
-                                    await pickImage(ImageSource.gallery,
-                                        num: number);
+                                await pickImage(ImageSource.gallery,
+                                    num: number);
                                 Navigator.of(context).pop();
                                 // if (!isImageSelectedCorrectSize) {
                                 //   imageSizeErrorDialogBox(context);
@@ -321,7 +401,8 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
               ]));
     }
 
-    Widget _displayAddPhotoSection() => Column(
+    Widget _displayAddPhotoSection() =>
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
@@ -344,29 +425,31 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                           minWidth: ScreenConfig.screenSizeWidth * 0.1),
                       child: _imageFile1 != null
                           ? CircleAvatar(
-                              radius: ScreenConfig.screenSizeHeight * 0.1,
-                              backgroundImage: FileImage(
-                                File(_imageFile1!.path),
-                              ))
+                          radius: ScreenConfig.screenSizeHeight * 0.1,
+                          backgroundImage: FileImage(
+                            File(_imageFile1!.path),
+                          ))
                           : GestureDetector(
-                              onTap: () async {
-                                pickImageBottomSheet(
-                                    context: context, number: 1);
-                              },
-                              child: Center(
-                                  child: Icon(
-                                Icons.person,
-                                color: ScreenConfig.theme.primaryColor,
-                                size: MediaQuery.sizeOf(context).width * 0.15,
-                              )),
+                        onTap: () async {
+                          pickImageBottomSheet(
+                              context: context, number: 1);
+                        },
+                        child: Center(
+                            child: Icon(
+                              Icons.person,
+                              color: ScreenConfig.theme.primaryColor,
+                              size: MediaQuery
+                                  .sizeOf(context)
+                                  .width * 0.15,
                             )),
+                      )),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
                   'Driver Image',
-                  style: ScreenConfig.theme.textTheme.headline6
+                  style: ScreenConfig.theme.textTheme.titleSmall
                       ?.copyWith(fontWeight: FontWeight.w500),
                 ),
               ],
@@ -374,7 +457,8 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           ],
         );
 
-    Widget _displayBody() => Padding(
+    Widget _displayBody() =>
+        Padding(
           padding: EdgeInsets.all(ScreenConfig.screenSizeWidth * 0.03),
           child: SizedBox(
             height: ScreenConfig.screenSizeHeight,
@@ -453,7 +537,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                         children: [
                           Text(
                             'Phone Number',
-                            style: ScreenConfig.theme.textTheme.headline6
+                            style: ScreenConfig.theme.textTheme.titleSmall
                                 ?.copyWith(fontWeight: FontWeight.w500),
                           ),
                           SizedBox(
@@ -465,10 +549,10 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                               controller: driverphonenumber,
                               decoration: InputDecoration(
                                 contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
+                                const EdgeInsets.symmetric(horizontal: 15),
                                 hintText: 'Enter Phone Number',
                                 hintStyle:
-                                    ScreenConfig.theme.textTheme.headline5,
+                                ScreenConfig.theme.textTheme.titleMedium,
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(8.0)),
@@ -496,7 +580,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                                 });
                               },
                               style:
-                                  TextStyle(color: Colors.black, fontSize: 15),
+                              TextStyle(color: Colors.black, fontSize: 15),
                             ),
                           ),
                         ],
@@ -563,7 +647,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                           inputType: TextInputType.number),*/
                       Text(
                         'Id Card Front Side Image',
-                        style: ScreenConfig.theme.textTheme.headline6
+                        style: ScreenConfig.theme.textTheme.titleSmall
                             ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -587,17 +671,17 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                             width: double.infinity,
                             child: _imageFile2 != null
                                 ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image(
-                                        fit: BoxFit.fill,
-                                        image: FileImage(
-                                          File(_imageFile2!.path),
-                                        )),
-                                  )
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image(
+                                  fit: BoxFit.fill,
+                                  image: FileImage(
+                                    File(_imageFile2!.path),
+                                  )),
+                            )
                                 : Icon(
-                                    CupertinoIcons.add_circled,
-                                    size: ScreenConfig.screenSizeWidth * 0.1,
-                                  ),
+                              CupertinoIcons.add_circled,
+                              size: ScreenConfig.screenSizeWidth * 0.1,
+                            ),
                           ),
                         ),
                       ),
@@ -605,7 +689,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       Text(
                         'Id Card Back Side Image',
-                        style: ScreenConfig.theme.textTheme.headline6
+                        style: ScreenConfig.theme.textTheme.titleSmall
                             ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -629,17 +713,17 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                             width: double.infinity,
                             child: _imageFile3 != null
                                 ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image(
-                                        fit: BoxFit.fill,
-                                        image: FileImage(
-                                          File(_imageFile3!.path),
-                                        )),
-                                  )
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image(
+                                  fit: BoxFit.fill,
+                                  image: FileImage(
+                                    File(_imageFile3!.path),
+                                  )),
+                            )
                                 : Icon(
-                                    CupertinoIcons.add_circled,
-                                    size: ScreenConfig.screenSizeWidth * 0.1,
-                                  ),
+                              CupertinoIcons.add_circled,
+                              size: ScreenConfig.screenSizeWidth * 0.1,
+                            ),
                           ),
                         ),
                       ),
@@ -647,7 +731,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       Text(
                         'Driving License Front Side Image',
-                        style: ScreenConfig.theme.textTheme.headline6
+                        style: ScreenConfig.theme.textTheme.titleSmall
                             ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -689,7 +773,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       Text(
                         'Driving Liicense Back Side Image',
-                        style: ScreenConfig.theme.textTheme.headline6
+                        style: ScreenConfig.theme.textTheme.titleSmall
                             ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -782,11 +866,11 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                       Center(
                           child: Text(
-                        'If You Alreday Have an Account!',
-                        style: TextStyle(
-                            color: themeColor,
-                            fontSize: ScreenConfig.screenSizeWidth * 0.04),
-                      )),
+                            'If You Alreday Have an Account!',
+                            style: TextStyle(
+                                color: themeColor,
+                                fontSize: ScreenConfig.screenSizeWidth * 0.04),
+                          )),
                       spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -857,16 +941,16 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           child: Buttons.longWidthButton(
               progres
                   ? Container(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ))
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ))
                   : Text(
-                      'Continue',
-                      style: ScreenConfig.theme.textTheme.headline6?.copyWith(
-                          color: Colors.white, fontWeight: FontWeight.w300),
-                    ), () {
+                'Continue',
+                style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
+                    color: Colors.white, fontWeight: FontWeight.w300),
+              ), () {
             // navigate();
 
             FocusScope.of(context).unfocus();
@@ -915,7 +999,9 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                 picError3 = false;
               });
             }
-            if (picError3 == false && picError2 == false && picError1 == false &&
+            if (picError3 == false &&
+                picError2 == false &&
+                picError1 == false &&
                 emailerror == false &&
                 passworderror == false &&
                 nameerror == false &&
@@ -955,10 +1041,10 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
-
-  Future<void> postUserData(driverregmodel user) async {
+  Future<void> postUserData(Driver user) async {
     final url = Uri.parse(
-        '${burl.burl}/api/v1/driver/register'); // Replace with your API endpoint
+        '${burl
+            .burl}/api/v1/driver/register'); // Replace with your API endpoint
     final body = jsonEncode(user.toJson());
     final headers = {
       HttpHeaders.contentTypeHeader: 'application/json',
@@ -988,12 +1074,11 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
           margin: EdgeInsets.all(10),
           duration: Duration(seconds: 3),
         );
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => VehicleRegistrationScreen()));
+        Get.off(VehicleRegistrationScreen());
       } else if (response.statusCode == 400) {
         final responseData = jsonDecode(response.body);
         final message = responseData['message'];
-        print("object $message");
+        print("Responce $message");
         Get.snackbar(
           'Error',
           '$message',
@@ -1035,3 +1120,4 @@ class driverId {
 
   String? driverid;
 }
+

@@ -59,11 +59,11 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
         children: [
           displayNoSizedText(
             text1,
-            ScreenConfig.theme.textTheme.button,
+            ScreenConfig.theme.textTheme.labelLarge,
           ),
           displayNoSizedText(
             text2,
-            ScreenConfig.theme.textTheme.button,
+            ScreenConfig.theme.textTheme.labelLarge,
           ),
         ],
       );
@@ -74,12 +74,12 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
         children: [
           displayNoSizedText(
             text1,
-            ScreenConfig.theme.textTheme.bodyText2
+            ScreenConfig.theme.textTheme.bodyMedium
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
           displayNoSizedText(
             text2,
-            ScreenConfig.theme.textTheme.bodyText2
+            ScreenConfig.theme.textTheme.bodyMedium
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
@@ -98,7 +98,7 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
                   children: [
                     displayText(
                       "Previous Rides",
-                      ScreenConfig.theme.textTheme.headline1,
+                      ScreenConfig.theme.textTheme.displayLarge,
                     ),
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                     FutureBuilder<List<Ride>>(future: futureRides, builder: (context,snapshot){
@@ -173,7 +173,7 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
                                               children: [
                                                 displayText(
                                                   "Your rating",
-                                                  ScreenConfig.theme.textTheme.bodyText1,
+                                                  ScreenConfig.theme.textTheme.bodyLarge,
                                                   width: 0.2,
                                                 ),
                                                 Row(
@@ -239,12 +239,12 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
                                                                             children: [
                                                                               displayText(
                                                                                   "Ride Time",
-                                                                                  ScreenConfig.theme.textTheme.bodyText1
+                                                                                  ScreenConfig.theme.textTheme.bodyLarge
                                                                                       ?.copyWith(fontWeight: FontWeight.bold),
                                                                                   width: 0.2),
                                                                               displayNoSizedText(
                                                                                 "${ride.createdAt.substring(0,10)}",
-                                                                                ScreenConfig.theme.textTheme.bodyText1
+                                                                                ScreenConfig.theme.textTheme.bodyLarge
                                                                                     ?.copyWith(
                                                                                     fontWeight: FontWeight.bold),
                                                                                 textAlign: TextAlign.right,
@@ -257,7 +257,7 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
                                                                           spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                                                                           displayText(
                                                                             "Reciept",
-                                                                            ScreenConfig.theme.textTheme.headline2,
+                                                                            ScreenConfig.theme.textTheme.displayMedium,
                                                                             width: ScreenConfig.screenSizeWidth * 0.8,
                                                                           ),
                                                                           spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -279,7 +279,7 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
                                                                                 child: Center(
                                                                                   child: displayText(
                                                                                       "Your Rating",
-                                                                                      ScreenConfig.theme.textTheme.bodyText2
+                                                                                      ScreenConfig.theme.textTheme.bodyMedium
                                                                                           ?.copyWith(
                                                                                           fontWeight: FontWeight.bold,
                                                                                           fontSize: 11,
@@ -332,12 +332,12 @@ class _DriverPreviousRidesScreenState extends State<DriverPreviousRidesScreen> {
                                                         children: [
                                                           displayText(
                                                             "Distance:",
-                                                            ScreenConfig.theme.textTheme.headline4,
+                                                            ScreenConfig.theme.textTheme.titleLarge,
                                                             width: 0.25,
                                                           ),
                                                           displayText(
                                                             "${ride.distance}",
-                                                            ScreenConfig.theme.textTheme.headline4,
+                                                            ScreenConfig.theme.textTheme.titleLarge,
                                                             width: 0.2,
                                                           ),
                                                         ],

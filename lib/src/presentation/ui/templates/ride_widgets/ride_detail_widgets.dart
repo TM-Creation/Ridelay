@@ -82,11 +82,11 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          displayText(name, ScreenConfig.theme.textTheme.button,
+                          displayText(name, ScreenConfig.theme.textTheme.labelLarge,
                               width: 0.3),
                           displayText(
                               "1-8 mins",
-                              ScreenConfig.theme.textTheme.button
+                              ScreenConfig.theme.textTheme.labelLarge
                                   ?.copyWith(fontSize: 9),
                               width: 0.3),
                         ],
@@ -98,7 +98,7 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: displayText(
                           "Rs. 290",
-                          ScreenConfig.theme.textTheme.headline5
+                          ScreenConfig.theme.textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.end,
                           width: 0.2),
@@ -112,7 +112,7 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
                       : buttonType == "Cancel Ride"
                           ? "Hold Tight ! Your Ride Is Coming"
                           : " ",
-                  ScreenConfig.theme.textTheme.button,
+                  ScreenConfig.theme.textTheme.labelLarge,
                   width: 0.8),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
               Row(
@@ -154,7 +154,7 @@ Widget rideDetailsWidget(String name, String buttonType, BuildContext context) {
                         ),
                         spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                         displayText("15km Remaining",
-                            ScreenConfig.theme.textTheme.bodyText2,
+                            ScreenConfig.theme.textTheme.bodyMedium,
                             textAlign: TextAlign.center, width: 0.22),
                         spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                         rectangleSquareButton(buttonType, () {
@@ -205,7 +205,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
             children: [
               displayText(
                   name,
-                  ScreenConfig.theme.textTheme.headline1
+                  ScreenConfig.theme.textTheme.displayLarge
                       ?.copyWith(color: Colors.white),
                   width: 0.8),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -214,10 +214,10 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     displayText("Distance Remaining",
-                        ScreenConfig.theme.textTheme.button,
+                        ScreenConfig.theme.textTheme.labelLarge,
                         width: 0.4),
                     displayText(
-                        "$distance", ScreenConfig.theme.textTheme.button,
+                        "$distance", ScreenConfig.theme.textTheme.labelLarge,
                         width: 0.2),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
@@ -226,9 +226,9 @@ Widget rideDetailsInProgressAndFinishedWidget(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     displayText(
-                        "Estimated Time", ScreenConfig.theme.textTheme.button,
+                        "Estimated Time", ScreenConfig.theme.textTheme.labelLarge,
                         width: 0.4),
-                    displayText("$ETA", ScreenConfig.theme.textTheme.button,
+                    displayText("$ETA", ScreenConfig.theme.textTheme.labelLarge,
                         width: 0.2),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
@@ -276,7 +276,7 @@ Widget rideDetailsInProgressAndFinishedWidget(
                         child: displayNoSizedText(
                             'Complete Your Ride Early',
                             ScreenConfig
-                                .theme.textTheme.caption
+                                .theme.textTheme.labelSmall
                                 ?.copyWith(
                                 color: ScreenConfig
                                     .theme
@@ -313,7 +313,7 @@ Widget rideRatingWidget(BuildContext context, int fare,String drivername) {
             children: [
               displayText(
                   "Thank You For Riding With Ridelay!",
-                  ScreenConfig.theme.textTheme.headline1?.copyWith(
+                  ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.normal,
                       fontSize: 17),
@@ -325,19 +325,19 @@ Widget rideRatingWidget(BuildContext context, int fare,String drivername) {
                   children: [
                     displayText(
                         "Total Payed Amount",
-                        ScreenConfig.theme.textTheme.headline1?.copyWith(
+                        ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.normal,
                             fontSize: 15),
                         width: 0.4),
                     displayText(
-                        "Rs. $fare", ScreenConfig.theme.textTheme.headline2,
+                        "Rs. $fare", ScreenConfig.theme.textTheme.displayMedium,
                         textAlign: TextAlign.end, width: 0.3),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               displayText(
                   "Please Rate Our Captain And Give Feedback",
-                  ScreenConfig.theme.textTheme.headline1?.copyWith(
+                  ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.normal,
                       fontSize: 17),
@@ -377,10 +377,10 @@ Widget rideRatingWidget(BuildContext context, int fare,String drivername) {
                         controller: feedBackController,
                         decoration: InputDecoration(
                             hintText: "Enter FeedBack",
-                            hintStyle: ScreenConfig.theme.textTheme.headline5,
+                            hintStyle: ScreenConfig.theme.textTheme.titleMedium,
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.all(20)),
-                        style: ScreenConfig.theme.textTheme.headline5),
+                        style: ScreenConfig.theme.textTheme.titleMedium),
                   ),
                   // Add FeedBack Input Field
                 ],
@@ -445,7 +445,7 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
         children: [
           displayText(
               "Submit Review",
-              ScreenConfig.theme.textTheme.headline1?.copyWith(
+              ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.normal,
                   fontSize: 17),
@@ -463,7 +463,7 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
                     decoration: redContainerTemplate(radius: 5),
                     child: Center(
                       child: displayNoSizedText(
-                          "No", ScreenConfig.theme.textTheme.button),
+                          "No", ScreenConfig.theme.textTheme.labelLarge),
                     )),
               ),
               const SizedBox(width: 5),
@@ -486,7 +486,7 @@ Widget submitReviewPanelWidget(BuildContext context,String rideid,String driveri
                     decoration: brownContainerTemplate(radius: 5),
                     child: Center(
                       child: displayNoSizedText(
-                          "Yes", ScreenConfig.theme.textTheme.button),
+                          "Yes", ScreenConfig.theme.textTheme.labelLarge),
                     )),
               ),
             ],

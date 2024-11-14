@@ -262,7 +262,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                           children: [
                             displayText(
                                 'Your Ride Is In Progress',
-                                ScreenConfig.theme.textTheme.headline1
+                                ScreenConfig.theme.textTheme.displayLarge
                                     ?.copyWith(color: Colors.white),
                                 width: 0.8),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -271,9 +271,9 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   displayText("Distance Remaining",
-                                      ScreenConfig.theme.textTheme.button,
+                                      ScreenConfig.theme.textTheme.labelLarge,
                                       width: 0.4),
-                                  displayText("$distance", ScreenConfig.theme.textTheme.button,
+                                  displayText("$distance", ScreenConfig.theme.textTheme.labelLarge,
                                       width: 0.2),
                                 ]),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
@@ -281,9 +281,9 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  displayText("Estimated Time", ScreenConfig.theme.textTheme.button,
+                                  displayText("Estimated Time", ScreenConfig.theme.textTheme.labelLarge,
                                       width: 0.4),
-                                  displayText("$ETA", ScreenConfig.theme.textTheme.button,
+                                  displayText("$ETA", ScreenConfig.theme.textTheme.labelLarge,
                                       width: 0.2),
                                 ]),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
@@ -313,14 +313,14 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                                 children: [
                                                   displayText(
                                                     passangername!,
-                                                    ScreenConfig.theme.textTheme.bodyText2,
+                                                    ScreenConfig.theme.textTheme.bodyMedium,
                                                     width: 0.2,
                                                   ),
                                                 ],
                                               ),
                                               displayText(
                                                 "Fare:  $fare",
-                                                ScreenConfig.theme.textTheme.bodyText2,
+                                                ScreenConfig.theme.textTheme.bodyMedium,
                                                 width: 0.22,
                                               ),
                                             ],
@@ -379,7 +379,7 @@ class _DriverSoloRideInProgressAndFinishedScreenState
                                         child: displayNoSizedText(
                                             'Ride Complete',
                                             ScreenConfig
-                                                .theme.textTheme.caption
+                                                .theme.textTheme.labelSmall
                                                 ?.copyWith(
                                                 color: ScreenConfig
                                                     .theme

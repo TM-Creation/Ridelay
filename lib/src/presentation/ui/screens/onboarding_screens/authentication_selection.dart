@@ -109,7 +109,7 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
                   children: [
                     Buttons.longWidthButton( Text(
                       'Sign-Up/Register',
-                      style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                      style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w300),
                     ), () {
                       Navigator.of(context)
@@ -118,7 +118,7 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                     Buttons.longWidthButton(Text(
                       'Login with Email',
-                      style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                      style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w300),
                     ), () {
                       Navigator.of(context)
@@ -127,7 +127,7 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
                     spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                     Buttons.longWidthButton(Text(
                       'Login with Phone Number',
-                      style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                      style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w300),
                     ), () {
                       Navigator.of(context)

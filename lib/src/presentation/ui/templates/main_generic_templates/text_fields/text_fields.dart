@@ -20,7 +20,7 @@ class MyTextFields {
         //     ScreenConfig.screenSizeWidth * 0.03, 0.0),
         height: 50,
         child: TextFormField(
-          style: ScreenConfig.theme.textTheme.headline5
+          style: ScreenConfig.theme.textTheme.titleMedium
               ?.copyWith(fontWeight: FontWeight.normal, color: Colors.black),
           readOnly: isReadOnly,
           keyboardType: textInputType,
@@ -32,7 +32,7 @@ class MyTextFields {
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(horizontal: 15),
             hintText: hint,
-            hintStyle: ScreenConfig.theme.textTheme.headline5,
+            hintStyle: ScreenConfig.theme.textTheme.titleMedium,
             errorMaxLines: 2,
             enabledBorder: OutlineInputBorder(
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),

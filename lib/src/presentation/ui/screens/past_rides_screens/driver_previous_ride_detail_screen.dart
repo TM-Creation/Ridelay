@@ -22,11 +22,11 @@ class DriverPreviousRideDetailScreen extends StatelessWidget {
         children: [
           displayNoSizedText(
             text1,
-            ScreenConfig.theme.textTheme.button,
+            ScreenConfig.theme.textTheme.labelLarge,
           ),
           displayNoSizedText(
             text2,
-            ScreenConfig.theme.textTheme.button,
+            ScreenConfig.theme.textTheme.labelLarge,
           ),
         ],
       );
@@ -38,12 +38,12 @@ class DriverPreviousRideDetailScreen extends StatelessWidget {
         children: [
           displayNoSizedText(
             text1,
-            ScreenConfig.theme.textTheme.bodyText2
+            ScreenConfig.theme.textTheme.bodyMedium
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
           displayNoSizedText(
             text2,
-            ScreenConfig.theme.textTheme.bodyText2
+            ScreenConfig.theme.textTheme.bodyMedium
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
@@ -95,25 +95,25 @@ class DriverPreviousRideDetailScreen extends StatelessWidget {
                               children: [
                                 displayText(
                                     "Ride Time",
-                                    ScreenConfig.theme.textTheme.bodyText1
+                                    ScreenConfig.theme.textTheme.bodyLarge
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                     width: 0.2),
                                 Row(
                                   children: [
                                     displayNoSizedText(
                                       "13.00 hrs",
-                                      ScreenConfig.theme.textTheme.bodyText1
+                                      ScreenConfig.theme.textTheme.bodyLarge
                                           ?.copyWith(
                                               fontWeight: FontWeight.bold),
                                       textAlign: TextAlign.right,
                                     ),
                                     displayNoSizedText(
                                       "  to  ",
-                                      ScreenConfig.theme.textTheme.bodyText1,
+                                      ScreenConfig.theme.textTheme.bodyLarge,
                                     ),
                                     displayNoSizedText(
                                         "14.00 hrs",
-                                        ScreenConfig.theme.textTheme.bodyText1
+                                        ScreenConfig.theme.textTheme.bodyLarge
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.right),
@@ -127,7 +127,7 @@ class DriverPreviousRideDetailScreen extends StatelessWidget {
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                             displayText(
                               "Reciept",
-                              ScreenConfig.theme.textTheme.headline2,
+                              ScreenConfig.theme.textTheme.displayMedium,
                               width: ScreenConfig.screenSizeWidth * 0.8,
                             ),
                             spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -149,7 +149,7 @@ class DriverPreviousRideDetailScreen extends StatelessWidget {
                                   child: Center(
                                     child: displayText(
                                         "Your Rating",
-                                        ScreenConfig.theme.textTheme.bodyText2
+                                        ScreenConfig.theme.textTheme.bodyMedium
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 11,

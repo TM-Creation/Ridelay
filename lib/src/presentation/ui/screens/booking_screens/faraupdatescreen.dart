@@ -18,6 +18,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/book
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/slider_for_bottom_navigation.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../onboarding_screens/register_screens/passangerregistration.dart';
@@ -33,7 +34,7 @@ class FareUpdateScreen extends StatefulWidget {
 class _FareUpdateScreenState extends State<FareUpdateScreen> {
   TextEditingController pickupEnterController = TextEditingController();
   TextEditingController dropoffEnterController = TextEditingController();
-  TextEditingController updatedfarefieldcontroller=TextEditingController();
+  TextEditingController updatedfarefieldcontroller = TextEditingController();
   String distance = '';
   int updatedfare = 0;
   String rideid = '';
@@ -48,7 +49,7 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
       setState(() {
         pickupEnterController.text = args['pickupLocation']!;
         dropoffEnterController.text = args['dropoffLocation']!;
-        updatedfarefieldcontroller.text=args['fare'].toString();
+        updatedfarefieldcontroller.text = args['fare'].toString();
         /*drivername = args['driverName']!;
         driverraiting = args['driverRaiting']!;
         vahiclename = args['vahicleName']!;
@@ -64,7 +65,7 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
   String drivername = '';
   double driverraiting = 4.2;
 
-  String driverimage='';
+  String driverimage = '';
   String? vahicleimage;
   String vahiclename = '';
   String numberplate = '';
@@ -72,7 +73,7 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
 
   @override
   void initState() {
-    initSocket();
+    getprefdata();
     print("initState call");
     updatedfarefieldcontroller.text = '0';
     super.initState();
@@ -81,29 +82,37 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
   int counter = 0;
 
   late IO.Socket socket;
-  final String? id = PassId().id;
+
+  Future<void> getprefdata() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    id = await prefs.getString('uid');
+    initSocket();
+  }
+
+  late final String? id;
   var reqrideid = '';
-  var driverid='';
+  var driverid = '';
 
   final LatLng? pickuplocation = pickanddrop().pickloc,
       dropofflocation = pickanddrop().droploc;
+
   initSocket() {
-    print('Null or Empty Check: ${PassId().token} -- ${PassId().type} -- ${PassId().id}');
+    print('Null or Empty Check: $id');
     //socket.emit('registerPassenger', PassId().id);
     socket.on('rideAccepted', (data) {
       print("$data ride is accept ");
-      isdriveraccept=false;
-      requestshow=true;
-      Map<String,dynamic> driverData={
-        'driverName':data['driver']['name'],
-        'driverRaiting':data['driver']['rating'],
-        'vahicleName':data['vehicle']['name'],
-        'numberPlate':data['vehicle']['numberPlate'],
-        'rideId':data['_id'],
-        'driverId':data['driver']['_id'],
+      isdriveraccept = false;
+      requestshow = true;
+      Map<String, dynamic> driverData = {
+        'driverName': data['driver']['name'],
+        'driverRaiting': data['driver']['rating'],
+        'vahicleName': data['vehicle']['name'],
+        'numberPlate': data['vehicle']['numberPlate'],
+        'rideId': data['_id'],
+        'driverId': data['driver']['_id'],
       };
 
-       /*drivername=data['driver']['name'];
+      /*drivername=data['driver']['name'];
       //driverimage=data['driver']['driverImage'];
       driverraiting=data['driver']['rating'];
       //vahicleimage=data['vehicle']['vehicleImage'];
@@ -122,34 +131,35 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
 
 //6654523062cc5411c069d411
   @override
-
   String typeofvahicle = '';
-  void acceptstatus(String rideId,String driverId) {
+
+  void acceptstatus(String rideId, String driverId) {
     print("Ride ID and Driver ID is this: $rideId $driverid");
-    final payload = {'rideId': reqrideid,
-      'driverId':driverid};
+    final payload = {'rideId': reqrideid, 'driverId': driverid};
     socket.emit('confirmRide', payload);
     print('Driver Accepted');
-    Navigator.pushReplacementNamed(context, RideWaitingScreen.routeName,arguments: {
-      "pickupLocation":pickupEnterController.text,
-      "dropoffLocation": dropoffEnterController.text,
-      "driverName":drivername,
-      "driverRaiting":driverraiting,
-      "vahicleName":vahiclename,
-      "vahicleNumberplate":numberplate,
-      "fare":updatedfare,
-      "rideid":reqrideid,
-      "driverID":driverid
-    });
+    Navigator.pushReplacementNamed(context, RideWaitingScreen.routeName,
+        arguments: {
+          "pickupLocation": pickupEnterController.text,
+          "dropoffLocation": dropoffEnterController.text,
+          "driverName": drivername,
+          "driverRaiting": driverraiting,
+          "vahicleName": vahiclename,
+          "vahicleNumberplate": numberplate,
+          "fare": updatedfare,
+          "rideid": reqrideid,
+          "driverID": driverid
+        });
   }
+
   void sendridereq() {
     // Create payload
     final payload = {
-      'passengerId': PassId().id,
+      'passengerId': id,
       'pickupLocation': {'coordinates': pickanddrop().pickloc},
       'dropoffLocation': {'coordinates': pickanddrop().droploc},
       'fare': updatedfare,
-      'distance':distance
+      'distance': distance
     };
     print("${pickanddrop().pickloc} and 2nd is ${pickanddrop().droploc}");
     // Emit the 'rideRequest' event with the payload
@@ -160,16 +170,18 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
     });
     //isdriveraccept=true;
   }
+
   @override
   void dispose() {
     //socket.off('rideAccepted');
     updatedfarefieldcontroller.dispose();
-    if(mounted){setState(() {
-
-    });}
+    if (mounted) {
+      setState(() {});
+    }
     // TODO: implement dispose
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     print("Counting $counter");
@@ -197,8 +209,9 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
                   height: ScreenConfig.screenSizeHeight * 0.02,
                 ),
                 GestureDetector(
-                  onTap: (){
-                    int currentValue = int.tryParse(updatedfarefieldcontroller.text) ?? 0;
+                  onTap: () {
+                    int currentValue =
+                        int.tryParse(updatedfarefieldcontroller.text) ?? 0;
                     currentValue += 5;
                     setState(() {
                       updatedfarefieldcontroller.text = currentValue.toString();
@@ -228,14 +241,14 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
                   decoration: InputDecoration(
                     border: InputBorder.none, // No borders
                   ),
-                  style: TextStyle(fontSize: 20,color: Colors.black),
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                   textAlign: TextAlign.center, // Center the text
                 ),
                 SizedBox(
                   height: ScreenConfig.screenSizeHeight * 0.02,
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Get.snackbar(
                       'Fare Raised',
                       'You Fare RaisedSuccessfully',
@@ -248,7 +261,7 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
                   },
                   child: Container(
                     height: ScreenConfig.screenSizeWidth * 0.13,
-                    width: ScreenConfig.screenSizeWidth*0.8,
+                    width: ScreenConfig.screenSizeWidth * 0.8,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: themeColor),
@@ -267,6 +280,7 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
         ),
       );
     }
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,

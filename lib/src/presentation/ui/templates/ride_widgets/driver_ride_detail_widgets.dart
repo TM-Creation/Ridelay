@@ -46,11 +46,11 @@ Widget driverRideDetailsWidget(
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          displayText(name, ScreenConfig.theme.textTheme.button,
+                          displayText(name, ScreenConfig.theme.textTheme.labelLarge,
                               width: 0.3),
                           displayText(
                               "1-8 mins",
-                              ScreenConfig.theme.textTheme.button
+                              ScreenConfig.theme.textTheme.labelLarge
                                   ?.copyWith(fontSize: 9),
                               width: 0.3),
                         ],
@@ -62,7 +62,7 @@ Widget driverRideDetailsWidget(
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: displayText(
                           "Rs. 290",
-                          ScreenConfig.theme.textTheme.headline5
+                          ScreenConfig.theme.textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.end,
                           width: 0.3),
@@ -76,7 +76,7 @@ Widget driverRideDetailsWidget(
                       : buttonType == "Cancel Ride"
                           ? "Please Hurry ! Your Customer is Waiting"
                           : " ",
-                  ScreenConfig.theme.textTheme.button,
+                  ScreenConfig.theme.textTheme.labelLarge,
                   width: 0.8),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
               Row(
@@ -110,7 +110,7 @@ Widget driverRideDetailsWidget(
                         ),
                         spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                         displayText("15km Remaining",
-                            ScreenConfig.theme.textTheme.bodyText2,
+                            ScreenConfig.theme.textTheme.bodyMedium,
                             textAlign: TextAlign.center, width: 0.22),
                         spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
                         driverRectangleSquareButton(buttonType, () {
@@ -154,7 +154,7 @@ Widget driverRideDetailsInProgressAndFinishedWidget(
             children: [
               displayText(
                   name,
-                  ScreenConfig.theme.textTheme.headline1
+                  ScreenConfig.theme.textTheme.displayLarge
                       ?.copyWith(color: Colors.white),
                   width: 0.8),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
@@ -163,9 +163,9 @@ Widget driverRideDetailsInProgressAndFinishedWidget(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     displayText("Distance Remaining",
-                        ScreenConfig.theme.textTheme.button,
+                        ScreenConfig.theme.textTheme.labelLarge,
                         width: 0.5),
-                    displayText("5 km", ScreenConfig.theme.textTheme.button,
+                    displayText("5 km", ScreenConfig.theme.textTheme.labelLarge,
                         width: 0.3),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
@@ -173,9 +173,9 @@ Widget driverRideDetailsInProgressAndFinishedWidget(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    displayText("ETA", ScreenConfig.theme.textTheme.button,
+                    displayText("ETA", ScreenConfig.theme.textTheme.labelLarge,
                         width: 0.5),
-                    displayText("8 mins", ScreenConfig.theme.textTheme.button,
+                    displayText("8 mins", ScreenConfig.theme.textTheme.labelLarge,
                         width: 0.3),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
@@ -215,7 +215,7 @@ Widget driverRideRatingWidget(BuildContext context,int fare,String rideID) {
             children: [
               displayText(
                   "Thank You For Riding With Ridelay!",
-                  ScreenConfig.theme.textTheme.headline1?.copyWith(
+                  ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.normal,
                       fontSize: 17),
@@ -226,16 +226,16 @@ Widget driverRideRatingWidget(BuildContext context,int fare,String rideID) {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     displayText("Total Payed Amount",
-                        ScreenConfig.theme.textTheme.headline2,
+                        ScreenConfig.theme.textTheme.displayMedium,
                         width: 0.4),
                     displayText(
-                        "Rs. $fare", ScreenConfig.theme.textTheme.headline2,
+                        "Rs. $fare", ScreenConfig.theme.textTheme.displayMedium,
                         textAlign: TextAlign.end, width: 0.3),
                   ]),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               displayText(
                   "Your Ride is Completed Successfully!",
-                  ScreenConfig.theme.textTheme.headline1?.copyWith(
+                  ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.normal,
                       fontSize: 17),
@@ -246,7 +246,7 @@ Widget driverRideRatingWidget(BuildContext context,int fare,String rideID) {
                 children: [
                   displayText(
                       "Go for Next Ride:",
-                      ScreenConfig.theme.textTheme.headline1?.copyWith(
+                      ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.normal,
                           fontSize: 17),
@@ -278,7 +278,7 @@ Widget driverRideRatingWidget(BuildContext context,int fare,String rideID) {
                           child: displayNoSizedText(
                               'Next Ride',
                               ScreenConfig
-                                  .theme.textTheme.caption
+                                  .theme.textTheme.labelSmall
                                   ?.copyWith(
                                   color: ScreenConfig
                                       .theme
@@ -314,7 +314,7 @@ Widget driverSubmitReviewPanelWidget(BuildContext context) {
         children: [
           displayText(
               "Submit Review",
-              ScreenConfig.theme.textTheme.headline1?.copyWith(
+              ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.normal,
                   fontSize: 17),
@@ -327,7 +327,7 @@ Widget driverSubmitReviewPanelWidget(BuildContext context) {
                   decoration: redContainerTemplate(radius: 5),
                   child: Center(
                     child: displayNoSizedText(
-                        "No", ScreenConfig.theme.textTheme.button),
+                        "No", ScreenConfig.theme.textTheme.labelLarge),
                   )),
               const SizedBox(width: 5),
               Container(
@@ -336,7 +336,7 @@ Widget driverSubmitReviewPanelWidget(BuildContext context) {
                   decoration: brownContainerTemplate(radius: 5),
                   child: Center(
                     child: displayNoSizedText(
-                        "Yes", ScreenConfig.theme.textTheme.button),
+                        "Yes", ScreenConfig.theme.textTheme.labelLarge),
                   )),
             ],
           )

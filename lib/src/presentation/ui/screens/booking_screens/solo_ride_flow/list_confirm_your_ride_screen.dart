@@ -68,7 +68,7 @@ class _ListConfirmYourRideScreenState extends State<ListConfirmYourRideScreen> {
                                 controller: TextEditingController(),
                                 decoration: InputDecoration(
                                   hintText: '',
-                                  hintStyle: ScreenConfig.theme.textTheme.headline5,
+                                  hintStyle: ScreenConfig.theme.textTheme.titleMedium,
                                   suffixIcon: SizedBox(
                                     height: 60,
                                     width: 50,
@@ -82,7 +82,7 @@ class _ListConfirmYourRideScreenState extends State<ListConfirmYourRideScreen> {
                                   border: InputBorder.none,
                                   contentPadding: const EdgeInsets.all(20),
                                 ),
-                                style: ScreenConfig.theme.textTheme.headline5,
+                                style: ScreenConfig.theme.textTheme.titleMedium,
                               ),
                             ),
                             spaceHeight(10),
@@ -110,7 +110,7 @@ class _ListConfirmYourRideScreenState extends State<ListConfirmYourRideScreen> {
                                 controller: TextEditingController(),
                                 decoration: InputDecoration(
                                   hintText: '',
-                                  hintStyle: ScreenConfig.theme.textTheme.headline5,
+                                  hintStyle: ScreenConfig.theme.textTheme.titleMedium,
                                   suffixIcon: SizedBox(
                                     height: 60,
                                     width: 50,
@@ -124,7 +124,7 @@ class _ListConfirmYourRideScreenState extends State<ListConfirmYourRideScreen> {
                                   border: InputBorder.none,
                                   contentPadding: const EdgeInsets.all(20),
                                 ),
-                                style: ScreenConfig.theme.textTheme.headline5,
+                                style: ScreenConfig.theme.textTheme.titleMedium,
                               ),
                             )
                           ],
@@ -132,7 +132,7 @@ class _ListConfirmYourRideScreenState extends State<ListConfirmYourRideScreen> {
                         spaceHeight(ScreenConfig.screenSizeHeight * 0.04),
                         displayText(
                             "Confirm Your Ride Partner",
-                            ScreenConfig.theme.textTheme.headline4
+                            ScreenConfig.theme.textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                             width: 0.9),

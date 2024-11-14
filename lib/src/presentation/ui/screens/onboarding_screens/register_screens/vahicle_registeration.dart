@@ -25,6 +25,7 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../models/authmodels/vehicleregmodel.dart';
 import '../../../config/theme.dart';
 import '../../driver_screens/driver_main_screen.dart';
@@ -55,10 +56,14 @@ class _VehicleRegistrationScreenState extends State<VehicleRegistrationScreen> {
   bool progres=false;
   final _formKey = GlobalKey<FormState>();
   String userNumber = "";
-
+  String? driverid;
   @override
   void initState() {
     super.initState();
+  }
+  Future<void> getdriverid() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+   driverid=await prefs.getString('driverid');
   }
 baseulr burl=baseulr();
   bool picError = false;
@@ -70,7 +75,7 @@ baseulr burl=baseulr();
 
   void navigate() {
     Vehicle vehicle = Vehicle(
-      driver: driverId().driverid!,
+      driver: driverid!,
       model: vehiclemodel.text,
       type: vehicleType.text,
       year: year.text,
@@ -137,7 +142,7 @@ baseulr burl=baseulr();
           children: [
             Text(
               name,
-              style: ScreenConfig.theme.textTheme.headline6
+              style: ScreenConfig.theme.textTheme.titleSmall
                   ?.copyWith(fontWeight: FontWeight.w500),
             ),
             SizedBox(
@@ -160,13 +165,13 @@ baseulr burl=baseulr();
           children: [
             displayText(
               "Vehicle Information",
-              ScreenConfig.theme.textTheme.headline1
+              ScreenConfig.theme.textTheme.displayLarge
                   ?.copyWith(color: Colors.black.withOpacity(0.5)),
             ),
             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
             displayText(
               'Add Vehicle Photo',
-              ScreenConfig.theme.textTheme.headline6
+              ScreenConfig.theme.textTheme.titleSmall
                   ?.copyWith(fontWeight: FontWeight.w500),
             ),
           ],
@@ -193,7 +198,7 @@ baseulr burl=baseulr();
                       ),
                       Text(
                         "Pick Image",
-                        style: ScreenConfig.theme.textTheme.headline6
+                        style: ScreenConfig.theme.textTheme.titleSmall
                             ?.merge(const TextStyle(
                           fontWeight: FontWeight.normal,
                         )),
@@ -216,7 +221,7 @@ baseulr burl=baseulr();
                             Buttons.longWidthButton(
                               Text(
                                 'Capture From Camera',
-                                style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                                style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                                     color: Colors.white, fontWeight: FontWeight.w300),
                               ),
                               () async {
@@ -234,7 +239,7 @@ baseulr burl=baseulr();
                             Buttons.longWidthButton(
                                Text(
                                 'Pick From Gallery',
-                                style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                                style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                                     color: Colors.white, fontWeight: FontWeight.w300),
                               ),
                               () async {
@@ -304,7 +309,7 @@ baseulr burl=baseulr();
                 ),
                 Text(
                   'Vehicle Image',
-                  style: ScreenConfig.theme.textTheme.headline6
+                  style: ScreenConfig.theme.textTheme.titleSmall
                       ?.copyWith(fontWeight: FontWeight.w500),
                 ),
               ],
@@ -546,7 +551,7 @@ baseulr burl=baseulr();
               child: CircularProgressIndicator(color: Colors.white,))
               : Text(
             'Continue',
-            style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+            style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                 color: Colors.white, fontWeight: FontWeight.w300),
           ), () {
             // navigate();
@@ -649,6 +654,8 @@ baseulr burl=baseulr();
           margin: EdgeInsets.all(10),
           duration: Duration(seconds: 3),
         );
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('vehreg', true);
         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
       }
       else if(response.statusCode == 400){

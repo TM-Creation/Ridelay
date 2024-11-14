@@ -102,7 +102,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
           children: [
             Text(
               name,
-              style: ScreenConfig.theme.textTheme.headline6
+              style: ScreenConfig.theme.textTheme.titleSmall
                   ?.copyWith(fontWeight: FontWeight.w500),
             ),
             SizedBox(
@@ -124,7 +124,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
               EdgeInsets.only(left: MediaQuery.sizeOf(context).width * 0.35),
           child: displayText(
             "Sign-up",
-            ScreenConfig.theme.textTheme.headline1
+            ScreenConfig.theme.textTheme.displayLarge
                 ?.copyWith(color: Colors.black.withOpacity(0.7)),
           ),
         );
@@ -217,7 +217,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                         children: [
                           Text(
                             'Phone Number',
-                            style: ScreenConfig.theme.textTheme.headline6
+                            style: ScreenConfig.theme.textTheme.titleSmall
                                 ?.copyWith(fontWeight: FontWeight.w500),
                           ),
                           SizedBox(
@@ -230,7 +230,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                               decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                                 hintText: 'Enter Phone Number',
-                                hintStyle: ScreenConfig.theme.textTheme.headline5,
+                                hintStyle: ScreenConfig.theme.textTheme.titleMedium,
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                                   borderSide: BorderSide(
@@ -359,7 +359,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
               child: CircularProgressIndicator(color: Colors.white,))
               : Text(
             'Continue',
-            style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+            style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                 color: Colors.white, fontWeight: FontWeight.w300),
           ), () {
             FocusScope.of(context).unfocus();
@@ -446,7 +446,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
           margin: EdgeInsets.all(10),
           duration: Duration(seconds: 3),
         );
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login(),));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Login(),));
       }
       else if(response.statusCode == 400){
         final responseData = jsonDecode(response.body);

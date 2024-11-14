@@ -154,13 +154,13 @@ class _OnboardingCardsScreenState extends State<OnboardingCardsScreen> {
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.05),
                   displayText(
                     "Need a quick ride",
-                    ScreenConfig.theme.textTheme.headline2
+                    ScreenConfig.theme.textTheme.displayMedium
                         ?.copyWith(color: Colors.black.withOpacity(0.5)),
                   ),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   displayText(
                       "Let's book a ride with us and we are ready to go.",
-                      ScreenConfig.theme.textTheme.headline3),
+                      ScreenConfig.theme.textTheme.displaySmall),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
                   dotIndicators(currentOnboardingImage),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.05),

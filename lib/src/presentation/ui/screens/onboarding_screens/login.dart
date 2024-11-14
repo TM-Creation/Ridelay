@@ -78,7 +78,7 @@ class _LoginState extends State<Login> {
           children: [
             Text(
               name,
-              style: ScreenConfig.theme.textTheme.headline6
+              style: ScreenConfig.theme.textTheme.titleSmall
                   ?.copyWith(fontWeight: FontWeight.w500),
             ),
             SizedBox(
@@ -100,7 +100,7 @@ class _LoginState extends State<Login> {
               EdgeInsets.only(left: MediaQuery.sizeOf(context).width * 0.35),
           child: displayText(
             "Login",
-            ScreenConfig.theme.textTheme.headline1
+            ScreenConfig.theme.textTheme.displayLarge
                 ?.copyWith(color: Colors.black.withOpacity(0.7)),
           ),
         );
@@ -198,12 +198,14 @@ class _LoginState extends State<Login> {
           child: Buttons.longWidthButton(
               progres
                   ? Container(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(color: Colors.white,))
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ))
                   : Text(
                       'Continue',
-                      style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                      style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                           color: Colors.white, fontWeight: FontWeight.w300),
                     ), () async {
             FocusScope.of(context).unfocus();
@@ -219,7 +221,7 @@ class _LoginState extends State<Login> {
             if (emailError == false && pasd == false) {
               print("Accepted");
               setState(() {
-                progres=true;
+                progres = true;
               });
               navigate();
             }
@@ -241,11 +243,11 @@ class _LoginState extends State<Login> {
     try {
       final response = await http.post(url, headers: headers, body: body);
       setState(() {
-        progres=false;
+        progres = false;
       });
       print("check try: ${response.statusCode}");
       if (response.statusCode == 200) {
-        // Successful POST request
+        // Successful POST requestdriver
         print('User Login Successfully: ${response.body}');
         final responseData = jsonDecode(response.body);
         final data = responseData['data'];
@@ -253,7 +255,7 @@ class _LoginState extends State<Login> {
         final id = iddata['_id'];
         final typeofuser = iddata['type'];
         final tokenofuser = data['token'];
-        print("id a gi $id ${data['data']['type']}");
+        print("id a gi $id ${data['data']['type']} $tokenofuser");
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('uid', id);
         await prefs.setString('utoken', tokenofuser);
@@ -278,8 +280,14 @@ class _LoginState extends State<Login> {
               duration: Duration(seconds: 3),
             );
             SharedPreferences prefs = await SharedPreferences.getInstance();
+            bool? vehreg = await prefs.getBool('vehreg');
             await prefs.setString('islogin', 'driver');
-            Navigator.of(context).pushNamed(DriverRideSelectionScreen.routeName);
+            Navigator.of(context).pushReplacementNamed(
+              DriverRideSelectionScreen.routeName,
+              arguments: {
+                'vehcreg':vehreg
+              },
+            );
           } else if (typeofuser == 'passenger') {
             print("Passenger Done");
             Get.snackbar(
@@ -293,15 +301,15 @@ class _LoginState extends State<Login> {
             );
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString('islogin', 'passenger');
-            Navigator.of(context).pushNamed(VehicleSelectionScreen.routeName);
+            Navigator.of(context)
+                .pushReplacementNamed(VehicleSelectionScreen.routeName);
           } else {
             print("Nothing Done");
           }
         } else {
           print('Error: Something null in response');
         }
-      }
-      else if (response.statusCode == 404) {
+      } else if (response.statusCode == 404) {
         final responseData = jsonDecode(response.body);
         final message = responseData['message'];
         print("object $message");
@@ -327,18 +335,17 @@ class _LoginState extends State<Login> {
           margin: EdgeInsets.all(10),
           duration: Duration(seconds: 3),
         );
-      }
-      else {
+      } else {
         // Error occurred
         print('Failed to Login: ${response.statusCode}');
         print('Response body: ${response.body}');
       }
     } catch (error) {
       setState(() {
-        progres=false;
+        progres = false;
       });
       // Handle network error
-      print('Error: $error');
+      print('Errorrrrrr: $error');
       Get.snackbar(
         'Error',
         'Server Not Found',

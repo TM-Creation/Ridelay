@@ -20,7 +20,7 @@ class GenericAppBars {
         backgroundColor: Colors.white,
         title: displayNoSizedText(
           title,
-          ScreenConfig.theme.textTheme.headline4
+          ScreenConfig.theme.textTheme.titleLarge
               ?.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),

@@ -30,30 +30,30 @@ final apptheme = ThemeData(
   //
   // ),
   textTheme: const TextTheme(
-    headline1: TextStyle(
+    displayLarge: TextStyle(
         fontSize: 20.0, fontWeight: FontWeight.bold, color: themeColor),
-    headline2: TextStyle(
+    displayMedium: TextStyle(
         fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),
-    headline3: TextStyle(
+    displaySmall: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.normal,
         color: Color(0xff707070)),
-    headline4: TextStyle(
+    titleLarge: TextStyle(
         fontWeight: FontWeight.normal, fontSize: 15, color: themeColor),
-    headline5: TextStyle(
+    titleMedium: TextStyle(
         fontWeight: FontWeight.normal, fontSize: 15, color: Color(0xff707070)),
-    headline6: TextStyle(
+    titleSmall: TextStyle(
         fontSize: 15, fontWeight: FontWeight.normal, color: Colors.black),
-    bodyText1: TextStyle(
+    bodyLarge: TextStyle(
         fontSize: 12.0, fontWeight: FontWeight.normal, color: Colors.white),
-    bodyText2: TextStyle(
+    bodyMedium: TextStyle(
         fontSize: 10.0, fontWeight: FontWeight.normal, color: Colors.white),
-    caption: TextStyle(
+    bodySmall: TextStyle(
         fontSize: 9.0, fontWeight: FontWeight.normal, color: Color(0xff707070)),
     // bodyMedium: TextStyle(color: Colors.black,fontSize: 20.0,),
-    button: TextStyle(
+    labelLarge: TextStyle(
         fontSize: 15, fontWeight: FontWeight.normal, color: Colors.white),
-    overline: TextStyle(fontSize: 16, letterSpacing: 0),
+    labelSmall: TextStyle(fontSize: 16, letterSpacing: 0),
   ),
   inputDecorationTheme: const InputDecorationTheme(
     hintStyle: TextStyle(fontSize: 20, color: Color(0xff828282)),

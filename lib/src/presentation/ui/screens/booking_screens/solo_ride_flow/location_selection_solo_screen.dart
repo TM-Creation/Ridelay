@@ -133,12 +133,12 @@ class _LocationSelectionSoloScreenState
                                 children: [
                                   displayText(
                                     "Total Distance:",
-                                    ScreenConfig.theme.textTheme.headline5,
+                                    ScreenConfig.theme.textTheme.titleMedium,
                                     width: 0.3,
                                   ),
                                   displayText(
                                     "27 km",
-                                    ScreenConfig.theme.textTheme.headline4,
+                                    ScreenConfig.theme.textTheme.titleLarge,
                                     width: 0.2,
                                   ),
                                 ],
@@ -161,7 +161,7 @@ class _LocationSelectionSoloScreenState
                                       children: [
                                         displayNoSizedText(
                                           "Let's Go",
-                                          ScreenConfig.theme.textTheme.button,
+                                          ScreenConfig.theme.textTheme.labelLarge,
                                         ),
                                         SizedBox(
                                           width: 20,

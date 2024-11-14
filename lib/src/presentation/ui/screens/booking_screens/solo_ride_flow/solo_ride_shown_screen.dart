@@ -50,7 +50,7 @@ class _SoloRideShownScreenState extends State<SoloRideShownScreen> {
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 displayText(
                     "Your found 4 riders to your locaton",
-                    ScreenConfig.theme.textTheme.headline4
+                    ScreenConfig.theme.textTheme.titleLarge
                         ?.copyWith(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                     width: 0.9),

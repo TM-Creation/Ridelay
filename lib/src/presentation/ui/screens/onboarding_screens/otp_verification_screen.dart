@@ -91,7 +91,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
     Widget _displayBodyText2({required String text}) => Text(text,
         textAlign: TextAlign.center,
-        style: ScreenConfig.theme.textTheme.bodyText1?.copyWith(
+        style: ScreenConfig.theme.textTheme.bodyLarge?.copyWith(
             color: Colors.black,
             wordSpacing: 1.0,
             // fontSize: 14,
@@ -110,7 +110,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                   keyboardType: const TextInputType.numberWithOptions(),
                   controller: otpController,
                   cursorColor: ScreenConfig.theme.primaryColor,
-                  style: ScreenConfig.theme.textTheme.headline1?.copyWith(
+                  style: ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: ScreenConfig.theme.primaryColor),
                   textAlign: TextAlign.center,
@@ -127,7 +127,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                         borderSide:
                             BorderSide(color: ScreenConfig.theme.primaryColor)),
                     hintText: '000000',
-                    hintStyle: ScreenConfig.theme.textTheme.headline1?.copyWith(
+                    hintStyle: ScreenConfig.theme.textTheme.displayLarge?.copyWith(
                         fontWeight: FontWeight.w600, color: Colors.grey),
                   ),
                   onChanged: (val) {
@@ -160,11 +160,11 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               reStartTimer();
             },
             child: displayText(
-                "Resend OTP", ScreenConfig.theme.textTheme.headline4,
+                "Resend OTP", ScreenConfig.theme.textTheme.titleLarge,
                 textAlign: TextAlign.center))
         : displayText(
             _start < 10 ? 'Resend OTP 0:0$_start' : 'Resend OTP 0:$_start',
-            ScreenConfig.theme.textTheme.headline5,
+            ScreenConfig.theme.textTheme.titleMedium,
             textAlign: TextAlign.center);
 
     Widget _displayButton() => SizedBox(
@@ -176,7 +176,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
             child: CircularProgressIndicator(color: Colors.white,))
             : Text(
           'Continue',
-          style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+          style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
               color: Colors.white, fontWeight: FontWeight.w300),
         ), () {
           if (otpController.text.length == 6 && otpController.text.isNotEmpty) {
@@ -218,21 +218,21 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           children: [
             displayText(
               "OTP Verification",
-              ScreenConfig.theme.textTheme.headline1
+              ScreenConfig.theme.textTheme.displayLarge
                   ?.copyWith(color: Colors.black.withOpacity(0.5)),
             ),
             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
             displayText(
-                'We have sent OTP to', ScreenConfig.theme.textTheme.headline6),
+                'We have sent OTP to', ScreenConfig.theme.textTheme.titleSmall),
             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
             displayText(
               args['number'],
-              ScreenConfig.theme.textTheme.headline4
+              ScreenConfig.theme.textTheme.titleLarge
                   ?.copyWith(fontWeight: FontWeight.w600),
             ),
             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
             displayText('Please enter 6 digit verification code below',
-                ScreenConfig.theme.textTheme.headline6),
+                ScreenConfig.theme.textTheme.titleSmall),
             spaceHeight(ScreenConfig.screenSizeHeight * 0.01),
           ],
         );

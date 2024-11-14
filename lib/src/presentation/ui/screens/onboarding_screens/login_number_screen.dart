@@ -78,12 +78,12 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
                 children: [
                   displayText(
                     "Login",
-                    ScreenConfig.theme.textTheme.headline1
+                    ScreenConfig.theme.textTheme.displayLarge
                         ?.copyWith(color: Colors.black.withOpacity(0.5)),
                   ),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   displayText("Enter phone number with country extension.",
-                      ScreenConfig.theme.textTheme.headline3),
+                      ScreenConfig.theme.textTheme.displaySmall),
                   spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                   IntlPhoneField(
                     keyboardType: TextInputType.number,
@@ -116,7 +116,7 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
                               ))
                           : Text(
                               'Login',
-                              style: ScreenConfig.theme.textTheme.headline6
+                              style: ScreenConfig.theme.textTheme.titleSmall
                                   ?.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w300),

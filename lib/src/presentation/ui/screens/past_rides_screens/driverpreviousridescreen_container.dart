@@ -82,7 +82,7 @@ class _DriverPreviousRideContainerState
                       children: [
                         displayText(
                           "Your rating",
-                          ScreenConfig.theme.textTheme.bodyText1,
+                          ScreenConfig.theme.textTheme.bodyMedium,
                           width: 0.2,
                         ),
                         Row(
@@ -122,12 +122,12 @@ class _DriverPreviousRideContainerState
                                 children: [
                                   displayText(
                                     "Distance:",
-                                    ScreenConfig.theme.textTheme.headline4,
+                                    ScreenConfig.theme.textTheme.titleLarge,
                                     width: 0.25,
                                   ),
                                   displayText(
                                     "275 km",
-                                    ScreenConfig.theme.textTheme.headline4,
+                                    ScreenConfig.theme.textTheme.titleLarge,
                                     width: 0.2,
                                   ),
                                 ],

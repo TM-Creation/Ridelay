@@ -26,7 +26,7 @@ Widget userDetailsContainer(String image, String firstText, String secondText,
                     children: [
                       displayText(
                         firstText,
-                        ScreenConfig.theme.textTheme.bodyText2,
+                        ScreenConfig.theme.textTheme.bodyMedium,
                         width: 0.2,
                       ),
                     ],
@@ -42,14 +42,14 @@ Widget userDetailsContainer(String image, String firstText, String secondText,
                       spaceWidth(3),
                       displayText(
                         secondText,
-                        ScreenConfig.theme.textTheme.bodyText2,
+                        ScreenConfig.theme.textTheme.bodyMedium,
                         width: 0.22,
                       ),
                     ],
                   )
                 : displayText(
                     secondText,
-                    ScreenConfig.theme.textTheme.bodyText2,
+                    ScreenConfig.theme.textTheme.bodyMedium,
                     width: 0.22,
                   ),
           ],
@@ -82,7 +82,7 @@ Widget userDetailsMiniContainer(
             spaceWidth(ScreenConfig.screenSizeWidth * 0.02),
             displayText(
               firstText,
-              ScreenConfig.theme.textTheme.button,
+              ScreenConfig.theme.textTheme.labelLarge,
               width: 0.3,
             )
           ],

@@ -22,7 +22,7 @@ class Buttons {
               children: [
                 Text(
                   text,
-                  style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                  style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                       color: Colors.white, fontWeight: FontWeight.w300),
                 ),
                 const Icon(
@@ -163,10 +163,10 @@ class Buttons {
                 ),
               ),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-              displayText(heading, ScreenConfig.theme.textTheme.headline4,
+              displayText(heading, ScreenConfig.theme.textTheme.titleLarge,
                   textAlign: TextAlign.center, width: 0.3),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.002),
-              displayText(subHeading, ScreenConfig.theme.textTheme.caption,
+              displayText(subHeading, ScreenConfig.theme.textTheme.labelSmall,
                   textAlign: TextAlign.center, width: 0.3),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
             ],
@@ -192,10 +192,10 @@ class Buttons {
                 ),
               ),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-              displayText(heading, ScreenConfig.theme.textTheme.headline4,
+              displayText(heading, ScreenConfig.theme.textTheme.titleLarge,
                   textAlign: TextAlign.center, width: 0.3),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.002),
-              displayText(subHeading, ScreenConfig.theme.textTheme.caption,
+              displayText(subHeading, ScreenConfig.theme.textTheme.labelSmall,
                   textAlign: TextAlign.center, width: 0.3),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
             ],
@@ -221,10 +221,10 @@ class Buttons {
                   ),
                 ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
-                displayText(heading, ScreenConfig.theme.textTheme.headline1,
+                displayText(heading, ScreenConfig.theme.textTheme.displayLarge,
                     textAlign: TextAlign.center, width: 0.3),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.002),
-                displayText(subHeading, ScreenConfig.theme.textTheme.headline3,
+                displayText(subHeading, ScreenConfig.theme.textTheme.displaySmall,
                     textAlign: TextAlign.center, width: 0.5),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.05),
               ],
@@ -278,7 +278,7 @@ class Buttons {
               ),
               Text(
                 text,
-                style: ScreenConfig.theme.textTheme.headline6
+                style: ScreenConfig.theme.textTheme.titleSmall
                     ?.copyWith(color: textColor),
               ),
             ],
@@ -317,7 +317,7 @@ class Buttons {
               ),
               Text(
                 text,
-                style: ScreenConfig.theme.textTheme.headline6
+                style: ScreenConfig.theme.textTheme.titleSmall
                     ?.copyWith(color: Colors.white),
               ),
             ],
@@ -337,7 +337,7 @@ class Buttons {
           child: Center(
               child: Text(
             text,
-            style: ScreenConfig.theme.textTheme.headline4
+            style: ScreenConfig.theme.textTheme.titleLarge
                 ?.copyWith(color: Colors.white, fontWeight: FontWeight.w300),
           )),
         ),
@@ -374,7 +374,7 @@ class Buttons {
               // SizedBox(width: ScreenConfig.screenSizeWidth*0.05,),
               Text(
                 text,
-                style: ScreenConfig.theme.textTheme.headline6?.copyWith(
+                style: ScreenConfig.theme.textTheme.titleSmall?.copyWith(
                     color: Colors.white, fontWeight: FontWeight.w300),
               ),
             ],
@@ -410,7 +410,7 @@ class Buttons {
               const SizedBox(width: 24),
               Text(
                 text,
-                style: ScreenConfig.theme.textTheme.headline5?.copyWith(
+                style: ScreenConfig.theme.textTheme.titleMedium?.copyWith(
                     color: Colors.white, fontWeight: FontWeight.w300),
               ),
             ],
@@ -430,7 +430,7 @@ class Buttons {
           child: Center(
               child: Text(
             text,
-            style: ScreenConfig.theme.textTheme.headline5
+            style: ScreenConfig.theme.textTheme.titleMedium
                 ?.copyWith(color: Colors.white),
           )),
         ),
@@ -449,7 +449,7 @@ class Buttons {
           child: Center(
               child: Text(
             text,
-            style: ScreenConfig.theme.textTheme.headline6
+            style: ScreenConfig.theme.textTheme.titleSmall
                 ?.copyWith(color: Colors.black),
           )),
         ),
@@ -469,7 +469,7 @@ class Buttons {
           child: Center(
               child: Text(
             text,
-            style: ScreenConfig.theme.textTheme.headline6
+            style: ScreenConfig.theme.textTheme.titleSmall
                 ?.copyWith(color: Colors.white),
           )),
         ),
@@ -488,7 +488,7 @@ class Buttons {
           child: Center(
               child: Text(
             text,
-            style: ScreenConfig.theme.textTheme.bodyText2
+            style: ScreenConfig.theme.textTheme.bodyMedium
                 ?.copyWith(color: textColor, fontWeight: FontWeight.normal),
           )),
         ),
@@ -508,7 +508,7 @@ class Buttons {
           child: Center(
               child: Text(
             text,
-            style: ScreenConfig.theme.textTheme.bodyText1
+            style: ScreenConfig.theme.textTheme.bodyLarge
                 ?.copyWith(color: textColor, fontWeight: FontWeight.normal),
           )),
         ),
@@ -547,7 +547,7 @@ class Buttons {
               children: [
                 Text(
                   buttonTitle,
-                  style: ScreenConfig.theme.textTheme.bodyText2?.copyWith(
+                  style: ScreenConfig.theme.textTheme.bodyMedium?.copyWith(
                       color: Colors.black, fontWeight: FontWeight.normal),
                 ),
                 const SizedBox(width: 5),
