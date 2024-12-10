@@ -242,7 +242,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
                                       color: ScreenConfig.theme.colorScheme.primary, width: 0.75),
                                 ),
                               ),
-                              initialCountryCode: 'US',
+                              initialCountryCode: 'PK',
                               // Initial selection and favorite
                               onChanged: (phone) {
                                 print(phone
@@ -451,6 +451,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
       else if(response.statusCode == 400){
         final responseData = jsonDecode(response.body);
         final message=responseData['message'];
+
         print("object $message");
         Get.snackbar(
           'Error',

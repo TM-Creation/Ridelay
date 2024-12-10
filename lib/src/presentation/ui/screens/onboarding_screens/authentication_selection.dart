@@ -35,45 +35,44 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
     super.initState();
   }
   Future<void> _requestPermissionAndGetCurrentLocation() async {
-    // Check if location permission is granted
-    print("1122Permission Start");
-    var status = await Permission.location.request();
-    if (status.isGranted) {
-      // Get current position
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-      print("1122Permission Accepted $position");
-      // Update the map to show the user's current location
-      userlocation = LatLng(position.latitude, position.longitude);
-      setState(() {
-        print("User Live Location in Pick Widget: $userlocation");
-        userLiveLocation().userlivelocation=userlocation;
-      });
-    } else {
-      print('Location permission denied');
-      /*ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Center(
-            child: Text(
-              'Please Give You Live Location',style: TextStyle(fontSize: 15,color: Colors.white),),
-          ),
-          backgroundColor: Colors.black,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );*/
-      Get.snackbar(
-        'Location Permission',
-        'Please Give You Live Location',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: themeColor,
-        colorText: Colors.white,
-        margin: EdgeInsets.all(10),
-        duration: Duration(seconds: 3),
-      );
-      _requestPermissionAndGetCurrentLocation();
+    try {
+      print("Permission Request Started");
+
+      // Request location permission
+      var status = await Permission.location.request();
+      print('Accepted Request of Location');
+      if (status.isGranted) {
+        // Get the current location
+        Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+        );
+        LatLng currentLocation = LatLng(position.latitude, position.longitude);
+
+        // Update state only if the widget is still mounted
+        if (mounted) {
+          setState(() {
+            userlocation = currentLocation;
+            userLiveLocation().userlivelocation = userlocation;
+          });
+          print("User Live Location: $userlocation");
+        }
+      } else {
+        // Show snackbar to inform the user
+        Get.snackbar(
+          'Location Permission',
+          'Location permission is required to continue. Please enable it.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 3),
+        );
+      }
+    } catch (e) {
+      print("Error in _requestPermissionAndGetCurrentLocation: $e");
     }
   }
+
   @override
   Widget build(BuildContext context) {
     Widget logoDisplay() {

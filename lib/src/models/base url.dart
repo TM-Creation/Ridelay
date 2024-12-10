@@ -1,3 +1,3 @@
  class baseulr{
-  var burl='http://51.20.248.6';
+  var burl='https://4167-14-1-106-190.ngrok-free.app';
  }

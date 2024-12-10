@@ -13,31 +13,20 @@ import 'package:path/path.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/authmodels/driverregmodel.dart';
-import 'package:ridely/src/models/imageuploadmodel.dart';
 import 'package:ridely/src/presentation/ui/config/compress_image.dart';
-import 'package:ridely/src/presentation/ui/config/validator.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/choice_customer_driver.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/vahicle_registeration.dart';
-import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
-import 'package:ridely/src/presentation/ui/templates/main_generic_templates/snack_bars/custom_snack_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
-import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/phone_number_textfield.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/text_fields.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_validation_texts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../models/base url.dart';
 import '../../../config/theme.dart';
-import '../../driver_screens/driver_main_screen.dart';
-import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:image_picker/image_picker.dart';
 
 class DriverRegistrationScreen extends StatefulWidget {
   const DriverRegistrationScreen({Key? key}) : super(key: key);
@@ -570,7 +559,7 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
                                       width: 0.75),
                                 ),
                               ),
-                              initialCountryCode: 'US',
+                              initialCountryCode: 'PK',
                               // Initial selection and favorite
                               onChanged: (phone) {
                                 print(phone
@@ -1059,12 +1048,14 @@ class _DriverRegistrationScreenState extends State<DriverRegistrationScreen> {
         // Successful POST request
         print('User data posted successfully: ${response.body}');
         SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('uid', jsonDecode(response.body)['data']['_id']);
         await prefs.setString(
             'driverid', jsonDecode(response.body)['data']['_id']);
         setState(() {
           driverId().driverid = jsonDecode(response.body)['data']['_id'];
           print("Driver Id is: ${driverId().driverid}");
         });
+
         Get.snackbar(
           'Register Successfully',
           "Now You're Ridely User!",

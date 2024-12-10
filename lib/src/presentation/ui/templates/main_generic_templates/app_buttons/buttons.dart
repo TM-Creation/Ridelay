@@ -195,7 +195,7 @@ class Buttons {
               displayText(heading, ScreenConfig.theme.textTheme.titleLarge,
                   textAlign: TextAlign.center, width: 0.3),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.002),
-              displayText(subHeading, ScreenConfig.theme.textTheme.labelSmall,
+              displayText(subHeading, ScreenConfig.theme.textTheme.bodySmall,
                   textAlign: TextAlign.center, width: 0.3),
               spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
             ],

@@ -7,6 +7,7 @@ class Vehicle {
   final String numberPlate;
   final String color;
   final String name;
+  final String vehicleImage;
 
   Vehicle({
     required this.driver,
@@ -16,7 +17,8 @@ class Vehicle {
     required this.vehicleType,
     required this.numberPlate,
     required this.color,
-    required this.name
+    required this.name,
+    required this.vehicleImage
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
@@ -28,7 +30,8 @@ class Vehicle {
       vehicleType: json['vehicleType'],
       numberPlate: json['numberPlate'],
       color: json['color'],
-      name: json['name']
+      name: json['name'],
+      vehicleImage: json['vehicleImage']
     );
   }
 
@@ -41,7 +44,8 @@ class Vehicle {
       'vehicleType': vehicleType,
       'numberPlate': numberPlate,
       'color': color,
-      'name' : name
+      'name' : name,
+      'vehicleImage' : vehicleImage
     };
   }
 }

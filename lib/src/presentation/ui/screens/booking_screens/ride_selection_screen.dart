@@ -233,7 +233,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                           Buttons.squareRideSelectionScreenButton(
                               "assets/images/CarButtonIcon.png",
                               "CAR",
-                              "Upto 3 persons", () {
+                              "4 persons Ride", () {
                             Navigator.of(context).pushNamed(
                                 LocationSelectionScreen.routeName,
                                 arguments: vahicle = 'car');
@@ -241,7 +241,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                           Buttons.squareRideSelectionScreenButton(
                               "assets/images/rikshawbuttonicon.png",
                               "Rickshaw",
-                              "Upto 1 Person Ride", () {
+                              "3 Person Ride", () {
                             Navigator.of(context).pushNamed(
                                 LocationSelectionScreen.routeName,
                                 arguments: vahicle = 'rickshaw');
@@ -249,7 +249,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                           Buttons.squareRideSelectionScreenButton(
                               "assets/images/BikeButtonIcon.png",
                               "BIKE",
-                              "One Person Ride", () {
+                              "1 Person Ride", () {
                             Navigator.of(context).pushNamed(
                                 LocationSelectionScreen.routeName,
                                 arguments: vahicle = 'bike');

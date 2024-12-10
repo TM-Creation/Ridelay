@@ -28,7 +28,10 @@ import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_v
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../models/authmodels/vehicleregmodel.dart';
 import '../../../config/theme.dart';
-import '../../driver_screens/driver_main_screen.dart';
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart' as path;
+
 
 class VehicleRegistrationScreen extends StatefulWidget {
   const VehicleRegistrationScreen({Key? key}) : super(key: key);
@@ -57,9 +60,11 @@ class _VehicleRegistrationScreenState extends State<VehicleRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   String userNumber = "";
   String? driverid;
+  String? uploadedImageUrl;
   @override
   void initState() {
     super.initState();
+    getdriverid();
   }
   Future<void> getdriverid() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -79,14 +84,66 @@ baseulr burl=baseulr();
       model: vehiclemodel.text,
       type: vehicleType.text,
       year: year.text,
-      vehicleType: "23a1",
+      vehicleType: vehicleType.text,
       numberPlate: plateNumber.text,
       color: color.text,
-      name: 'Civic'
+      name: 'Civic',
+      vehicleImage: uploadedImageUrl!
 
     );
     print('User data to be sent: ${jsonEncode(vehicle.toJson())}');
     postVehicleData(vehicle);
+  }
+  Future<void> uploadImage(PickedFile pickedFile) async {
+    final String uploadUrl = '${burl.burl}/upload-image';
+    try {
+      // Convert PickedFile to File
+      final File imageFile = File(pickedFile.path);
+      var stream = http.ByteStream(imageFile.openRead().cast<List<int>>());
+
+      var length = await imageFile.length();
+
+      // Get the mime type of the file
+      var mimeType = lookupMimeType(imageFile.path);
+
+      // Create the multipart request
+      var request = http.MultipartRequest('POST', Uri.parse(uploadUrl));
+
+      var multipartFile = http.MultipartFile(
+        'image',
+        stream,
+        length,
+        filename: path.basename(imageFile.path),
+        contentType: MediaType(mimeType!.split('/')[0], mimeType.split('/')[1]),
+      );
+
+      // Attach the file to the request
+      request.files.add(multipartFile);
+
+      // Send the request
+      var response = await request.send();
+
+      // Check if the request was successful
+      if (response.statusCode == 200) {
+        // Get the response body
+        final responseBody = await response.stream.bytesToString();
+        print('Image uploaded successfully.');
+        print('Response body: $responseBody');
+
+        final jsonResponse = json.decode(responseBody);
+        final imageUrl = jsonResponse['url'];
+
+        setState(() {
+          // Store the image URL or perform other actions
+          uploadedImageUrl = imageUrl; // Replace with your variable
+          print('Image Uploaded, URL: $uploadedImageUrl');
+        });
+      } else {
+        print('Failed to upload image. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
   }
 
   @override
@@ -102,7 +159,7 @@ baseulr burl=baseulr();
             setState(() {
               _imageFile = pickedFile;
               picError = false;
-
+              uploadImage(pickedFile);
               // _cnicFrontFile = pickedFile;
             });
 
@@ -185,6 +242,7 @@ baseulr burl=baseulr();
           builder: (ctx) =>
               Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                 Container(
+                  color: themeColor,
                   alignment: AlignmentDirectional.topStart,
                   padding: const EdgeInsets.only(top: 12, left: 15, bottom: 6),
                   child: Row(
@@ -194,12 +252,13 @@ baseulr burl=baseulr();
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        icon: const Icon(Icons.close),
+                        icon: const Icon(Icons.close,color: Colors.white,),
                       ),
                       Text(
                         "Pick Image",
                         style: ScreenConfig.theme.textTheme.titleSmall
                             ?.merge(const TextStyle(
+                          color: Colors.white,
                           fontWeight: FontWeight.normal,
                         )),
                       ),
@@ -634,6 +693,7 @@ baseulr burl=baseulr();
         '${burl.burl}/api/v1/vehicles'); // Replace with your API endpoint
     final body = jsonEncode(vehicle.toJson());
     final headers = {
+
       HttpHeaders.contentTypeHeader: 'application/json',
     };
 

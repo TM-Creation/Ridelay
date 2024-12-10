@@ -251,15 +251,24 @@ class _LoginState extends State<Login> {
         print('User Login Successfully: ${response.body}');
         final responseData = jsonDecode(response.body);
         final data = responseData['data'];
-        final iddata = data['data'];
+        print(data);
+        final iddata = data['data']['user'];
         final id = iddata['_id'];
         final typeofuser = iddata['type'];
         final tokenofuser = data['token'];
-        print("id a gi $id ${data['data']['type']} $tokenofuser");
+        final name=data['data']['user']['name'];
+        final email=data['data']['user']['email'];
+        final phone=data['data']['user']['phone'];
+        final profileImage=data['data']['user']['driverImage'];
+        print("id a gi $id $typeofuser $tokenofuser");
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('uid', id);
         await prefs.setString('utoken', tokenofuser);
         await prefs.setString('utype', typeofuser);
+        await prefs.setString('username', name);
+        await prefs.setString('email', email);
+        await prefs.setString('phone', phone);
+        await prefs.setString('profileImage', profileImage);
         setState(() {
           PassId().id = id;
           PassId().token = tokenofuser;
@@ -269,6 +278,13 @@ class _LoginState extends State<Login> {
             PassId().token != null &&
             typeofuser != null) {
           if (typeofuser == 'driver') {
+            final vehicleids= data['data']["vehicle"]['_id'];
+            if(vehicleids.isNotEmpty){
+              await prefs.setString("vehicle", vehicleids);
+              await prefs.setBool('vehreg', true);
+            }else{
+              await prefs.setBool('vehreg', false);
+            }
             print("Driver Done");
             Get.snackbar(
               'Login',
@@ -279,16 +295,10 @@ class _LoginState extends State<Login> {
               margin: EdgeInsets.all(10),
               duration: Duration(seconds: 3),
             );
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            bool? vehreg = await prefs.getBool('vehreg');
-            await prefs.setString('islogin', 'driver');
             Navigator.of(context).pushReplacementNamed(
               DriverRideSelectionScreen.routeName,
-              arguments: {
-                'vehcreg':vehreg
-              },
             );
-          } else if (typeofuser == 'passenger') {
+          } else if (typeofuser == 'passengers') {
             print("Passenger Done");
             Get.snackbar(
               'Login',
@@ -348,7 +358,7 @@ class _LoginState extends State<Login> {
       print('Errorrrrrr: $error');
       Get.snackbar(
         'Error',
-        'Server Not Found',
+        '$error',
         snackPosition: SnackPosition.TOP,
         backgroundColor: themeColor,
         colorText: Colors.white,

@@ -106,6 +106,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void getSuggestion1(String input) async {
+    print(GoogleMapKey().googlemapkey+"Heeeeeeeeeeelo");
     String KPLACES_API_KEY = "${GoogleMapKey().googlemapkey}";
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';

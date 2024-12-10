@@ -156,6 +156,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                                         .replaceAll(RegExp(r'[^0-9.]'), ''))! <
                                     60) {
                                   print("${distance!.totalDuration} duration");
+                                  print("Pickup and Drop off New one ${pickupEnterController.text} and ${dropoffEnterController.text}");
                                   Navigator.of(context).pushNamed(
                                     RideShownScreen.routeName,
                                     arguments: {
