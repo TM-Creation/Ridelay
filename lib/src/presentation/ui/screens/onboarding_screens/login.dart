@@ -268,7 +268,6 @@ class _LoginState extends State<Login> {
         await prefs.setString('username', name);
         await prefs.setString('email', email);
         await prefs.setString('phone', phone);
-        await prefs.setString('profileImage', profileImage);
         setState(() {
           PassId().id = id;
           PassId().token = tokenofuser;
@@ -278,6 +277,7 @@ class _LoginState extends State<Login> {
             PassId().token != null &&
             typeofuser != null) {
           if (typeofuser == 'driver') {
+            await prefs.setString('profileImage', profileImage);
             final vehicleids= data['data']["vehicle"]['_id'];
             if(vehicleids.isNotEmpty){
               await prefs.setString("vehicle", vehicleids);
