@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/models/authmodels/passangerloginmodel.dart';
@@ -23,6 +26,7 @@ import 'package:ridely/src/presentation/ui/templates/register_info_widgets/get_v
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/theme.dart';
+import 'authentication_selection.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -45,8 +49,46 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    _requestPermissionAndGetCurrentLocation();
   }
-
+  LatLng userlocation = LatLng(9.0, 7.9);
+  Future<void> _requestPermissionAndGetCurrentLocation() async {
+    if(userLiveLocation().userlivelocation!=null){
+      print("User Live Location: ${userLiveLocation().userlivelocation}");
+    }else{
+      try {
+        print("Permission Request Started");
+        // Request location permission
+        var status = await Permission.location.request();
+        print('Accepted Request of Location');
+        if (status.isGranted) {
+          // Get the current location
+          Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+          );
+          LatLng currentLocation = LatLng(position.latitude, position.longitude);
+          setState(() {
+            userlocation = currentLocation;
+            userLiveLocation().userlivelocation = userlocation;
+          });
+          print("User Live Location: $userlocation");
+        } else {
+          // Show snackbar to inform the user
+          Get.snackbar(
+            'Location Permission',
+            'Location permission is required to continue. Please enable it.',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: themeColor,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 3),
+          );
+        }
+      } catch (e) {
+        print("Error in _requestPermissionAndGetCurrentLocation: $e");
+      }
+    }
+  }
   baseulr burl = baseulr();
   bool pasd = false;
   bool emailError = false;
@@ -256,18 +298,11 @@ class _LoginState extends State<Login> {
         final id = iddata['_id'];
         final typeofuser = iddata['type'];
         final tokenofuser = data['token'];
-        final name=data['data']['user']['name'];
-        final email=data['data']['user']['email'];
-        final phone=data['data']['user']['phone'];
-        final profileImage=data['data']['user']['driverImage'];
         print("id a gi $id $typeofuser $tokenofuser");
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('uid', id);
         await prefs.setString('utoken', tokenofuser);
         await prefs.setString('utype', typeofuser);
-        await prefs.setString('username', name);
-        await prefs.setString('email', email);
-        await prefs.setString('phone', phone);
         setState(() {
           PassId().id = id;
           PassId().token = tokenofuser;
@@ -277,6 +312,14 @@ class _LoginState extends State<Login> {
             PassId().token != null &&
             typeofuser != null) {
           if (typeofuser == 'driver') {
+            final name=data['data']['user']['name'];
+            final email=data['data']['user']['email'];
+            final phone=data['data']['user']['phone'];
+            final profileImage=data['data']['user']['driverImage'];
+            await prefs.setString('username', name);
+            await prefs.setString('email', email);
+            await prefs.setString('phone', phone);
+            print('Profile Image is here $profileImage');
             await prefs.setString('profileImage', profileImage);
             final vehicleids= data['data']["vehicle"]['_id'];
             if(vehicleids.isNotEmpty){
@@ -295,10 +338,18 @@ class _LoginState extends State<Login> {
               margin: EdgeInsets.all(10),
               duration: Duration(seconds: 3),
             );
+            await prefs.setString('islogin', 'driver');
             Navigator.of(context).pushReplacementNamed(
               DriverRideSelectionScreen.routeName,
             );
-          } else if (typeofuser == 'passengers') {
+          } else if (typeofuser == 'passenger') {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            final name=iddata['name'];
+            final email=iddata['email'];
+            final phone=iddata['phone'];
+            await prefs.setString('username', name);
+            await prefs.setString('email', email);
+            await prefs.setString('phone', phone);
             print("Passenger Done");
             Get.snackbar(
               'Login',
@@ -309,7 +360,6 @@ class _LoginState extends State<Login> {
               margin: EdgeInsets.all(10),
               duration: Duration(seconds: 3),
             );
-            SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString('islogin', 'passenger');
             Navigator.of(context)
                 .pushReplacementNamed(VehicleSelectionScreen.routeName);

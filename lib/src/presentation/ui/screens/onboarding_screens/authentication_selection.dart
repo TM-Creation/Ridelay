@@ -37,7 +37,6 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
   Future<void> _requestPermissionAndGetCurrentLocation() async {
     try {
       print("Permission Request Started");
-
       // Request location permission
       var status = await Permission.location.request();
       print('Accepted Request of Location');
@@ -47,15 +46,11 @@ class _AuthenticationSelectionState extends State<AuthenticationSelection> {
           desiredAccuracy: LocationAccuracy.high,
         );
         LatLng currentLocation = LatLng(position.latitude, position.longitude);
-
-        // Update state only if the widget is still mounted
-        if (mounted) {
           setState(() {
             userlocation = currentLocation;
             userLiveLocation().userlivelocation = userlocation;
           });
           print("User Live Location: $userlocation");
-        }
       } else {
         // Show snackbar to inform the user
         Get.snackbar(

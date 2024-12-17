@@ -188,6 +188,8 @@ Widget rideDetailsInProgressAndFinishedWidget(
     String drivername,
     double driverraiting,
     String vahiclename,
+    String vehicleImage,
+    String driverImage,
     String numberplate) {
   return Column(
     children: [
@@ -236,13 +238,13 @@ Widget rideDetailsInProgressAndFinishedWidget(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   userDetailsContainer(
-                    "assets/images/UserProfileImage.png",
+                    driverImage,
                     "$drivername",
                     "$driverraiting",
                     true,
                   ),
                   userDetailsContainer(
-                    "assets/images/UserCarImage.png",
+                    vehicleImage,
                     "$vahiclename",
                     "$numberplate",
                     false,

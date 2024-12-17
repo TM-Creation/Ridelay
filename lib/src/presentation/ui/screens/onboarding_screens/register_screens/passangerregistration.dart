@@ -486,7 +486,7 @@ class PassangerRegistrationScreen extends State<RegisterInfoScreen> {
       // Handle network error
       Get.snackbar(
         'Error',
-        'Server Not Found',
+        '$error',
         snackPosition: SnackPosition.TOP,
         backgroundColor: themeColor,
         colorText: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,7 +15,9 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spac
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_fields/phone_number_textfield.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
 
+import '../../config/theme.dart';
 import '../../templates/main_generic_templates/app_bars/app_bar.dart';
+import 'authentication_selection.dart';
 
 class LoginNumberScreen extends StatefulWidget {
   static const routeName = '/loginNumberEnter-screen';
@@ -33,9 +36,46 @@ class _LoginNumberScreenState extends State<LoginNumberScreen> {
   void initState() {
     errorValidatorShow = false;
     phoneNumberController = TextEditingController();
+    _requestPermissionAndGetCurrentLocation();
     super.initState();
   }
-
+  Future<void> _requestPermissionAndGetCurrentLocation() async {
+    if(userLiveLocation().userlivelocation!=null){
+      print("User Live Location: ${userLiveLocation().userlivelocation}");
+    }else{
+      try {
+        print("Permission Request Started");
+        // Request location permission
+        var status = await Permission.location.request();
+        print('Accepted Request of Location');
+        if (status.isGranted) {
+          // Get the current location
+          Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+          );
+          LatLng currentLocation = LatLng(position.latitude, position.longitude);
+          setState(() {
+            userlocation = currentLocation;
+            userLiveLocation().userlivelocation = userlocation;
+          });
+          print("User Live Location: $userlocation");
+        } else {
+          // Show snackbar to inform the user
+          Get.snackbar(
+            'Location Permission',
+            'Location permission is required to continue. Please enable it.',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: themeColor,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 3),
+          );
+        }
+      } catch (e) {
+        print("Error in _requestPermissionAndGetCurrentLocation: $e");
+      }
+    }
+  }
   String number = '';
 @override
   void dispose() {

@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../models/base url.dart';
@@ -13,12 +15,12 @@ import 'package:path/path.dart' as path;
 import 'package:http_parser/http_parser.dart';
 
 import 'driver_main_screen.dart';
-class Profile extends StatefulWidget {
+class DriverProfile extends StatefulWidget {
   @override
-  _ProfileState createState() => _ProfileState();
+  _DriverProfileState createState() => _DriverProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _DriverProfileState extends State<DriverProfile> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -128,10 +130,15 @@ class _ProfileState extends State<Profile> {
         await prefs.setString('username', nameController.text);
         await prefs.setString('email', emailController.text);
         await prefs.setString('phone', phoneController.text);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Profile updated successfully!'),
-          backgroundColor: Colors.green,
-        ));
+        Get.snackbar(
+          'Success',
+          'Profile updated successfully!',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
         setState(() {
           isReadOnly = true;
         });
@@ -139,27 +146,37 @@ class _ProfileState extends State<Profile> {
             DriverRideSelectionScreen.routeName);
       } else {
         // Handle API error
-        print('Failed to update profile: ${response.statusCode}');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to update profile!'),
-          backgroundColor: Colors.red,
-        ));
+        Get.snackbar(
+          'Alert!',
+          'Failed to update profile!',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: themeColor,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 3),
+        );
       }
     } catch (error) {
       setState(() {
         isLoading = false;
       });
       print('Error: $error');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Network error!'),
-        backgroundColor: Colors.red,
-      ));
+      Get.snackbar(
+        'Error!',
+        'Network error',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: themeColor,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3),
+      );
     }
   }
   final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
+   var size=MediaQuery.sizeOf(context);
     Future<bool> pickImage() async {
       try {
         // ignore: deprecated_member_use
@@ -186,19 +203,26 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Profile'),
+        backgroundColor: themeColor,
+        automaticallyImplyLeading: false,
+        title: Text('Profile',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
         actions: [
-          IconButton(
-            icon: Icon(isReadOnly ? Icons.edit : Icons.save),
-            onPressed: () {
-              if (isReadOnly) {
-                setState(() {
-                  isReadOnly = false;
-                });
-              } else {
-                _updateProfileData();
-              }
-            },
+          Row(
+            children: [
+              Text(isReadOnly ? 'Edit' : 'Save',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
+              IconButton(
+                icon: Icon(isReadOnly ? Icons.edit : Icons.save,color: Colors.white,),
+                onPressed: () {
+                  if (isReadOnly) {
+                    setState(() {
+                      isReadOnly = false;
+                    });
+                  } else {
+                    _updateProfileData();
+                  }
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -207,11 +231,14 @@ class _ProfileState extends State<Profile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: size.width*0.1,
+            ),
             Center(
               child: GestureDetector(
                 onTap: isReadOnly ? null : pickImage,
                 child: CircleAvatar(
-                  radius: 50,
+                  radius: size.width*0.13,
                   backgroundImage: profileImage != null
                       ? FileImage(profileImage!)
                       : (imageUrl != null
@@ -226,34 +253,46 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: size.width*0.2),
             TextField(
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: themeColor,fontWeight: FontWeight.bold),
               controller: nameController,
               readOnly: isReadOnly,
               decoration: InputDecoration(
                 labelText: 'Name',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: themeColor,fontSize: size.width*0.05,fontWeight: FontWeight.bold),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: themeColor)
+                ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: size.width*0.1),
             TextField(
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: themeColor,fontWeight: FontWeight.bold),
               controller: emailController,
               readOnly: isReadOnly,
               decoration: InputDecoration(
                 labelText: 'Email',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: themeColor,fontSize: size.width*0.05,fontWeight: FontWeight.bold),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: themeColor)
+                ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: size.width*0.1),
             TextField(
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: themeColor,fontWeight: FontWeight.bold),
               controller: phoneController,
               readOnly: isReadOnly,
               decoration: InputDecoration(
                 labelText: 'Phone',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: themeColor,fontSize: size.width*0.05,fontWeight: FontWeight.bold),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: themeColor),
+                ),
               ),
             ),
             SizedBox(height: 20),

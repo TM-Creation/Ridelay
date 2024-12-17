@@ -43,9 +43,9 @@ class _RideInProgressAndFinishedScreenState
   late IO.Socket socket2;
   String distance = '', ETA = '';
   String numberplate = '', drivername = '', vahiclename = '';
-  String rideid = '', driverid = '';
-  double  driverraiting = 0.0;
-  int fare=0;
+  String rideid = '', driverid = '', driverImage = '', vehicleImage = '';
+  double driverraiting = 0.0;
+  int fare = 0;
 
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -58,12 +58,15 @@ class _RideInProgressAndFinishedScreenState
         dropoffEnterController.text = args['dropoffLocation']!;
         drivername = args['driverName']!;
         driverraiting = args['driverRaiting']!;
+        driverImage = args['driverImage'];
         vahiclename = args['vahicleName']!;
         numberplate = args['vahicleNumberplate']!;
+        vehicleImage = args['vehicleImage'];
         fare = args['fare']!;
         rideid = args['rideid']!;
         driverid = args['driverID']!;
       });
+      print('Data data data $drivername');
     }
   }
 
@@ -83,13 +86,14 @@ class _RideInProgressAndFinishedScreenState
     });
     socket.on('completeRide', (data) {
       print('on of is run correctly');
-      Navigator.of(context).pushReplacementNamed(RideRatingScreen.routeName, arguments: {
+      Navigator.of(context)
+          .pushReplacementNamed(RideRatingScreen.routeName, arguments: {
         "pickupLocation": pickupEnterController.text,
         "dropoffLocation": dropoffEnterController.text,
         "fare": fare,
         "rideid": rideid,
         "driverID": driverid,
-        "drivername":drivername
+        "drivername": drivername
       });
     });
   }
@@ -252,7 +256,7 @@ class _RideInProgressAndFinishedScreenState
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.32,
+        //height: ScreenConfig.screenSizeHeight * 0.32,
         width: ScreenConfig.screenSizeWidth,
         decoration: bottomModalTemplate(),
         child: Padding(
@@ -264,14 +268,17 @@ class _RideInProgressAndFinishedScreenState
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
                 rideDetailsInProgressAndFinishedWidget(
-                    "Your Ride Is In Progress",
-                    context,
-                    distance,
-                    ETA,
-                    drivername,
-                    driverraiting,
-                    vahiclename,
-                    numberplate),
+                  "Your Ride Is In Progress",
+                  context,
+                  distance,
+                  ETA,
+                  drivername,
+                  driverraiting,
+                  vahiclename,
+                  vehicleImage,
+                  driverImage,
+                  numberplate,
+                ),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.02),
               ],
             ),

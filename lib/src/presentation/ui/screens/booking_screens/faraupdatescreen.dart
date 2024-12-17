@@ -50,12 +50,15 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
         pickupEnterController.text = args['pickupLocation']!;
         dropoffEnterController.text = args['dropoffLocation']!;
         updatedfarefieldcontroller.text = args['fare'].toString();
+        updatedfare=args['fare'];
+        distance = args['distance'];
+        //rideid = args['rideid']!;
         /*drivername = args['driverName']!;
         driverraiting = args['driverRaiting']!;
         vahiclename = args['vahicleName']!;
         numberplate = args['vahicleNumberplate']!;
         updatedfare = args['fare']!;
-        rideid = args['rideid']!;*/
+        ;*/
         //driverid = args['driverID']!;
       });
     }
@@ -66,7 +69,8 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
   double driverraiting = 4.2;
 
   String driverimage = '';
-  String? vahicleimage;
+  String vahicleimage='';
+  String phone='';
   String vahiclename = '';
   String numberplate = '';
   List<Map<String, dynamic>> drivers = [];
@@ -75,7 +79,6 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
   void initState() {
     getprefdata();
     print("initState call");
-    updatedfarefieldcontroller.text = '0';
     super.initState();
   }
 
@@ -86,10 +89,12 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
   Future<void> getprefdata() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     id = await prefs.getString('uid');
+    token = await prefs.getString('utoken');
+    type = await prefs.getString('utype');
     initSocket();
   }
 
-  late final String? id;
+  late final String? id,token,type;
   var reqrideid = '';
   var driverid = '';
 
@@ -98,20 +103,37 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
 
   initSocket() {
     print('Null or Empty Check: $id');
-    //socket.emit('registerPassenger', PassId().id);
+    socket = IO.io(baseulr().burl, <String, dynamic>{
+      'transports': ['websocket'],
+      'extraHeaders': {'authorization': token, 'usertype': type},
+      'autoConnect': false,
+    });
+    if (socket.connected) {
+      print('Socket Already Connected');
+    } else {
+      socket.connect();
+      socket.onConnect((_) {
+        print("Server Connect with Socket");
+        setState(() {
+          socketconnection().socket = socket;
+        });
+        socket.emit('registerPassenger', PassId().id);
+      });
+    }
     socket.on('rideAccepted', (data) {
+      if (!mounted) return;
       print("$data ride is accept ");
-      isdriveraccept = false;
-      requestshow = true;
       Map<String, dynamic> driverData = {
         'driverName': data['driver']['name'],
         'driverRaiting': data['driver']['rating'],
-        'vahicleName': data['vehicle']['name'],
+        'driverImage' : data['driver']['driverImage'],
+        'diverPhone' : data['driver']['phone'],
+        'vehicleName': data['vehicle']['name'],
+        'vehicleImage' : data['vehicle']['vehicleImage'],
         'numberPlate': data['vehicle']['numberPlate'],
         'rideId': data['_id'],
         'driverId': data['driver']['_id'],
       };
-
       /*drivername=data['driver']['name'];
       //driverimage=data['driver']['driverImage'];
       driverraiting=data['driver']['rating'];
@@ -123,6 +145,8 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
       driverid=driver['_id'];*/
       drivers.add(driverData);
       counter++;
+      isdriveraccept = false;
+      requestshow = true;
       setState(() {
         print("check sestate");
       });
@@ -144,14 +168,17 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
           "dropoffLocation": dropoffEnterController.text,
           "driverName": drivername,
           "driverRaiting": driverraiting,
+          "driverImage": driverimage,
+          "driverPhone" : phone,
           "vahicleName": vahiclename,
+          "vehicleImage" : vahicleimage,
           "vahicleNumberplate": numberplate,
           "fare": updatedfare,
           "rideid": reqrideid,
           "driverID": driverid
         });
   }
-
+  final _formKey = GlobalKey<FormState>();
   void sendridereq() {
     // Create payload
     final payload = {
@@ -161,12 +188,12 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
       'fare': updatedfare,
       'distance': distance
     };
-    print("${pickanddrop().pickloc} and 2nd is ${pickanddrop().droploc}");
-    // Emit the 'rideRequest' event with the payload
     socket.emit('rideRequest', payload);
     print('Emitted rideRequest with payload: $payload');
     socket.on('rideRequested', (data) {
       print("data of riderequest $data");
+      reqrideid=data['_id'];
+      drivers=[];
     });
     //isdriveraccept=true;
   }
@@ -175,6 +202,7 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
   void dispose() {
     //socket.off('rideAccepted');
     updatedfarefieldcontroller.dispose();
+    socket.off('rideAccepted');
     if (mounted) {
       setState(() {});
     }
@@ -184,7 +212,7 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Counting $counter");
+    print("Counting ${drivers.length}");
     Widget bottomModalNonSlideable() {
       return Container(
         height: ScreenConfig.screenSizeHeight * 0.34,
@@ -198,16 +226,6 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
               children: [
                 sliderBar(),
                 spaceHeight(ScreenConfig.screenSizeHeight * 0.03),
-                Text(
-                  'Increase fare if Driver is not Coming',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: ScreenConfig.screenSizeWidth * 0.04,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: ScreenConfig.screenSizeHeight * 0.02,
-                ),
                 GestureDetector(
                   onTap: () {
                     int currentValue =
@@ -233,31 +251,70 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: ScreenConfig.screenSizeHeight * 0.02,
+                  height: ScreenConfig.screenSizeHeight * 0.01,
                 ),
-                TextField(
-                  controller: updatedfarefieldcontroller,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: InputBorder.none, // No borders
+
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: themeColor,width: 2),
+                    borderRadius: BorderRadius.circular(10)
                   ),
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                  textAlign: TextAlign.center, // Center the text
+                  width: MediaQuery.sizeOf(context).width*0.3,
+                  child: TextFormField(
+                    controller: updatedfarefieldcontroller,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      errorStyle: TextStyle(fontSize: 10),
+                      border: InputBorder.none, // No borders
+                    ),
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                    textAlign: TextAlign.center, // Center the text
+                  ),
                 ),
                 SizedBox(
-                  height: ScreenConfig.screenSizeHeight * 0.02,
+                  height: ScreenConfig.screenSizeHeight * 0.01,
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.snackbar(
-                      'Fare Raised',
-                      'You Fare RaisedSuccessfully',
-                      snackPosition: SnackPosition.TOP,
-                      backgroundColor: themeColor,
-                      colorText: Colors.white,
-                      margin: EdgeInsets.all(10),
-                      duration: Duration(seconds: 3),
-                    );
+                    if(updatedfarefieldcontroller.text.isNotEmpty){
+                      if(int.tryParse(updatedfarefieldcontroller.text)! < (updatedfare-((updatedfare*5)/100))){
+                        setState(() {
+                          updatedfarefieldcontroller.text=(updatedfare-((updatedfare*5)/100)).toString();
+                        });
+                        Get.snackbar(
+                          'Fare must be',
+                          '${updatedfarefieldcontroller.text}',
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: themeColor,
+                          colorText: Colors.white,
+                          margin: EdgeInsets.all(10),
+                          duration: Duration(seconds: 3),
+                        );
+                      }else{
+                        updatedfare=int.tryParse(updatedfarefieldcontroller.text)!;
+                        print('Updated Fare is here $updatedfare');
+                        Get.snackbar(
+                          'Fare Raised',
+                          'You Fare Raised Successfully',
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: themeColor,
+                          colorText: Colors.white,
+                          margin: EdgeInsets.all(10),
+                          duration: Duration(seconds: 3),
+                        );
+                        sendridereq();
+                      }
+                    }else{
+                      Get.snackbar(
+                        'Alert!',
+                        'Enter Fare',
+                        snackPosition: SnackPosition.TOP,
+                        backgroundColor: themeColor,
+                        colorText: Colors.white,
+                        margin: EdgeInsets.all(10),
+                        duration: Duration(seconds: 3),
+                      );
+                    }
                   },
                   child: Container(
                     height: ScreenConfig.screenSizeWidth * 0.13,
@@ -332,6 +389,223 @@ class _FareUpdateScreenState extends State<FareUpdateScreen> {
                   ScreenConfig.screenSizeHeight * 0.2,
                 )
               ],
+            ),
+          ),
+          if(requestshow) Padding(
+            padding: const EdgeInsets.only(top: 15),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: List.generate(drivers.length, (index) {
+                    final driver = drivers[index];
+                    return Column(
+                      children: [
+                        Container(
+                          height: ScreenConfig.screenSizeHeight * 0.2,
+                          width: ScreenConfig.screenSizeWidth * 0.83,
+                          decoration: blueContainerTemplate(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 15),
+                            child: Center(
+                              child: SizedBox(
+                                width:
+                                ScreenConfig.screenSizeWidth * 0.75,
+                                child: Column(
+                                  children: [
+                                    spaceHeight(
+                                        ScreenConfig.screenSizeHeight *
+                                            0.02),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                      children: [
+                                        Container(
+                                          color: Colors.transparent,
+                                          child: Row(
+                                            children: [
+                                          Container(
+                                          width: ScreenConfig.screenSizeWidth * 0.12,
+                                            height: ScreenConfig.screenSizeWidth * 0.12,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8), // Adjust the radius as needed
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.withOpacity(0.3), // Optional shadow
+                                                  blurRadius: 4,
+                                                  offset: Offset(2, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            clipBehavior: Clip.hardEdge, // Ensures the child respects the rounded corners
+                                            child: Image.network(
+                                              driver['driverImage'],
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                              spaceWidth(ScreenConfig
+                                                  .screenSizeWidth *
+                                                  0.03),
+                                              Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  Text(
+                                                    "${driver['driverName']}",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                        ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.03),
+                                                  ),
+                                                  Text(
+                                                    "${driver['driverRaiting']} *",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                        ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.03),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),Container(
+                                          color: Colors.transparent,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: ScreenConfig.screenSizeWidth * 0.12,
+                                                height: ScreenConfig.screenSizeWidth * 0.12,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(8), // Adjust the radius as needed
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey.withOpacity(0.3), // Optional shadow
+                                                      blurRadius: 4,
+                                                      offset: Offset(2, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                clipBehavior: Clip.hardEdge, // Ensures the child respects the rounded corners
+                                                child: Image.network(
+                                                  driver['vehicleImage'],
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              spaceWidth(ScreenConfig
+                                                  .screenSizeWidth *
+                                                  0.03),
+                                              Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  Text(
+                                                    "${driver['vehicleName']}",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                        ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.03),
+                                                  ),
+                                                  Text(
+                                                    "${driver['numberPlate']}",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                        ScreenConfig
+                                                            .screenSizeWidth *
+                                                            0.03),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    spaceHeight(
+                                        ScreenConfig.screenSizeHeight *
+                                            0.02),
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.only(top: 8),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            /*'driverName':data['driver']['name'],
+                                            'driverRaiting':data['driver']['rating'],
+                                            'vahicleName':data['vehicle']['name'],
+                                            'numberPlate':data['vehicle']['numberPlate'],
+                                            'rideId':data['_id'],
+                                            'driverId':data['driver']['_id'],*/
+                                            drivername=driver['driverName'];
+                                            driverraiting=driver['driverRaiting'].toDouble();
+                                            vahiclename=driver['vehicleName'];
+                                            numberplate=driver['numberPlate'];
+                                            driverimage=driver['driverImage'];
+                                            vahicleimage=driver['vehicleImage'];
+                                            reqrideid=driver['rideId'];
+                                            driverid=driver['driverId'];
+                                          });
+                                          acceptstatus(driver['rideId'],driver['driverId']);
+                                        },
+                                        child: Container(
+                                            height: 40,
+                                            width: ScreenConfig.screenSizeWidth * 0.7,
+                                            decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                borderRadius:
+                                                BorderRadius
+                                                    .all(Radius
+                                                    .circular(
+                                                    10)),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors
+                                                        .grey
+                                                        .withOpacity(
+                                                        0.40),
+                                                    offset: const Offset(
+                                                        0.0,
+                                                        1.2), //(x,y)
+                                                    blurRadius: 6.0,
+                                                  )
+                                                ]),
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets
+                                                  .symmetric(
+                                                  horizontal:
+                                                  10.0,
+                                                  vertical: 5),
+                                              child: Center(
+                                                  child: Text(
+                                                    "Accept",
+                                                    style: TextStyle(
+                                                        fontSize: 14),
+                                                  )),
+                                            )),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ),
             ),
           ),
           Column(

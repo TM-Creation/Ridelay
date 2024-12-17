@@ -289,7 +289,7 @@ class _DriverSoloRideWaitingScreenState
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.36,
+        //height: ScreenConfig.screenSizeHeight * 0.36,
         width: double.infinity,
         decoration: bottomModalTemplate(),
         child: Padding(
@@ -490,7 +490,7 @@ class _DriverSoloRideWaitingScreenState
                                             child: displayNoSizedText(
                                                 'Passanger Picked',
                                                 ScreenConfig
-                                                    .theme.textTheme.labelSmall
+                                                    .theme.textTheme.bodyMedium
                                                     ?.copyWith(
                                                         color: ScreenConfig
                                                             .theme.primaryColor,
@@ -561,7 +561,7 @@ class _DriverSoloRideWaitingScreenState
                                               child: displayNoSizedText(
                                                   'Cancel Ride',
                                                   ScreenConfig
-                                                      .theme.textTheme.labelSmall
+                                                      .theme.textTheme.bodyMedium
                                                       ?.copyWith(
                                                           color: ScreenConfig
                                                               .theme

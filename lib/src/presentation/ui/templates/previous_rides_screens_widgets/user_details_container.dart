@@ -14,8 +14,19 @@ Widget userDetailsContainer(String image, String firstText, String secondText,
           width: ScreenConfig.screenSizeWidth * 0.085,
           height: ScreenConfig.screenSizeWidth * 0.085,
           decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            borderRadius: BorderRadius.circular(8), // Adjust the radius as needed
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3), // Optional shadow
+                blurRadius: 4,
+                offset: Offset(2, 2),
+              ),
+            ],
+          ),
+          clipBehavior: Clip.hardEdge, // Ensures the child respects the rounded corners
+          child: Image.network(
+            image,
+            fit: BoxFit.cover,
           ),
         ),
         spaceWidth(ScreenConfig.screenSizeWidth * 0.02),

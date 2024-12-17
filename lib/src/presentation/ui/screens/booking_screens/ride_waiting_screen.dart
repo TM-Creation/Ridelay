@@ -43,7 +43,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
       duration = '',
       numberplate = '',
       drivername = '',
-      vahiclename = '';
+      vahiclename = '',driverImage='',vehicleImage='',driverPhone='';
   int fare = 0;
   double driverraiting = 0.0;
   String rideid = '', driverid = '';
@@ -60,7 +60,10 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
         dropoffEnterController.text = args['dropoffLocation']!;
         drivername = args['driverName']!;
         driverraiting = args['driverRaiting']!;
+        driverImage = args['driverImage'];
+        driverPhone = args['driverPhone'];
         vahiclename = args['vahicleName']!;
+        vehicleImage = args['vehicleImage'];
         numberplate = args['vahicleNumberplate']!;
         fare = args['fare']!;
         rideid = args['rideid']!;
@@ -117,8 +120,10 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
             "dropoffLocation": dropoffEnterController.text,
             "driverName": drivername,
             "driverRaiting": driverraiting,
+            "driverImage" : driverImage,
             "vahicleName": vahiclename,
             "vahicleNumberplate": numberplate,
+            "vehicleImage" : vehicleImage,
             "fare": fare,
             "rideid": rideid,
             "driverID": driverid
@@ -284,7 +289,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
   Widget build(BuildContext context) {
     Widget bottomModalNonSlideable() {
       return Container(
-        height: ScreenConfig.screenSizeHeight * 0.32,
+        //height: ScreenConfig.screenSizeHeight * 0.32,
         width: ScreenConfig.screenSizeWidth,
         decoration: bottomModalTemplate(),
         child: Padding(
@@ -298,7 +303,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                 Column(
                   children: [
                     Container(
-                      // height: ScreenConfig.screenSizeHeight * 0.26,
+                      height: ScreenConfig.screenSizeHeight * 0.26,
                       width: ScreenConfig.screenSizeWidth * 0.85,
                       decoration: blueContainerTemplate(),
                       child: Padding(
@@ -371,7 +376,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     userDetailsContainer(
-                                      "assets/images/UserProfileImage.png",
+                                      driverImage,
                                       "$drivername",
                                       "$driverraiting",
                                       true,
@@ -379,7 +384,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                     spaceHeight(
                                         ScreenConfig.screenSizeHeight * 0.02),
                                     userDetailsContainer(
-                                      "assets/images/UserCarImage.png",
+                                      vehicleImage,
                                       "$vahiclename",
                                       "$numberplate",
                                       false,
@@ -400,7 +405,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                           smallSquareButton(
                                               "assets/images/PhoneIcon.png",
                                               () {
-                                            _launchCaller('+923030252618');
+                                            _launchCaller(driverPhone);
                                           }),
                                           smallSquareButton(
                                               "assets/images/EmailIcon.png",
@@ -445,7 +450,7 @@ class _RideWaitingScreenState extends State<RideWaitingScreen> {
                                               child: displayNoSizedText(
                                                   'Cancel Ride',
                                                   ScreenConfig
-                                                      .theme.textTheme.labelSmall
+                                                      .theme.textTheme.bodyMedium
                                                       ?.copyWith(
                                                           color: Colors.white),
                                                   textAlign: TextAlign.center)),

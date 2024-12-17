@@ -8,27 +8,16 @@ import 'package:ridely/src/models/base%20url.dart';
 import 'package:ridely/src/presentation/ui/config/theme.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/transactionhistory.dart';
 import 'package:ridely/src/presentation/ui/screens/driver_screens/wallet.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/vahicle_registeration.dart';
-import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
-import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
-import 'package:ridely/src/presentation/ui/templates/main_generic_templates/booking_widgets/map_widgets.dart';
-import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/slider_for_bottom_navigation.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
-import 'package:ridely/src/presentation/ui/templates/ride_widgets/driver_ride_detail_widgets.dart';
-import 'package:ridely/src/presentation/ui/templates/ride_widgets/ride_detail_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../templates/previous_rides_screens_widgets/user_details_container.dart';
 import '../../templates/ride_widgets/ride_widget_buttons.dart';
-import '../booking_screens/solo_ride_flow/solo_ride_shown_screen.dart';
-import '../onboarding_screens/register_screens/passangerregistration.dart';
 import '../past_rides_screens/Driver_Previou_Ride_Screen.dart';
 import 'driver_profile.dart';
 import 'driver_solo_ride_waiting_screen.dart';
@@ -322,7 +311,7 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                   Center(
                     child: GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Profile()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>DriverProfile()));
                       },
                       child: CircleAvatar(
                         radius: MediaQuery.sizeOf(context).width * 0.12,
@@ -339,7 +328,8 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                       name??'',
                       style: TextStyle(
                           color: ScreenConfig.theme.primaryColor,
-                          fontSize: MediaQuery.sizeOf(context).width * 0.062),
+                          fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.sizeOf(context).width * 0.05),
                     ),
                   ),
                   SizedBox(
@@ -476,283 +466,213 @@ class _DriverRideSelectionScreenState extends State<DriverRideSelectionScreen> {
                     }),
                 ),
               )
-              : FutureBuilder<bool>(
-                  future: fetch,
-                  builder: (context, snapshot) {
-                    // While the future is loading, show a loading indicator
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
-                    // If an error occurred, show an error message
-                    if (snapshot.hasError) {
-                      return Center(child: Text("Error loading data"));
-                    }
-
-                    // If data is loaded successfully, display it
-                    if (snapshot.hasData && snapshot.data != null) {
-                      return Center(
-                          child: Text("Fetched Data: ${snapshot.data}"));
-                    }
-                    // If no data is found, show a message
-                    return snapshot.data!
-                        ? isLoading
-                            ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    CircularProgressIndicator(
-                                      color: themeColor,
-                                    ),
-                                    SizedBox(height: 20),
-                                    Text("Wait for Passange's Responce"),
-                                  ],
-                                ),
-                              )
-                            : SizedBox(
-                                width: ScreenConfig.screenSizeWidth,
-                                child: Center(
-                                  child: SizedBox(
-                                    height: ScreenConfig.screenSizeHeight,
-                                    width: ScreenConfig.screenSizeWidth * 0.9,
-                                    child: SingleChildScrollView(
-                                        physics: const ClampingScrollPhysics(),
-                                        child: Column(
-                                          children: [
-                                            spaceHeight(
-                                                ScreenConfig.screenSizeHeight *
-                                                    0.02),
-                                            Column(
-                                              children: List.generate(
-                                                  rides.length, (index) {
-                                                final ride = rides[index];
-                                                return Column(
-                                                  children: [
-                                                    Container(
-                                                      // height: ScreenConfig.screenSizeHeight * 0.26,
-                                                      width: ScreenConfig
-                                                              .screenSizeWidth *
-                                                          0.9,
-                                                      decoration:
-                                                          blueContainerTemplate(),
-                                                      child: Padding(
-                                                        padding: EdgeInsets.symmetric(
-                                                            vertical: ScreenConfig
-                                                                    .screenSizeHeight *
-                                                                0.02,
-                                                            horizontal: ScreenConfig
-                                                                    .screenSizeWidth *
-                                                                0.05),
-                                                        child: Column(
+              : SizedBox(
+              width: ScreenConfig.screenSizeWidth,
+              child: Center(
+                child: SizedBox(
+                  height: ScreenConfig.screenSizeHeight,
+                  width: ScreenConfig.screenSizeWidth * 0.9,
+                  child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          spaceHeight(
+                              ScreenConfig.screenSizeHeight *
+                                  0.02),
+                          Column(
+                            children: List.generate(
+                                rides.length, (index) {
+                              final ride = rides[index];
+                              return Column(
+                                children: [
+                                  Container(
+                                    // height: ScreenConfig.screenSizeHeight * 0.26,
+                                    width: ScreenConfig
+                                        .screenSizeWidth *
+                                        0.9,
+                                    decoration:
+                                    blueContainerTemplate(),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: ScreenConfig
+                                              .screenSizeHeight *
+                                              0.02,
+                                          horizontal: ScreenConfig
+                                              .screenSizeWidth *
+                                              0.05),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment
+                                            .start,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .start,
+                                        children: [
+                                          displayText(
+                                              "You Found A Passenger!",
+                                              ScreenConfig
+                                                  .theme
+                                                  .textTheme
+                                                  .labelLarge,
+                                              width: 0.8),
+                                          spaceHeight(ScreenConfig
+                                              .screenSizeHeight *
+                                              0.025),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment
+                                                .start,
+                                            children: [
+                                              Column(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  Container(
+                                                    color: Colors
+                                                        .transparent,
+                                                    child:
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          width:
+                                                          ScreenConfig.screenSizeWidth * 0.15,
+                                                          height:
+                                                          ScreenConfig.screenSizeWidth * 0.15,
+                                                          decoration:
+                                                          BoxDecoration(
+                                                            image: DecorationImage(image: AssetImage('assets/images/UserProfileImage.png'), fit: BoxFit.cover),
+                                                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                                          ),
+                                                        ),
+                                                        spaceWidth(ScreenConfig.screenSizeWidth *
+                                                            0.03),
+                                                        Column(
                                                           crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
+                                                          CrossAxisAlignment.start,
                                                           children: [
-                                                            displayText(
-                                                                "You Found A Passenger!",
-                                                                ScreenConfig
-                                                                    .theme
-                                                                    .textTheme
-                                                                    .labelLarge,
-                                                                width: 0.8),
-                                                            spaceHeight(ScreenConfig
-                                                                    .screenSizeHeight *
-                                                                0.025),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Container(
-                                                                      color: Colors
-                                                                          .transparent,
-                                                                      child:
-                                                                          Row(
-                                                                        children: [
-                                                                          Container(
-                                                                            width:
-                                                                                ScreenConfig.screenSizeWidth * 0.15,
-                                                                            height:
-                                                                                ScreenConfig.screenSizeWidth * 0.15,
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              image: DecorationImage(image: AssetImage('assets/images/UserProfileImage.png'), fit: BoxFit.cover),
-                                                                              borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                                                            ),
-                                                                          ),
-                                                                          spaceWidth(ScreenConfig.screenSizeWidth *
-                                                                              0.03),
-                                                                          Column(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              Text(
-                                                                                "${ride['passengerName']}",
-                                                                                style: TextStyle(fontSize: ScreenConfig.screenSizeWidth * 0.03),
-                                                                              ),
-                                                                              Text(
-                                                                                "Rating: 4.2 *",
-                                                                                style: TextStyle(fontSize: ScreenConfig.screenSizeWidth * 0.03),
-                                                                              ),
-                                                                              Text(
-                                                                                "Distance: ${ride['distance']}",
-                                                                                style: TextStyle(fontSize: ScreenConfig.screenSizeWidth * 0.03),
-                                                                              ),
-                                                                              Text(
-                                                                                "Fare: ${ride['fare']}",
-                                                                                style: TextStyle(fontSize: ScreenConfig.screenSizeWidth * 0.03),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                    spaceHeight(
-                                                                        ScreenConfig.screenSizeHeight *
-                                                                            0.02),
-                                                                    // userDetailsContainer("assets/images/UserCarImage.png",
-                                                                    //     "Honda Civic", "LXV 5675", false, true, "2019")
-                                                                  ],
-                                                                ),
-                                                                SizedBox(
-                                                                  width: ScreenConfig
-                                                                          .screenSizeWidth *
-                                                                      0.22,
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .center,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Row(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.spaceBetween,
-                                                                        children: [
-                                                                          smallSquareButton(
-                                                                              "assets/images/PhoneIcon.png",
-                                                                              () {
-                                                                            _launchCaller(ride['phoneNumber']);
-                                                                          }),
-                                                                          smallSquareButton(
-                                                                              "assets/images/EmailIcon.png",
-                                                                              () {}),
-                                                                        ],
-                                                                      ),
-                                                                      spaceHeight(
-                                                                          ScreenConfig.screenSizeHeight *
-                                                                              0.035),
-                                                                      GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          setState(
-                                                                              () {
-                                                                            pick =
-                                                                                ride['pickupLocation'];
-                                                                            drop =
-                                                                                ride['dropoffLocation'];
-                                                                            passangerName =
-                                                                                ride['passengerName'];
-                                                                            phonenumber =
-                                                                                ride['phoneNumber'];
-                                                                            fare =
-                                                                                ride['fare'];
-                                                                            datarespose =
-                                                                                ride['id'];
-                                                                          });
-                                                                          acceptrides(
-                                                                              ride['id']);
-                                                                          startLoading();
-                                                                        },
-                                                                        child:
-                                                                            Container(
-                                                                          width:
-                                                                              ScreenConfig.screenSizeWidth * 0.25,
-                                                                          decoration: BoxDecoration(
-                                                                              color: thirdColor,
-                                                                              borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                                                              boxShadow: [
-                                                                                BoxShadow(
-                                                                                  color: Colors.grey.withOpacity(0.40),
-                                                                                  offset: const Offset(0.0, 1.2),
-                                                                                  //(x,y)
-                                                                                  blurRadius: 6.0,
-                                                                                )
-                                                                              ]),
-                                                                          child: Padding(
-                                                                              padding: const EdgeInsets.all(5.0),
-                                                                              child: displayNoSizedText('Confirm Ride', ScreenConfig.theme.textTheme.labelSmall?.copyWith(color: ScreenConfig.theme.primaryColor, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-                                                                        ),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            )
+                                                            Text(
+                                                              "${ride['passengerName']}",
+                                                              style: TextStyle(fontSize: ScreenConfig.screenSizeWidth * 0.03),
+                                                            ),
+                                                            Text(
+                                                              "Rating: 4.2 *",
+                                                              style: TextStyle(fontSize: ScreenConfig.screenSizeWidth * 0.03),
+                                                            ),
+                                                            Text(
+                                                              "Distance: ${ride['distance']}",
+                                                              style: TextStyle(fontSize: ScreenConfig.screenSizeWidth * 0.03),
+                                                            ),
+                                                            Text(
+                                                              "Fare: ${ride['fare']}",
+                                                              style: TextStyle(fontSize: ScreenConfig.screenSizeWidth * 0.03),
+                                                            ),
                                                           ],
                                                         ),
-                                                      ),
+                                                      ],
                                                     ),
-                                                    spaceHeight(ScreenConfig
-                                                            .screenSizeHeight *
-                                                        0.015),
+                                                  ),
+                                                  spaceHeight(
+                                                      ScreenConfig.screenSizeHeight *
+                                                          0.02),
+                                                  // userDetailsContainer("assets/images/UserCarImage.png",
+                                                  //     "Honda Civic", "LXV 5675", false, true, "2019")
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                width: ScreenConfig
+                                                    .screenSizeWidth *
+                                                    0.22,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .center,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        smallSquareButton(
+                                                            "assets/images/PhoneIcon.png",
+                                                                () {
+                                                              _launchCaller(ride['phoneNumber']);
+                                                            }),
+                                                        smallSquareButton(
+                                                            "assets/images/EmailIcon.png",
+                                                                () {}),
+                                                      ],
+                                                    ),
+                                                    spaceHeight(
+                                                        ScreenConfig.screenSizeHeight *
+                                                            0.035),
+                                                    GestureDetector(
+                                                      onTap:
+                                                          () {
+                                                        setState(
+                                                                () {
+                                                              pick =
+                                                              ride['pickupLocation'];
+                                                              drop =
+                                                              ride['dropoffLocation'];
+                                                              passangerName =
+                                                              ride['passengerName'];
+                                                              phonenumber =
+                                                              ride['phoneNumber'];
+                                                              fare =
+                                                              ride['fare'];
+                                                              datarespose =
+                                                              ride['id'];
+                                                            });
+                                                        acceptrides(
+                                                            ride['id']);
+                                                        startLoading();
+                                                      },
+                                                      child:
+                                                      Container(
+                                                        width:
+                                                        ScreenConfig.screenSizeWidth * 0.25,
+                                                        decoration: BoxDecoration(
+                                                            color: thirdColor,
+                                                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors.grey.withOpacity(0.40),
+                                                                offset: const Offset(0.0, 1.2),
+                                                                //(x,y)
+                                                                blurRadius: 6.0,
+                                                              )
+                                                            ]),
+                                                        child: Padding(
+                                                            padding: const EdgeInsets.all(5.0),
+                                                            child: displayNoSizedText('Confirm Ride', ScreenConfig.theme.textTheme.bodyMedium?.copyWith(color: ScreenConfig.theme.primaryColor, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+                                                      ),
+                                                    )
                                                   ],
-                                                );
-                                              }),
-                                            ),
-                                          ],
-                                        )),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ))
-                        : Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    'Your not Register any Vehicle',
-                                    style: ScreenConfig
-                                        .theme.textTheme.titleSmall
-                                        ?.copyWith(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                Buttons.longWidthButton(
-                                    Text(
-                                      "Register Vahicle",
-                                      style: ScreenConfig
-                                          .theme.textTheme.titleSmall
-                                          ?.copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w300),
-                                    ), () {
-                                  Navigator.pushReplacementNamed(context,
-                                      VehicleRegistrationScreen.routeName);
-                                })
-                              ],
-                            ),
-                          );
-                  },
+                                  spaceHeight(ScreenConfig
+                                      .screenSizeHeight *
+                                      0.015),
+                                ],
+                              );
+                            }),
+                          ),
+                        ],
+                      )),
                 ),
+              )),
         ));
   }
 }

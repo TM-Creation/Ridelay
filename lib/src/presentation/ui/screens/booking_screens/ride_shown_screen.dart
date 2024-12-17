@@ -40,7 +40,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
   bool showConfirmYourRide = false;
   String distance = '', duration = '';
   double? totaldistance;
-  int counter = 0;
   int minifare = 0, gofare = 0, comfortfare = 0, rickshawfare = 0, bykefare = 0;
   int fare = 454;
   String ETA = '';
@@ -72,20 +71,22 @@ class _RideShownScreenState extends State<RideShownScreen> {
   }
 
   void assignFare() {
-    if (go) {
-      fare = gofare;
-    } else if (min) {
-      fare = minifare;
-    } else if (comfrt) {
-      fare = comfortfare;
-    } else if (rikshaw) {
-      fare = rickshawfare;
-    } else if (bik) {
-      fare = bykefare;
-    } else {
-      fare = 0; // Default fare if no condition is true
-    }
-    setState(() {});
+    setState(() {
+      if (go) {
+        fare = gofare;
+      } else if (min) {
+        fare = minifare;
+      } else if (comfrt) {
+        fare = comfortfare;
+      } else if (rikshaw) {
+        fare = rickshawfare;
+      } else if (bik) {
+        fare = bykefare;
+      } else {
+        fare = 0; // Default fare if no condition is true
+      }
+      sendridereq();
+    });
   }
 
   bool isdriveraccept = false, requestshow = false;
@@ -185,7 +186,10 @@ class _RideShownScreenState extends State<RideShownScreen> {
     socket.emit('rideRequest', payload);
     print('Emitted rideRequest with payload: $payload');
     socket.on('rideRequested', (data) {
+      if (!mounted) return;
       print("data of riderequest $data");
+      reqrideid=data['_id'];
+      print('Ride Id is here $reqrideid');
       Navigator.pushReplacementNamed(context, FareUpdateScreen.routeName,
           arguments: {
             "pickupLocation": pickupEnterController.text,
@@ -195,12 +199,18 @@ class _RideShownScreenState extends State<RideShownScreen> {
             //"vahicleName":vahiclename,
             //"vahicleNumberplate":numberplate,
             "fare": fare,
-            "rideid": reqrideid,
+            "distance" : distance
+            //"rideid": reqrideid,
             //"driverID":driverid
           });
     });
 
     //isdriveraccept=true;
+  }
+  @override
+  void dispose() {
+    socket.off('rideRequested'); // Remove the listener
+    super.dispose();
   }
 
 //6654523062cc5411c069d411
@@ -226,14 +236,7 @@ class _RideShownScreenState extends State<RideShownScreen> {
     });
   }*/
   @override
-  /*void dispose() {
-    socket.off('rideAccepted');
-    // TODO: implement dispose
-    super.dispose();
-  }*/
-  @override
   Widget build(BuildContext context) {
-    print("Counting $counter");
     Widget confirmYourRideWidget(String typeofvahicle) {
       return Container(
         height: ScreenConfig.screenSizeHeight * 0.25,
@@ -320,7 +323,6 @@ class _RideShownScreenState extends State<RideShownScreen> {
                                 },
                               );*/
                               assignFare();
-                              sendridereq();
                             },
                             child: Container(
                               height: 25,

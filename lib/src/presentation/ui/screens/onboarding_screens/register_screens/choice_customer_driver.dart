@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/driver_registration.dart';
@@ -8,6 +12,8 @@ import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/snack_bars/custom_snack_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
+
+import '../../../config/theme.dart';
 
 class ChoiceCustomerDriverScreen extends StatefulWidget {
   static const routeName = '/choiceCustomerDriver-screen';
@@ -21,6 +27,50 @@ class ChoiceCustomerDriverScreen extends StatefulWidget {
 
 class _ChoiceCustomerDriverScreenState
     extends State<ChoiceCustomerDriverScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _requestPermissionAndGetCurrentLocation();
+  }
+  LatLng userlocation = LatLng(9.0, 7.9);
+  Future<void> _requestPermissionAndGetCurrentLocation() async {
+    if(userLiveLocation().userlivelocation!=null){
+      print("User Live Location: ${userLiveLocation().userlivelocation}");
+    }else{
+      try {
+        print("Permission Request Started");
+        // Request location permission
+        var status = await Permission.location.request();
+        print('Accepted Request of Location');
+        if (status.isGranted) {
+          // Get the current location
+          Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+          );
+          LatLng currentLocation = LatLng(position.latitude, position.longitude);
+          setState(() {
+            userlocation = currentLocation;
+            userLiveLocation().userlivelocation = userlocation;
+          });
+          print("User Live Location: $userlocation");
+        } else {
+          // Show snackbar to inform the user
+          Get.snackbar(
+            'Location Permission',
+            'Location permission is required to continue. Please enable it.',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: themeColor,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 3),
+          );
+        }
+      } catch (e) {
+        print("Error in _requestPermissionAndGetCurrentLocation: $e");
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

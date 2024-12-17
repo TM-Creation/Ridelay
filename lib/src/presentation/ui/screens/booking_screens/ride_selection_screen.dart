@@ -1,24 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:ridely/src/infrastructure/screen_config/screen_config.dart';
 import 'package:ridely/src/presentation/ui/screens/booking_screens/location_selection_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/booking_screens/solo_ride_flow/vehicle_selection_screen.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/authentication_selection.dart';
+import 'package:ridely/src/presentation/ui/screens/booking_screens/passanger_profile.dart';
 import 'package:ridely/src/presentation/ui/screens/onboarding_screens/login.dart';
-import 'package:ridely/src/presentation/ui/screens/onboarding_screens/register_screens/passangerregistration.dart';
-import 'package:ridely/src/presentation/ui/screens/past_rides_screens/previous_rides_screen.dart';
 import 'package:ridely/src/presentation/ui/templates/decorations/box_decoration_templates.dart';
-import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_bars/app_bar.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/app_buttons/buttons.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/booking_widgets/map_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/other_widgets/slider_for_bottom_navigation.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/spacing_widgets.dart';
 import 'package:ridely/src/presentation/ui/templates/main_generic_templates/text_templates/display_text.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VehicleSelectionScreen extends StatefulWidget {
@@ -35,8 +26,16 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
   @override
   /*LatLng userlocation = LatLng(9.0, 7.9);*/
   void initState() {
+    fetchUserData();
    /* _requestPermissionAndGetCurrentLocation();*/
     super.initState();
+  }
+  String? name;
+  Future<void> fetchUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('username') ?? '';
+    });
   }
   /*Future<void> _requestPermissionAndGetCurrentLocation() async {
     // Check if location permission is granted
@@ -73,7 +72,7 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
   void searchupdate()async{
    final searchlocation=await locationFromAddress(locationEnterController.text);
     setState(() {
-      search=searchlocation as List<Location>;
+      search=searchlocation;
       print('$search search a gya');
     });
   }
@@ -123,11 +122,25 @@ class _VehicleSelectionScreenState extends State<VehicleSelectionScreen> {
                   height: MediaQuery.sizeOf(context).height * 0.03,
                 ),
                 Center(
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>PassangerProfile()));
+                    },
+                    child: CircleAvatar(
+                      radius: MediaQuery.sizeOf(context).width * 0.1,
+                      child: Text(name!.isEmpty? '':name!.substring(0,1) ??'',style: TextStyle(fontSize: MediaQuery.sizeOf(context).height * 0.05),),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.01,
+                ),
+                Center(
                   child: Text(
-                    "Moeen",
+                    name!.isEmpty? '':name ??'',
                     style: TextStyle(
                         color: ScreenConfig.theme.primaryColor,
-                        fontSize: MediaQuery.sizeOf(context).width * 0.062),
+                        fontSize: MediaQuery.sizeOf(context).width * 0.05,fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(
