@@ -35,7 +35,7 @@
             android:value="2" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBGO7cxITuAgXMtjPaYiHe0_Y56wYP1H78"/>
+            android:value="AIzaSyA9r_gMNGeVkwEQl-C5rwXP5Jx31idawpg"/>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
